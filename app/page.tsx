@@ -226,7 +226,7 @@ export default function Home() {
               <div className="text-3xl" aria-hidden="true">
                 {item.icon}
               </div>
-              <h2 className="mt-4 truncate whitespace-nowrap text-lg font-bold leading-tight text-slate-950">
+              <h2 className="mt-4 text-lg font-bold leading-tight text-slate-950">
                 {item.title}
               </h2>
               <p className="mt-2 text-sm text-slate-500">{item.text}</p>
@@ -287,24 +287,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16" id="quiz">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
-          <div>
-            <p className="font-semibold uppercase tracking-wide text-[#1B5E20]">
-              Калькулятор
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-              Рассчитайте стоимость забора за 1 минуту
-            </h2>
-            <p className="mt-5 text-slate-600">
-              Ответьте на 6 вопросов. Мы подготовим предварительный расчёт и
-              уточним стоимость по телефону за 5 минут.
-            </p>
-          </div>
-          <QuizForm />
-        </div>
-      </section>
-
       <section className="bg-[#F5F5F5] py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -341,6 +323,24 @@ export default function Home() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="py-16" id="quiz">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
+          <div>
+            <p className="font-semibold uppercase tracking-wide text-[#1B5E20]">
+              Калькулятор
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Рассчитайте стоимость забора за 1 минуту
+            </h2>
+            <p className="mt-5 text-slate-600">
+              Ответьте на 6 вопросов. Мы подготовим предварительный расчёт и
+              уточним стоимость по телефону за 5 минут.
+            </p>
+          </div>
+          <QuizForm />
         </div>
       </section>
 

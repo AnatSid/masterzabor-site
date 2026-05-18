@@ -148,6 +148,8 @@ export function QuizForm({ cityName }: QuizFormProps) {
     reset,
     formState: { errors },
   } = useForm<QuizFormValues>({
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       fenceType: "Профнастил",
       height: "1.8 м",

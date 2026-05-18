@@ -102,15 +102,17 @@ function formatLeadMessage(data: LeadData) {
   if (lengthMeters && pricePerMeter) {
     const gatePrice = data.gateType ? (GATE_PRICE[data.gateType] ?? 0) : 0;
     const wicketPrice = data.wicket ? (WICKET_PRICE[data.wicket] ?? 0) : 0;
+    const gateLabel = data.gateType?.trim() || "не выбраны";
+    const wicketLabel = data.wicket?.trim() || "не выбрана";
     const subtotal = Math.round(lengthMeters * pricePerMeter);
     const total = subtotal + gatePrice + wicketPrice;
 
     lines.push(
       "─────────────────",
       "💰 Ориентир (для менеджера):",
-      `   Забор: ${lengthMeters}м × ${pricePerMeter} = ${subtotal} BYN`,
-      `   Ворота: +${gatePrice} BYN`,
-      `   Калитка: +${wicketPrice} BYN`,
+      `   Забор: ${lengthMeters}м × ${pricePerMeter} BYN/м.п. = ${subtotal} BYN`,
+      `   Ворота (${gateLabel}): +${gatePrice} BYN`,
+      `   Калитка (${wicketLabel}): +${wicketPrice} BYN`,
       `   ≈ ИТОГО: ${total} BYN`,
     );
   }
