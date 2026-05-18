@@ -46,6 +46,7 @@ function validateLead(body: LeadRequestBody) {
     length: readString(body.length),
     height: readString(body.height),
     gateType: readString(body.gateType),
+    wicket: readString(body.wicket),
     comment: readString(body.comment),
     source: readString(body.source),
   };

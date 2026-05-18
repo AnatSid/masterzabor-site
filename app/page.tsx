@@ -36,8 +36,8 @@ const trustItems = [
   },
   {
     icon: "💳",
-    title: "Рассрочка и оплата частями — работаем с 8 банками",
-    text: "подберём комфортный платёж",
+    title: "Рассрочка и оплата частями",
+    text: "подберём комфортный платёж — работаем с 8 банками",
   },
   {
     icon: "🚚",
@@ -219,14 +219,17 @@ export default function Home() {
       <section className="bg-[#F5F5F5] py-12">
         <div className="mx-auto grid max-w-7xl gap-4 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
           {trustItems.map((item) => (
-            <article className="rounded-2xl bg-white p-6 shadow-sm" key={item.title}>
+            <article
+              className="flex h-full flex-col rounded-2xl bg-white p-6 shadow-sm"
+              key={item.title}
+            >
               <div className="text-3xl" aria-hidden="true">
                 {item.icon}
               </div>
-              <h2 className="mt-4 text-xl font-bold text-slate-950">
+              <h2 className="mt-4 truncate whitespace-nowrap text-lg font-bold leading-tight text-slate-950">
                 {item.title}
               </h2>
-              <p className="mt-2 text-sm text-slate-600">{item.text}</p>
+              <p className="mt-2 text-sm text-slate-500">{item.text}</p>
             </article>
           ))}
         </div>
@@ -294,7 +297,7 @@ export default function Home() {
               Рассчитайте стоимость забора за 1 минуту
             </h2>
             <p className="mt-5 text-slate-600">
-              Ответьте на 5 вопросов. Мы подготовим предварительный расчёт и
+              Ответьте на 6 вопросов. Мы подготовим предварительный расчёт и
               уточним стоимость по телефону за 5 минут.
             </p>
           </div>
