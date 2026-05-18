@@ -785,7 +785,7 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
    Возвращает: totalLeads, bySource, byCity, byDay.
 
 3. Создать app/api/cron/daily-report/route.ts — ежедневная сводка в Telegram:
-   Каждый день в 21:00 (Минск) отправляет:
+   Каждый день в 20:00 (Минск) отправляет:
    📊 Сводка за дату — количество заявок, топ страницы, топ города, итого за месяц.
    Настроить через Vercel Cron Job в vercel.json.
 
@@ -796,7 +796,7 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 Статус выполнения (18.05.2026):
 - ✅ Подключён `@vercel/kv`, заявки сохраняются в KV по ключам `leads:YYYY-MM-DD`.
 - ✅ Реализован `GET /api/stats?period=today|week|month` с защитой по `STATS_API_TOKEN`.
-- ✅ Реализован `GET /api/cron/daily-report`, добавлен `vercel.json` с cron `0 18 * * *` (21:00 Минск).
+- ✅ Реализован `GET /api/cron/daily-report`, добавлен `vercel.json` с cron `0 17 * * *` (20:00 Минск).
 - ⬜ Опциональный Telegram webhook-бот (`/api/telegram-webhook`) не реализован.
 - ✅ Выполнена ручная E2E-проверка: `/api/lead` → KV → `/api/stats` → `/api/cron/daily-report` → Telegram.
 

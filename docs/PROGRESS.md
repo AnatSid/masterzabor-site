@@ -133,7 +133,8 @@
 - ✅ Промпт 10 завершён: обновлён `app/sitemap.ts` (главная, услуги, города, блог, внутренние страницы с нужными `priority`/`changeFrequency`), добавлен `app/robots.ts` (Allow `/`, Disallow `/api/`, `sitemap`, `host`).
 - ✅ В `app/layout.tsx` добавлено условное подключение Яндекс.Метрики (`NEXT_PUBLIC_YM_ID`) и Google Analytics (`NEXT_PUBLIC_GA_ID`) через `next/script` со стратегией `afterInteractive`; `.env.example` дополнен новыми переменными.
 - ✅ Промпт 11 завершён (без опционального webhook-бота): подключён `@vercel/kv`, API `/api/lead` сохраняет заявки в KV (`leads:YYYY-MM-DD`), добавлен защищённый `/api/stats?period=today|week|month` с агрегациями `totalLeads/bySource/byCity/byDay`.
-- ✅ Добавлен `app/api/cron/daily-report/route.ts` и `vercel.json` (cron `0 18 * * *`, 21:00 Минск): в Telegram отправляется ежедневная сводка (за день + топ страница + топ город + итого за месяц), `.env.example` дополнен `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `STATS_API_TOKEN`, `CRON_SECRET`.
+- ✅ Добавлен `app/api/cron/daily-report/route.ts` и `vercel.json` (cron `0 17 * * *`, 20:00 Минск): в Telegram отправляется ежедневная сводка (за день + топ страница + топ город + итого за месяц), `.env.example` дополнен `KV_REST_API_URL`, `KV_REST_API_TOKEN`, `STATS_API_TOKEN`, `CRON_SECRET`.
+- ✅ Cron-сводка переведена на 20:00 по Минску (вместо 21:00): данные берутся на момент 20:00 и сразу отправляются в Telegram.
 - ✅ Проведена E2E-проверка Промпта 11: тестовая заявка через `/api/lead` успешно сохраняется в KV и отправляется в Telegram; `/api/stats` и `/api/cron/daily-report` возвращают корректные данные.
 - ✅ Для наглядной проверки аналитики очищены тестовые данные и заложен сценарий из 8 заявок с повторяющимися городами/источниками (явные топы по странице и городу).
 - ⚠️ После `vercel env pull` локальный `.env.local` может перезаписываться и терять пользовательские переменные (Telegram/KV/токены); перед тестами проверять наличие нужных env.
