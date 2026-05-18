@@ -70,16 +70,16 @@
 - ✅ JSON-LD Article
 
 ## Промпт 9: Цены, Портфолио, Отзывы, Контакты
-- ⬜ /tseny/
-- ⬜ /nashi-raboty/
-- ⬜ /otzyvy/
-- ⬜ /kontakty/
+- ✅ /tseny/
+- ✅ /nashi-raboty/
+- ✅ /otzyvy/
+- ✅ /kontakty/
 
 ## Промпт 10: Sitemap, robots, аналитика
-- ⬜ app/sitemap.ts (все ~40 URL)
-- ⬜ app/robots.ts
-- ⬜ Яндекс.Метрика (условно через env)
-- ⬜ Google Analytics (условно через env)
+- ✅ app/sitemap.ts (все ~40 URL)
+- ✅ app/robots.ts
+- ✅ Яндекс.Метрика (условно через env)
+- ✅ Google Analytics (условно через env)
 
 ## Промпт 11: Счётчик заявок + аналитика
 - ⬜ Vercel KV подключён
@@ -128,6 +128,10 @@
 - ✅ Telegram-ориентир уточнён для прозрачности: в строках «Ворота» и «Калитка» теперь явно показывается выбранная клиентом опция в скобках (например, «Ворота (Распашные)», «Калитка (Калитка с замком)»).
 - ✅ Промпт 8 завершён: добавлен `content/blog-posts.ts` с 3 статьями (content в HTML, meta/excerpt/date/image/tags), созданы страницы `/blog/` и `/blog/[slug]/` с `generateStaticParams`, `generateMetadata`, хлебными крошками, сайдбаром, CTA и `LeadForm`.
 - ✅ Для блога добавлены JSON-LD схемы `Article` и `BreadcrumbList` на странице каждой статьи.
+- ✅ Промпт 9 завершён: добавлены страницы `/tseny/`, `/nashi-raboty/`, `/otzyvy/`, `/kontakty/` с отдельным SEO metadata, хлебными крошками, внутренней перелинковкой и контентом по плану.
+- ✅ Для `/tseny/` добавлены таблицы цен по категориям, пометка «цены ориентировочные», CTA-форма и JSON-LD Product; для `/kontakty/` добавлены реквизиты, Google Maps iframe и `LeadForm` в варианте `full`.
+- ✅ Промпт 10 завершён: обновлён `app/sitemap.ts` (главная, услуги, города, блог, внутренние страницы с нужными `priority`/`changeFrequency`), добавлен `app/robots.ts` (Allow `/`, Disallow `/api/`, `sitemap`, `host`).
+- ✅ В `app/layout.tsx` добавлено условное подключение Яндекс.Метрики (`NEXT_PUBLIC_YM_ID`) и Google Analytics (`NEXT_PUBLIC_GA_ID`) через `next/script` со стратегией `afterInteractive`; `.env.example` дополнен новыми переменными.
 - ✅ Для историчности зафиксированы UX-правила:
   - в квизе ошибка «Введите имя» должна исчезать сразу после корректного ввода;
   - на главной сначала показываем «Примеры работ», затем блок «Калькулятор»;
