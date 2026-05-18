@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { aggregateLeads, getLeadsByKeys, getRangeKeys } from "@/lib/leads";
+import { getAggregatedStats } from "@/lib/reporting";
 
 export const runtime = "nodejs";
-
-const PERIOD_DAYS = {
-  today: 1,
-  week: 7,
-  month: 30,
-} as const;
-
-type StatsPeriod = keyof typeof PERIOD_DAYS;
+type StatsPeriod = "today" | "week" | "month";
+const ALLOWED_PERIODS: readonly StatsPeriod[] = ["today", "week", "month"];
 
 function getBearerToken(request: NextRequest) {
   const header = request.headers.get("authorization");
@@ -40,14 +34,12 @@ export async function GET(request: NextRequest) {
   const period = request.nextUrl.searchParams.get("period") as
     | StatsPeriod
     | null;
-  const normalizedPeriod: StatsPeriod = period && period in PERIOD_DAYS ? period : "today";
-  const keys = getRangeKeys(PERIOD_DAYS[normalizedPeriod]);
-  const leadsByKey = await getLeadsByKeys(keys);
-  const allLeads = leadsByKey.flatMap((entry) => entry.leads);
-  const aggregated = aggregateLeads(allLeads);
+  const normalizedPeriod: StatsPeriod =
+    period && ALLOWED_PERIODS.includes(period) ? period : "today";
+  const aggregated = await getAggregatedStats(normalizedPeriod);
 
   return NextResponse.json({
-    period: normalizedPeriod,
+    period: aggregated.period,
     totalLeads: aggregated.totalLeads,
     bySource: aggregated.bySource,
     byCity: aggregated.byCity,

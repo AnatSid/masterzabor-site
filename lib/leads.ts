@@ -1,4 +1,5 @@
 import { kv } from "@vercel/kv";
+import { cities } from "@/content/cities";
 import { LeadData } from "@/lib/telegram";
 
 const MINSK_TIME_ZONE = "Europe/Minsk";
@@ -12,6 +13,8 @@ export type StoredLead = {
   fenceType: string;
   time: string;
 };
+
+const cityLabelBySlug = new Map(cities.map((city) => [city.slug, city.name]));
 
 function dateToMinskKey(date: Date) {
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -63,6 +66,19 @@ export async function getLeadsByKeys(keys: string[]) {
   return entries;
 }
 
+function cityFromSource(source: string) {
+  if (!source.startsWith("city-")) {
+    return null;
+  }
+
+  const slug = source.slice("city-".length).trim();
+  if (!slug) {
+    return null;
+  }
+
+  return cityLabelBySlug.get(slug) ?? slug;
+}
+
 export function getRangeKeys(days: number) {
   return Array.from({ length: days }, (_, index) => {
     const day = new Date();
@@ -96,7 +112,10 @@ export function aggregateLeads(leads: StoredLead[]) {
 
   for (const lead of leads) {
     bySource[lead.source] = (bySource[lead.source] ?? 0) + 1;
-    byCity[lead.city] = (byCity[lead.city] ?? 0) + 1;
+    const normalizedCity = cityFromSource(lead.source);
+    if (normalizedCity) {
+      byCity[normalizedCity] = (byCity[normalizedCity] ?? 0) + 1;
+    }
     const dayKey = lead.time.slice(0, 10);
     byDay[dayKey] = (byDay[dayKey] ?? 0) + 1;
   }

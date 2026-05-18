@@ -799,6 +799,29 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 - ✅ Реализован `GET /api/cron/daily-report`, добавлен `vercel.json` с cron `0 17 * * *` (20:00 Минск).
 - ⬜ Опциональный Telegram webhook-бот (`/api/telegram-webhook`) не реализован.
 - ✅ Выполнена ручная E2E-проверка: `/api/lead` → KV → `/api/stats` → `/api/cron/daily-report` → Telegram.
+- ✅ Логика «топ город» переведена на `source`/URL (`city-{slug}`), а не на свободный ввод `city` из формы: это убирает шум от опечаток, деревень и разных форматов ввода.
+- ✅ Telegram-сводка упрощена: оставлен `Топ страница` (читаемый URL), строка `Топ город` убрана как дублирующая сигнал источника.
+- ✅ Реализован опциональный webhook-бот `app/api/telegram-webhook/route.ts` с командами `/report`, `/stats`, `/stats week`, `/stats month`, `/top`.
+- ✅ Для безопасного webhook добавлена поддержка `TELEGRAM_WEBHOOK_SECRET` (заголовок `x-telegram-bot-api-secret-token`).
+
+Как работает ручной вызов сводки/статистики:
+- Cron-режим (авто): Vercel вызывает `GET /api/cron/daily-report` по расписанию из `vercel.json` (`0 17 * * *` = 20:00 Минск).
+- Ручной режим через API:
+  - `GET /api/cron/daily-report` с `Authorization: Bearer <CRON_SECRET>` — сразу отправить сводку в Telegram.
+  - `GET /api/stats?period=today|week|month` с `Authorization: Bearer <STATS_API_TOKEN>` — получить JSON статистики.
+- Ручной режим через Telegram-бот (webhook):
+  - `/report` — отправить текущую сводку.
+  - `/stats` — статистика за сегодня.
+  - `/stats week` — статистика за 7 дней.
+  - `/stats month` — статистика за 30 дней.
+  - `/top` — топ страницы за сегодня.
+
+Как включить webhook у Telegram:
+1) Деплой с публичным HTTPS URL (например `https://masterzabor.by`).
+2) Добавить env: `TELEGRAM_WEBHOOK_SECRET`.
+3) Выполнить:
+   `https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://<домен>/api/telegram-webhook&secret_token=<TELEGRAM_WEBHOOK_SECRET>`
+4) В webhook допущены команды только из чата `TELEGRAM_CHAT_ID` (защита от посторонних чатов).
 
 ---
 

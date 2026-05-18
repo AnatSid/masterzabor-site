@@ -123,16 +123,19 @@ function formatLeadMessage(data: LeadData) {
 }
 
 async function sendTelegramRequest({
+  chatId,
   text,
   parseMode,
 }: {
+  chatId?: string;
   text: string;
   parseMode?: "HTML";
 }) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const defaultChatId = process.env.TELEGRAM_CHAT_ID;
+  const targetChatId = chatId ?? defaultChatId;
 
-  if (!token || !chatId) {
+  if (!token || !targetChatId) {
     console.warn("Telegram env variables are not configured");
     return false;
   }
@@ -146,7 +149,7 @@ async function sendTelegramRequest({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          chat_id: chatId,
+          chat_id: targetChatId,
           text,
           ...(parseMode ? { parse_mode: parseMode } : {}),
         }),
@@ -169,4 +172,11 @@ export async function sendToTelegram(data: LeadData): Promise<boolean> {
 
 export async function sendTelegramText(text: string): Promise<boolean> {
   return sendTelegramRequest({ text });
+}
+
+export async function sendTelegramTextToChat(
+  chatId: string,
+  text: string,
+): Promise<boolean> {
+  return sendTelegramRequest({ chatId, text });
 }
