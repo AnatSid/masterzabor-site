@@ -128,6 +128,7 @@ export function QuizForm({ cityName }: QuizFormProps) {
       </div>
 
       <div className="min-h-64">
+        <div className="animate-[fadeIn_220ms_ease-out]" key={step}>
         {step === 1 ? (
           <fieldset>
             <legend className="text-2xl font-bold text-slate-950">
@@ -326,6 +327,7 @@ export function QuizForm({ cityName }: QuizFormProps) {
             </div>
           </div>
         ) : null}
+        </div>
       </div>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-between">
