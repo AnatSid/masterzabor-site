@@ -122,7 +122,13 @@ function formatLeadMessage(data: LeadData) {
     .join("\n");
 }
 
-export async function sendToTelegram(data: LeadData): Promise<boolean> {
+async function sendTelegramRequest({
+  text,
+  parseMode,
+}: {
+  text: string;
+  parseMode?: "HTML";
+}) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
@@ -141,8 +147,8 @@ export async function sendToTelegram(data: LeadData): Promise<boolean> {
         },
         body: JSON.stringify({
           chat_id: chatId,
-          text: formatLeadMessage(data),
-          parse_mode: "HTML",
+          text,
+          ...(parseMode ? { parse_mode: parseMode } : {}),
         }),
       },
     );
@@ -152,4 +158,15 @@ export async function sendToTelegram(data: LeadData): Promise<boolean> {
     console.error("Failed to send Telegram message", error);
     return false;
   }
+}
+
+export async function sendToTelegram(data: LeadData): Promise<boolean> {
+  return sendTelegramRequest({
+    text: formatLeadMessage(data),
+    parseMode: "HTML",
+  });
+}
+
+export async function sendTelegramText(text: string): Promise<boolean> {
+  return sendTelegramRequest({ text });
 }

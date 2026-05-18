@@ -793,6 +793,13 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
    через webhook на app/api/telegram-webhook/route.ts.
 ```
 
+Статус выполнения (18.05.2026):
+- ✅ Подключён `@vercel/kv`, заявки сохраняются в KV по ключам `leads:YYYY-MM-DD`.
+- ✅ Реализован `GET /api/stats?period=today|week|month` с защитой по `STATS_API_TOKEN`.
+- ✅ Реализован `GET /api/cron/daily-report`, добавлен `vercel.json` с cron `0 18 * * *` (21:00 Минск).
+- ⬜ Опциональный Telegram webhook-бот (`/api/telegram-webhook`) не реализован.
+- ✅ Выполнена ручная E2E-проверка: `/api/lead` → KV → `/api/stats` → `/api/cron/daily-report` → Telegram.
+
 ---
 
 ## Часть 5. Порядок действий

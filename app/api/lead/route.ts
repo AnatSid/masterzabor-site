@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { appendLeadToStorage } from "@/lib/leads";
 import { LeadData, sendToTelegram } from "@/lib/telegram";
 import { isValidBelarusPhone, normalizeBelarusPhone } from "@/lib/phone";
 
@@ -91,6 +92,16 @@ export async function POST(request: NextRequest) {
 
   if ("error" in validation) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
+  }
+
+  try {
+    await appendLeadToStorage(validation.lead);
+  } catch (error) {
+    console.error("Failed to save lead to KV", error);
+    return NextResponse.json(
+      { error: "Не удалось сохранить заявку" },
+      { status: 502 },
+    );
   }
 
   const isSent = await sendToTelegram(validation.lead);

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "latest",
+    "@vercel/kv": "^3.0.0",
     "next": "^15.5.18",
     "react": "latest",
     "react-dom": "latest",
