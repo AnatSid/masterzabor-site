@@ -207,19 +207,23 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="self-start rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur">
-            <p className="text-2xl font-bold">Бесплатный расчёт сегодня</p>
-            <p className="mt-3 text-slate-200">
-              Рассчитаем стоимость, подберём материалы и покажем варианты
-              заборов под ваш участок.
-            </p>
-            <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
+          <div className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur lg:flex lg:self-stretch lg:p-6">
+            <div className="flex flex-col lg:w-full lg:justify-between">
+              <div>
+                <p className="text-2xl font-bold">Бесплатный расчёт сегодня</p>
+                <p className="mt-3 text-slate-200">
+                  Рассчитаем стоимость, подберём материалы и покажем варианты
+                  заборов под ваш участок.
+                </p>
+              </div>
+              <div className="mt-5 grid grid-cols-2 gap-3 text-sm lg:mt-6">
               <span className="rounded-2xl bg-white/10 px-4 py-3">Гарантия 20 лет</span>
               <span className="rounded-2xl bg-white/10 px-4 py-3">Договор и смета</span>
               <span className="rounded-2xl bg-white/10 px-4 py-3">Свои бригады</span>
               <span className="rounded-2xl bg-white/10 px-4 py-3">Работаем по РБ</span>
               <span className="rounded-2xl bg-white/10 px-4 py-3">Рассрочка и оплата частями</span>
               <span className="rounded-2xl bg-white/10 px-4 py-3">Быстрый расчёт по телефону</span>
+              </div>
             </div>
           </div>
         </div>
