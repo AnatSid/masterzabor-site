@@ -152,6 +152,7 @@
   - Подтверждено: `app/robots.ts`, `app/sitemap.ts`, canonical-логика и `.env.example` соответствуют требованиям (без `www`).
   - Добавлены отсутствующие ассеты: `public/images/og-masterzabor.jpg`, `public/icon.svg`, `public/favicon.ico`.
 - ✅ Фикс для Яндекс.Вебмастера: в `app/robots.ts` директива `Host` изменена на домен без протокола (`masterzabor.by`) для корректного определения главного зеркала.
+- ✅ Обновлены Vercel env для аналитики: `NEXT_PUBLIC_GA_ID=G-DT0TXHL4DM` и `NEXT_PUBLIC_YM_ID=109298310` (Production); проверено, что `app/layout.tsx` условно подключает GA4 и Яндекс.Метрику через эти переменные с `next/script` и `strategy="afterInteractive"`.
 
 ---
 
