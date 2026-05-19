@@ -90,11 +90,11 @@ function serviceSeoText(service: Service) {
 function getQuizDefaultsByServiceSlug(serviceSlug: string) {
   switch (serviceSlug) {
     case "zabory-iz-profnastila":
-      return { defaultFenceType: "Профнастил", defaultStep: 2 };
+      return { defaultFenceType: "Профнастил" };
     case "zabory-iz-evroshtaketnika":
-      return { defaultFenceType: "Евроштакетник", defaultStep: 2 };
+      return { defaultFenceType: "Евроштакетник" };
     case "zabory-iz-setki-rabitsy":
-      return { defaultFenceType: "Сетка-рабица", defaultStep: 2 };
+      return { defaultFenceType: "Сетка-рабица" };
     case "vorota-raspashnye":
       return { defaultGateType: "Распашные" };
     case "vorota-otkatnye":
