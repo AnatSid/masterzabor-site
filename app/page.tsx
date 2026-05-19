@@ -178,11 +178,14 @@ export default function Home() {
               {COMPANY_NAME}
             </p>
             <h1 className="mt-5 max-w-4xl text-4xl font-bold tracking-tight sm:text-6xl">
-              Установка заборов по всей Беларуси под ключ с гарантией до 20 лет
+              Установка заборов по всей Беларуси под ключ
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-200">
-              Профнастил • Евроштакетник • Сетка-рабица. Цены от 30 BYN/м.п.
-              Рассрочка и оплата частями до 60 месяцев.
+            <p className="mt-6 max-w-2xl text-xl leading-relaxed text-slate-200 sm:text-2xl">
+              Профнастил • Евроштакетник • Сетка-рабица
+              <br />
+              Цены от 30 BYN/м.п.
+              <br />
+              Рассрочка и оплата частями до 60 месяцев
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <a
@@ -206,11 +209,13 @@ export default function Home() {
               Рассчитаем стоимость, подберём материалы и покажем варианты
               заборов под ваш участок.
             </p>
-            <div className="mt-6 grid grid-cols-2 gap-4 text-sm">
-              <span className="rounded-2xl bg-white/10 p-4">Гарантия 20 лет</span>
-              <span className="rounded-2xl bg-white/10 p-4">Договор и смета</span>
-              <span className="rounded-2xl bg-white/10 p-4">Свои бригады</span>
-              <span className="rounded-2xl bg-white/10 p-4">Работаем по РБ</span>
+            <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+              <span className="rounded-2xl bg-white/10 px-4 py-3">Гарантия 20 лет</span>
+              <span className="rounded-2xl bg-white/10 px-4 py-3">Договор и смета</span>
+              <span className="rounded-2xl bg-white/10 px-4 py-3">Свои бригады</span>
+              <span className="rounded-2xl bg-white/10 px-4 py-3">Работаем по РБ</span>
+              <span className="rounded-2xl bg-white/10 px-4 py-3">Рассрочка до 60 мес.</span>
+              <span className="rounded-2xl bg-white/10 px-4 py-3">Выезд по всей Беларуси</span>
             </div>
           </div>
         </div>
