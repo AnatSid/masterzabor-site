@@ -504,7 +504,7 @@ export function QuizForm({
                   rules={{
                     validate: (value) =>
                       isValidBelarusPhone(value) ||
-                      "Введите номер: +375 и 9 цифр (25, 29, 33 или 44)",
+                      "Проверьте номер телефона",
                   }}
                   render={({ field }) => (
                     <BelarusPhoneField

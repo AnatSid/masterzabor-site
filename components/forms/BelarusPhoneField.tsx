@@ -20,7 +20,7 @@ export function BelarusPhoneField({
   value,
   onChange,
   onBlur,
-  placeholder = "XX-XXX-XX-XX",
+  placeholder = "29-123-45-67",
 }: BelarusPhoneFieldProps) {
   const localDigits = extractBelarusLocalDigits(value);
 
