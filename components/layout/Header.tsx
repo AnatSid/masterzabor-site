@@ -15,7 +15,6 @@ const navigation = [
   { label: "Профнастил", href: "/zabory-iz-profnastila/" },
   { label: "Штакетник", href: "/zabory-iz-evroshtaketnika/" },
   { label: "Сетка-рабица", href: "/zabory-iz-setki-rabitsy/" },
-  { label: "Цены", href: "/tseny/" },
   { label: "Наши работы", href: "/nashi-raboty/" },
   { label: "Контакты", href: "/kontakty/" },
 ] as const;
@@ -76,7 +75,7 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-5 text-sm font-medium text-slate-700 lg:flex">
-          {navigation.map((item) => (
+          {navigation.slice(0, 3).map((item) => (
             <Link
               className="transition hover:text-[#1B5E20]"
               href={item.href}
@@ -106,6 +105,15 @@ export function Header() {
               ))}
             </div>
           </div>
+          {navigation.slice(3).map((item) => (
+            <Link
+              className="transition hover:text-[#1B5E20]"
+              href={item.href}
+              key={item.href}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
@@ -161,7 +169,7 @@ export function Header() {
         }`}
       >
         <nav className="flex flex-col gap-1">
-          {navigation.map((item) => (
+          {navigation.slice(0, 3).map((item) => (
             <Link
               className="rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20]"
               href={item.href}
@@ -202,6 +210,16 @@ export function Header() {
               </div>
             </div>
           </div>
+          {navigation.slice(3).map((item) => (
+            <Link
+              className="rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20]"
+              href={item.href}
+              key={item.href}
+              onClick={() => setIsOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <div className="mt-8 border-t border-slate-200 pt-6">
