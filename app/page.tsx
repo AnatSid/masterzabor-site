@@ -172,7 +172,7 @@ export default function Home() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/40" />
 
-        <div className="relative mx-auto grid max-w-[1500px] gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.4fr_0.6fr] lg:items-start lg:gap-14 lg:px-8 lg:py-28">
+        <div className="relative mx-auto grid max-w-[1350px] gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-start lg:gap-12 lg:px-8 lg:py-28">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-amber-300">
               {COMPANY_NAME}
@@ -180,7 +180,9 @@ export default function Home() {
             <h1 className="mt-5 max-w-3xl text-balance text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
               Установка заборов
               <br />
-              по всей Беларуси под ключ
+              <span className="sm:whitespace-nowrap">
+                по всей Беларуси под ключ
+              </span>
             </h1>
             <p className="mt-6 max-w-3xl text-xl leading-relaxed text-slate-200 sm:text-2xl">
               Профнастил • Евроштакетник • Сетка-рабица
