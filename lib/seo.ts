@@ -4,7 +4,7 @@ import {
   CITY,
   COMPANY_NAME,
   COORDINATES,
-  PHONE_DISPLAY,
+  PHONE,
   SITE_NAME,
   SITE_URL,
   UNP,
@@ -104,7 +104,7 @@ export function generateLocalBusinessJsonLd() {
     "@id": `${SITE_URL}/#localbusiness`,
     name: COMPANY_NAME,
     url: SITE_URL,
-    telephone: PHONE_DISPLAY,
+    telephone: PHONE,
     priceRange: "$$",
     taxID: UNP,
     address: {
