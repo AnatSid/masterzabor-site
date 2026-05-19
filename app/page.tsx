@@ -172,7 +172,7 @@ export default function Home() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/40" />
 
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:py-28">
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start lg:px-8 lg:py-28">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-amber-300">
               {COMPANY_NAME}
@@ -203,7 +203,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur">
+          <div className="self-start rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur">
             <p className="text-2xl font-bold">Бесплатный расчёт сегодня</p>
             <p className="mt-3 text-slate-200">
               Рассчитаем стоимость, подберём материалы и покажем варианты
