@@ -149,10 +149,12 @@ export function ServicePage({ service }: ServicePageProps) {
                 ))}
               </ol>
             </nav>
-            <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-6xl">
-              {service.title} в Беларуси под ключ
+            <h1 className="mt-6 text-balance text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
+              {service.title}
+              <br />
+              в Беларуси под ключ
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-200">
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-200">
               {service.description}
             </p>
             <p className="mt-6 text-3xl font-bold text-amber-300">

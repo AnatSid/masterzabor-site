@@ -160,8 +160,10 @@ export function CityPage({ city }: CityPageProps) {
             <p className="font-semibold uppercase tracking-[0.25em] text-amber-300">
               {city.oblast}
             </p>
-            <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-6xl">
-              Установка заборов в {city.namePrepositional} под ключ
+            <h1 className="mt-5 text-balance text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
+              Установка заборов
+              <br />
+              в {city.namePrepositional} под ключ
             </h1>
             <p className="mt-6 text-lg leading-8 text-slate-200">
               Профнастил, евроштакетник, сетка-рабица, ворота и калитки.
