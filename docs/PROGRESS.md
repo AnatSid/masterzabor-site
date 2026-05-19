@@ -151,6 +151,7 @@
   - `lib/seo.ts`: для LocalBusiness нормализован телефон в международном формате (`+375333135072`).
   - Подтверждено: `app/robots.ts`, `app/sitemap.ts`, canonical-логика и `.env.example` соответствуют требованиям (без `www`).
   - Добавлены отсутствующие ассеты: `public/images/og-masterzabor.jpg`, `public/icon.svg`, `public/favicon.ico`.
+- ✅ Фикс для Яндекс.Вебмастера: в `app/robots.ts` директива `Host` изменена на домен без протокола (`masterzabor.by`) для корректного определения главного зеркала.
 
 ---
 
