@@ -151,7 +151,7 @@ export function LeadForm({
             </span>
             <input
               className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-[#1B5E20] focus:ring-2 focus:ring-[#1B5E20]/20"
-              placeholder="Например: д. Стужки, г. Пинск, пос. Октябрьский"
+              placeholder="Город, деревня или посёлок"
               {...register("city")}
             />
           </label>
@@ -181,7 +181,7 @@ export function LeadForm({
             </span>
             <textarea
               className="mt-2 min-h-28 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-[#1B5E20] focus:ring-2 focus:ring-[#1B5E20]/20"
-              placeholder="Удобное время для звонка, пожелания и т.д."
+              placeholder=""
               {...register("comment")}
             />
           </label>

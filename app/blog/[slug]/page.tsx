@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LeadForm } from "@/components/forms/LeadForm";
+import { QuizForm } from "@/components/forms/QuizForm";
 import { blogPosts, getBlogPostBySlug } from "@/content/blog-posts";
 import {
   generateArticleJsonLd,
@@ -185,7 +185,7 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
               рассчитать стоимость забора под ваш участок.
             </p>
           </div>
-          <LeadForm source={`blog-post-${post.slug}`} />
+          <QuizForm source={`blog-post-${post.slug}`} />
         </div>
       </section>
     </main>

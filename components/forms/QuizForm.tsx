@@ -133,10 +133,41 @@ function WicketIcon({ type }: { type: string }) {
 
 type QuizFormProps = {
   cityName?: string;
+  source?: string;
+  defaultFenceType?: string;
+  defaultGateType?: string;
+  defaultWicketType?: string;
+  defaultStep?: number;
 };
 
-export function QuizForm({ cityName }: QuizFormProps) {
-  const [step, setStep] = useState(1);
+function sanitizeDefaultStep(step?: number) {
+  if (!step) {
+    return 1;
+  }
+
+  return Math.min(6, Math.max(1, Math.trunc(step)));
+}
+
+export function QuizForm({
+  cityName,
+  source = "home-quiz",
+  defaultFenceType,
+  defaultGateType,
+  defaultWicketType,
+  defaultStep,
+}: QuizFormProps) {
+  const initialFenceType = fenceTypes.includes(defaultFenceType as (typeof fenceTypes)[number])
+    ? defaultFenceType
+    : "Профнастил";
+  const initialGateType = gateTypes.includes(defaultGateType as (typeof gateTypes)[number])
+    ? defaultGateType
+    : "Не нужны";
+  const initialWicketType = wicketTypes.includes(defaultWicketType as (typeof wicketTypes)[number])
+    ? defaultWicketType
+    : "Калитка не нужна";
+  const initialStep = sanitizeDefaultStep(defaultStep);
+
+  const [step, setStep] = useState(initialStep);
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const {
     control,
@@ -151,10 +182,10 @@ export function QuizForm({ cityName }: QuizFormProps) {
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
-      fenceType: "Профнастил",
+      fenceType: initialFenceType,
       height: "1.8 м",
-      gateType: "Не нужны",
-      wicket: "Калитка не нужна",
+      gateType: initialGateType,
+      wicket: initialWicketType,
       city: cityName ?? "",
     },
   });
@@ -197,7 +228,7 @@ export function QuizForm({ cityName }: QuizFormProps) {
         body: JSON.stringify({
           ...formValues,
           phone: normalizeBelarusPhone(formValues.phone),
-          source: "home-quiz",
+          source,
         }),
       });
 
@@ -206,12 +237,12 @@ export function QuizForm({ cityName }: QuizFormProps) {
       }
 
       setStatus("success");
-      setStep(1);
+      setStep(initialStep);
       reset({
-        fenceType: "Профнастил",
+        fenceType: initialFenceType,
         height: "1.8 м",
-        gateType: "Не нужны",
-        wicket: "Калитка не нужна",
+        gateType: initialGateType,
+        wicket: initialWicketType,
         length: "",
         name: "",
         phone: "",
@@ -457,6 +488,11 @@ export function QuizForm({ cityName }: QuizFormProps) {
                   placeholder="Город, деревня или посёлок"
                   {...register("city")}
                 />
+                {cityName ? (
+                  <span className="mt-2 block text-xs text-slate-500">
+                    Укажите ваш населённый пункт, если он отличается
+                  </span>
+                ) : null}
               </label>
 
               <label className="block sm:col-span-2">

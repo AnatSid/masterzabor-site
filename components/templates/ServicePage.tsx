@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { LeadForm } from "@/components/forms/LeadForm";
+import { QuizForm } from "@/components/forms/QuizForm";
 import { cities } from "@/content/cities";
 import { services, type Service } from "@/content/services";
 import { PHONE, PHONE_DISPLAY } from "@/lib/constants";
@@ -87,7 +87,27 @@ function serviceSeoText(service: Service) {
   ];
 }
 
+function getQuizDefaultsByServiceSlug(serviceSlug: string) {
+  switch (serviceSlug) {
+    case "zabory-iz-profnastila":
+      return { defaultFenceType: "Профнастил", defaultStep: 2 };
+    case "zabory-iz-evroshtaketnika":
+      return { defaultFenceType: "Евроштакетник", defaultStep: 2 };
+    case "zabory-iz-setki-rabitsy":
+      return { defaultFenceType: "Сетка-рабица", defaultStep: 2 };
+    case "vorota-raspashnye":
+      return { defaultGateType: "Распашные" };
+    case "vorota-otkatnye":
+      return { defaultGateType: "Откатные" };
+    case "kalitki":
+      return { defaultWicketType: "Калитка с замком" };
+    default:
+      return {};
+  }
+}
+
 export function ServicePage({ service }: ServicePageProps) {
+  const quizDefaults = getQuizDefaultsByServiceSlug(service.slug);
   const relatedServices = services.filter((item) => item.slug !== service.slug);
   const breadcrumbs = [
     { name: "Главная", url: "/" },
@@ -325,7 +345,7 @@ export function ServicePage({ service }: ServicePageProps) {
               комплектацию.
             </p>
           </div>
-          <LeadForm source={`service-${service.slug}`} variant="full" />
+          <QuizForm source={`service-${service.slug}`} {...quizDefaults} />
         </div>
       </section>
 

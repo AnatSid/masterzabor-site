@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LeadForm } from "@/components/forms/LeadForm";
+import { QuizForm } from "@/components/forms/QuizForm";
 import { services } from "@/content/services";
 import {
   generateBreadcrumbJsonLd,
@@ -161,7 +161,7 @@ export default function TsenyPage() {
               параметры участка и подготовим расчёт с понятной сметой.
             </p>
           </div>
-          <LeadForm source="prices-page" variant="full" />
+          <QuizForm source="prices-page" />
         </div>
       </section>
     </main>

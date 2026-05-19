@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/cards/ProductCard";
-import { LeadForm } from "@/components/forms/LeadForm";
+import { QuizForm } from "@/components/forms/QuizForm";
 import { cities, type City } from "@/content/cities";
 import { services } from "@/content/services";
 import {
@@ -317,11 +317,7 @@ export function CityPage({ city }: CityPageProps) {
               комплектацию для вашего участка.
             </p>
           </div>
-          <LeadForm
-            cityName={city.name}
-            source={`city-${city.slug}`}
-            variant="full"
-          />
+          <QuizForm cityName={city.name} source={`city-${city.slug}`} />
         </div>
       </section>
 

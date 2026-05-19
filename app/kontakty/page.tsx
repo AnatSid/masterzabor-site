@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LeadForm } from "@/components/forms/LeadForm";
+import { QuizForm } from "@/components/forms/QuizForm";
 import {
   ADDRESS,
   BANK_DETAILS,
@@ -140,7 +140,7 @@ export default function KontaktyPage() {
               рабочего дня и подготовим расчёт стоимости под ваш объект.
             </p>
           </div>
-          <LeadForm source="contacts-page" variant="full" />
+          <QuizForm source="contacts-page" />
         </div>
       </section>
     </main>
