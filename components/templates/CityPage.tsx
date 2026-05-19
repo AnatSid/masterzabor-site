@@ -142,7 +142,8 @@ export function CityPage({ city }: CityPageProps) {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/30" />
 
-        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+        <div className="relative mx-auto grid max-w-[1350px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-start lg:gap-12 lg:px-8 lg:py-24">
+          <div>
           <nav aria-label="Хлебные крошки" className="text-sm text-slate-300">
             <ol className="flex flex-wrap gap-2">
               {breadcrumbs.map((item, index) => (
@@ -165,10 +166,12 @@ export function CityPage({ city }: CityPageProps) {
               <br />
               в {city.namePrepositional} под ключ
             </h1>
-            <p className="mt-6 text-lg leading-8 text-slate-200">
-              Профнастил, евроштакетник, сетка-рабица, ворота и калитки.
-              Рассчитаем стоимость по телефону за 5 минут и согласуем понятную
-              смету.
+            <p className="mt-6 max-w-3xl text-xl leading-relaxed text-slate-200 sm:text-2xl">
+              Профнастил • Евроштакетник • Сетка-рабица
+              <br />
+              Цены от 30 BYN/м.п.
+              <br />
+              Рассрочка и оплата частями до 60 месяцев
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <a
@@ -185,11 +188,33 @@ export function CityPage({ city }: CityPageProps) {
               </a>
             </div>
           </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur lg:flex lg:self-stretch lg:p-6">
+            <div className="flex flex-col lg:w-full lg:justify-between">
+              <div>
+                <p className="text-2xl font-bold">Бесплатный расчёт сегодня</p>
+                <p className="mt-3 text-slate-200">
+                  Рассчитаем стоимость, подберём материалы и покажем варианты
+                  заборов под ваш участок.
+                </p>
+              </div>
+              <div className="mt-5 grid grid-cols-2 gap-3 text-sm lg:mt-6">
+                <span className="rounded-2xl bg-white/10 px-4 py-3">Гарантия 20 лет</span>
+                <span className="rounded-2xl bg-white/10 px-4 py-3">Договор и смета</span>
+                <span className="rounded-2xl bg-white/10 px-4 py-3">Свои бригады</span>
+                <span className="rounded-2xl bg-white/10 px-4 py-3">Работаем по РБ</span>
+                <span className="rounded-2xl bg-white/10 px-4 py-3">Рассрочка и оплата частями</span>
+                <span className="rounded-2xl bg-white/10 px-4 py-3">Быстрый расчёт по телефону</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <section className="py-16">
-        <article className="mx-auto max-w-4xl px-4 text-lg leading-8 text-slate-700 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-[1350px] px-4 sm:px-6 lg:px-8">
+          <article className="max-w-3xl text-lg leading-8 text-slate-700">
           <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
             Заборы в {city.namePrepositional}: расчёт, доставка и монтаж
           </h2>
@@ -198,7 +223,8 @@ export function CityPage({ city }: CityPageProps) {
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
-        </article>
+          </article>
+        </div>
       </section>
 
       <section className="bg-[#F5F5F5] py-16">
