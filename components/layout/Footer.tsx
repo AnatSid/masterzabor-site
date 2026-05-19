@@ -24,8 +24,8 @@ const footerServices = [
   { label: "Профнастил", href: "/zabory-iz-profnastila/" },
   { label: "Евроштакетник", href: "/zabory-iz-evroshtaketnika/" },
   { label: "Сетка-рабица", href: "/zabory-iz-setki-rabitsy/" },
-  { label: "Распашные ворота", href: "/vorota-raspashnye/" },
-  { label: "Откатные ворота", href: "/vorota-otkatnye/" },
+  { label: "Ворота распашные", href: "/vorota-raspashnye/" },
+  { label: "Ворота откатные", href: "/vorota-otkatnye/" },
   { label: "Калитки", href: "/kalitki/" },
 ] as const;
 

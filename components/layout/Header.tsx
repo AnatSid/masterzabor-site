@@ -15,10 +15,15 @@ const navigation = [
   { label: "Профнастил", href: "/zabory-iz-profnastila/" },
   { label: "Штакетник", href: "/zabory-iz-evroshtaketnika/" },
   { label: "Сетка-рабица", href: "/zabory-iz-setki-rabitsy/" },
-  { label: "Ворота", href: "/vorota-raspashnye/" },
   { label: "Цены", href: "/tseny/" },
   { label: "Наши работы", href: "/nashi-raboty/" },
   { label: "Контакты", href: "/kontakty/" },
+] as const;
+
+const gateNavigation = [
+  { label: "Ворота распашные", href: "/vorota-raspashnye/" },
+  { label: "Ворота откатные", href: "/vorota-otkatnye/" },
+  { label: "Калитки", href: "/kalitki/" },
 ] as const;
 
 const messengers = [
@@ -29,6 +34,7 @@ const messengers = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isGateMenuOpen, setIsGateMenuOpen] = useState(false);
   const [hasShadow, setHasShadow] = useState(false);
 
   useEffect(() => {
@@ -46,6 +52,12 @@ export function Header() {
     return () => {
       document.body.style.overflow = "";
     };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setIsGateMenuOpen(false);
+    }
   }, [isOpen]);
 
   return (
@@ -73,6 +85,27 @@ export function Header() {
               {item.label}
             </Link>
           ))}
+          <div className="group relative">
+            <button
+              aria-haspopup="menu"
+              className="inline-flex items-center gap-1 transition hover:text-[#1B5E20]"
+              type="button"
+            >
+              Ворота
+              <span className="text-xs">▾</span>
+            </button>
+            <div className="invisible absolute left-0 top-full z-20 mt-2 w-56 rounded-xl border border-slate-200 bg-white p-2 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              {gateNavigation.map((item) => (
+                <Link
+                  className="block rounded-lg px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-[#1B5E20]"
+                  href={item.href}
+                  key={item.href}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
@@ -138,6 +171,37 @@ export function Header() {
               {item.label}
             </Link>
           ))}
+          <div className="rounded-lg">
+            <button
+              aria-controls="mobile-gates-menu"
+              aria-expanded={isGateMenuOpen}
+              className="flex w-full items-center justify-between rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20]"
+              onClick={() => setIsGateMenuOpen((value) => !value)}
+              type="button"
+            >
+              <span>Ворота</span>
+              <span className="text-xs">{isGateMenuOpen ? "▴" : "▾"}</span>
+            </button>
+            <div
+              className={`overflow-hidden transition-all ${
+                isGateMenuOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0"
+              }`}
+              id="mobile-gates-menu"
+            >
+              <div className="ml-3 flex flex-col border-l border-slate-200 pl-3">
+                {gateNavigation.map((item) => (
+                  <Link
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-[#1B5E20]"
+                    href={item.href}
+                    key={item.href}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         </nav>
 
         <div className="mt-8 border-t border-slate-200 pt-6">
