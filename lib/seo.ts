@@ -16,6 +16,7 @@ type PageMetadataInput = {
   description: string;
   path: string;
   image?: string;
+  keywords?: string[];
 };
 
 type ProductJsonLdInput = {
@@ -57,6 +58,7 @@ export function generatePageMetadata({
   description,
   path,
   image = DEFAULT_IMAGE,
+  keywords = [],
 }: PageMetadataInput): Metadata {
   const url = absoluteUrl(path);
   const imageUrl = absoluteUrl(image);
@@ -77,6 +79,7 @@ export function generatePageMetadata({
       "сетка-рабица",
       "ворота",
       "Гомель",
+      ...keywords,
     ],
     openGraph: {
       type: "website",

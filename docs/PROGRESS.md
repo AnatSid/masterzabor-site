@@ -166,6 +166,7 @@
 - ✅ Обновлены Vercel env для аналитики: `NEXT_PUBLIC_GA_ID=G-DT0TXHL4DM` и `NEXT_PUBLIC_YM_ID=109298310` (Production); проверено, что `app/layout.tsx` условно подключает GA4 и Яндекс.Метрику через эти переменные с `next/script` и `strategy="afterInteractive"`.
 - ✅ Фикс навигации Header/Footer: пункт «Ворота» в шапке переведён на dropdown (desktop) и accordion (mobile) с отдельными ссылками на `/vorota-raspashnye/`, `/vorota-otkatnye/`, `/kalitki/`; в колонке «Услуги» футера названия приведены к формату «Ворота распашные/Ворота откатные/Калитки`.
 - ✅ В `Header` восстановлена очередность верхнего меню под прежний UX: `Профнастил → Штакетник → Сетка-рабица → Ворота → Наши работы → Контакты` (при сохранении dropdown/accordion для пункта «Ворота»).
+- ✅ SEO-усиление страницы `/zabory-iz-evroshtaketnika/`: добавлены синонимы «металлоштакетник» и «металлический штакетник» в `metaTitle`, `metaDescription`, `keywords`, первый абзац и FAQ; расширен `generatePageMetadata` для передачи page-specific keywords из `content/services.ts`.
 
 ---
 

@@ -8,6 +8,7 @@ export const metadata = generatePageMetadata({
   title: service.metaTitle,
   description: service.metaDescription,
   path: `/${service.slug}/`,
+  keywords: service.keywords,
 });
 
 export default function ZaboryIzEvroshtaketnikaPage() {
