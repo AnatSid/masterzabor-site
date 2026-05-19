@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { BelarusPhoneField } from "@/components/forms/BelarusPhoneField";
 import { isValidBelarusPhone, normalizeBelarusPhone } from "@/lib/phone";
@@ -52,13 +52,35 @@ function FenceOptionPreview({ label }: { label: string }) {
 
 function LengthScheme() {
   return (
-    <svg className="mt-4 h-28 w-full rounded-xl border border-slate-200 bg-slate-50 p-3" viewBox="0 0 320 120">
-      <rect x="20" y="22" width="280" height="76" fill="none" stroke="#475569" strokeDasharray="5 5" />
-      <line x1="20" y1="95" x2="300" y2="95" stroke="#0F172A" strokeWidth="2" />
-      <polygon points="20,95 30,90 30,100" fill="#0F172A" />
-      <polygon points="300,95 290,90 290,100" fill="#0F172A" />
-      <text x="160" y="112" textAnchor="middle" fontSize="12" fill="#334155">
-        длина, м
+    <svg
+      className="mt-4 h-40 w-full rounded-xl border border-slate-200 bg-slate-50 p-3"
+      viewBox="0 0 360 150"
+    >
+      {/* Лёгкая имитация секций забора вместо пунктира */}
+      <line x1="24" y1="34" x2="336" y2="34" stroke="#94A3B8" strokeWidth="1.4" strokeOpacity="0.55" />
+      <line x1="24" y1="98" x2="336" y2="98" stroke="#94A3B8" strokeWidth="1.2" strokeOpacity="0.5" />
+      {Array.from({ length: 11 }).map((_, index) => {
+        const x = 24 + index * 31.2;
+
+        return (
+          <line
+            key={x}
+            x1={x}
+            y1="98"
+            x2={x}
+            y2="38"
+            stroke="#94A3B8"
+            strokeWidth="1.3"
+            strokeOpacity="0.5"
+          />
+        );
+      })}
+
+      <line x1="24" y1="114" x2="336" y2="114" stroke="#F59E0B" strokeWidth="4.5" strokeLinecap="round" />
+      <polygon points="24,114 40,105 40,123" fill="#F59E0B" />
+      <polygon points="336,114 320,105 320,123" fill="#F59E0B" />
+      <text x="180" y="140" textAnchor="middle" fontSize="20" fontWeight="700" fill="#92400E">
+        Длина, м
       </text>
     </svg>
   );
@@ -66,20 +88,23 @@ function LengthScheme() {
 
 function HeightScheme() {
   return (
-    <svg className="mt-4 h-36 w-full rounded-xl border border-slate-200 bg-white p-3" viewBox="0 0 320 140">
-      <line x1="20" y1="118" x2="300" y2="118" stroke="#111827" strokeWidth="2" />
-      <rect x="56" y="38" width="52" height="80" fill="none" stroke="#111827" />
-      <circle cx="150" cy="52" r="8" fill="none" stroke="#111827" />
-      <line x1="150" y1="60" x2="150" y2="100" stroke="#111827" />
-      <line x1="150" y1="70" x2="136" y2="84" stroke="#111827" />
-      <line x1="150" y1="70" x2="164" y2="84" stroke="#111827" />
-      <line x1="150" y1="100" x2="139" y2="118" stroke="#111827" />
-      <line x1="150" y1="100" x2="161" y2="118" stroke="#111827" />
-      <line x1="36" y1="38" x2="36" y2="118" stroke="#111827" />
-      <polygon points="36,38 32,46 40,46" fill="#111827" />
-      <polygon points="36,118 32,110 40,110" fill="#111827" />
-      <text x="182" y="30" fontSize="11" fill="#111827">1.5 / 1.8 / 2.0 / 2.5 м</text>
-      <text x="182" y="48" fontSize="11" fill="#334155">рост человека ~170 см</text>
+    <svg
+      className="mt-4 h-44 w-full rounded-xl border border-slate-200 bg-white p-3 sm:h-48"
+      viewBox="0 0 360 180"
+    >
+      <line x1="24" y1="152" x2="336" y2="152" stroke="#111827" strokeWidth="2.4" />
+      <rect x="64" y="52" width="62" height="100" fill="none" stroke="#111827" strokeWidth="2" />
+      <circle cx="176" cy="68" r="10" fill="none" stroke="#111827" strokeWidth="2" />
+      <line x1="176" y1="78" x2="176" y2="126" stroke="#111827" strokeWidth="2" />
+      <line x1="176" y1="90" x2="160" y2="108" stroke="#111827" strokeWidth="2" />
+      <line x1="176" y1="90" x2="192" y2="108" stroke="#111827" strokeWidth="2" />
+      <line x1="176" y1="126" x2="163" y2="152" stroke="#111827" strokeWidth="2" />
+      <line x1="176" y1="126" x2="189" y2="152" stroke="#111827" strokeWidth="2" />
+      <line x1="42" y1="56" x2="42" y2="146" stroke="#F59E0B" strokeWidth="2" />
+      <polygon points="42,56 38,64 46,64" fill="#F59E0B" />
+      <polygon points="42,146 38,138 46,138" fill="#F59E0B" />
+      <text x="214" y="38" fontSize="13" fontWeight="700" fill="#111827">1.5 / 1.8 / 2.0 / 2.5 м</text>
+      <text x="214" y="60" fontSize="13" fontWeight="600" fill="#334155">рост человека ~170 см</text>
     </svg>
   );
 }
@@ -166,6 +191,20 @@ export function QuizForm({
     ? defaultWicketType
     : "Калитка не нужна";
   const initialStep = sanitizeDefaultStep(defaultStep);
+  const initialResetValues = useMemo(
+    () => ({
+      fenceType: initialFenceType,
+      height: "1.8 м",
+      gateType: initialGateType,
+      wicket: initialWicketType,
+      length: "",
+      name: "",
+      phone: "",
+      city: cityName ?? "",
+      comment: "",
+    }),
+    [cityName, initialFenceType, initialGateType, initialWicketType],
+  );
 
   const [step, setStep] = useState(initialStep);
   const [status, setStatus] = useState<SubmitStatus>("idle");
@@ -195,6 +234,12 @@ export function QuizForm({
       setValue("city", cityName);
     }
   }, [cityName, setValue]);
+
+  useEffect(() => {
+    setStatus("idle");
+    setStep(initialStep);
+    reset(initialResetValues);
+  }, [initialResetValues, initialStep, reset, source]);
 
   const values = watch();
   const progress = (step / 6) * 100;
@@ -238,17 +283,7 @@ export function QuizForm({
 
       setStatus("success");
       setStep(initialStep);
-      reset({
-        fenceType: initialFenceType,
-        height: "1.8 м",
-        gateType: initialGateType,
-        wicket: initialWicketType,
-        length: "",
-        name: "",
-        phone: "",
-        city: cityName ?? "",
-        comment: "",
-      });
+      reset(initialResetValues);
     } catch {
       setStatus("error");
     }
@@ -272,8 +307,8 @@ export function QuizForm({
         </div>
       </div>
 
-      <div className="min-h-64">
-        <div className="animate-[fadeIn_220ms_ease-out]" key={step}>
+      <div className="min-h-[520px]">
+        <div className="h-full animate-[fadeIn_220ms_ease-out]" key={step}>
         {step === 1 ? (
           <fieldset>
             <legend className="text-2xl font-bold text-slate-950">
@@ -335,6 +370,10 @@ export function QuizForm({
             <legend className="text-2xl font-bold text-slate-950">
               Выберите высоту
             </legend>
+            <span className="mt-3 block text-sm text-slate-600">
+              Если сомневаетесь в высоте, нажмите «Не знаю, нужна консультация»
+              — подскажем по телефону.
+            </span>
             <HeightScheme />
             <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
               {heights.map((height) => (
@@ -354,7 +393,7 @@ export function QuizForm({
                 </button>
               ))}
               <button
-                className={`rounded-xl border border-dashed px-4 py-4 text-sm font-semibold transition ${
+                className={`col-span-2 flex min-h-[88px] w-full items-center justify-center rounded-xl border border-dashed px-4 py-4 text-center text-sm leading-tight whitespace-normal font-semibold transition sm:col-span-1 ${
                   values.height === "Нужна консультация"
                     ? "border-slate-500 bg-slate-200 text-slate-900"
                     : "border-slate-300 bg-slate-100 text-slate-700 hover:border-slate-500"
@@ -366,7 +405,11 @@ export function QuizForm({
                 }
                 type="button"
               >
-                Не знаю, нужна консультация
+                <span className="block max-w-[9.5rem]">
+                  <span className="block">Не знаю,</span>
+                  <span className="block">нужна</span>
+                  <span className="block">консультация</span>
+                </span>
               </button>
             </div>
             <input type="hidden" {...register("height", { required: true })} />
