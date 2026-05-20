@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAggregatedStats, getDailyReportSnapshot } from "@/lib/reporting";
+import { getTrafficReportText, TrafficPeriod } from "@/lib/analytics/reporting";
 import { sendTelegramTextToChat } from "@/lib/telegram";
 
 export const runtime = "nodejs";
@@ -51,6 +52,9 @@ function helpText() {
     "/stats — статистика за сегодня",
     "/stats week — статистика за 7 дней",
     "/stats month — статистика за 30 дней",
+    "/traffic — трафик за сегодня",
+    "/traffic week — трафик за 7 дней",
+    "/traffic month — трафик за 30 дней",
     "/top — топ страницы за сегодня",
   ].join("\n");
 }
@@ -85,24 +89,34 @@ export async function POST(request: NextRequest) {
   const { command, arg } = normalizeCommand(text);
   let responseText = "";
 
-  if (command === "/report") {
-    const snapshot = await getDailyReportSnapshot();
-    responseText = snapshot.text;
-  } else if (command === "/stats") {
-    const period =
-      arg === "week" || arg === "month" || arg === "today" ? arg : "today";
-    const stats = await getAggregatedStats(period);
-    responseText = [
-      `Статистика ${formatStatsLabel(period)}:`,
-      `Заявок: ${stats.totalLeads}`,
-      `Топ страницы: ${formatTopSource(stats.bySource)}`,
-      `Городских лидов (по source city-{slug}): ${Object.values(stats.byCity).reduce((sum, value) => sum + value, 0)}`,
-    ].join("\n");
-  } else if (command === "/top") {
-    const stats = await getAggregatedStats("today");
-    responseText = `Топ страница за сегодня: ${formatTopSource(stats.bySource)}`;
-  } else {
-    responseText = helpText();
+  try {
+    if (command === "/report") {
+      const snapshot = await getDailyReportSnapshot();
+      responseText = snapshot.text;
+    } else if (command === "/stats") {
+      const period =
+        arg === "week" || arg === "month" || arg === "today" ? arg : "today";
+      const stats = await getAggregatedStats(period);
+      responseText = [
+        `Статистика ${formatStatsLabel(period)}:`,
+        `Заявок: ${stats.totalLeads}`,
+        `Топ страницы: ${formatTopSource(stats.bySource)}`,
+        `Городских лидов (по source city-{slug}): ${Object.values(stats.byCity).reduce((sum, value) => sum + value, 0)}`,
+      ].join("\n");
+    } else if (command === "/traffic") {
+      const period: TrafficPeriod =
+        arg === "week" || arg === "month" || arg === "today" ? arg : "today";
+      const traffic = await getTrafficReportText(period);
+      responseText = traffic.text;
+    } else if (command === "/top") {
+      const stats = await getAggregatedStats("today");
+      responseText = `Топ страница за сегодня: ${formatTopSource(stats.bySource)}`;
+    } else {
+      responseText = helpText();
+    }
+  } catch (error) {
+    console.error("Telegram webhook command failed", error);
+    responseText = "⚠️ Временная ошибка при обработке команды";
   }
 
   await sendTelegramTextToChat(String(chatId), responseText);
