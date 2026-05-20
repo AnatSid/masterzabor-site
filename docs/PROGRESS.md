@@ -198,6 +198,9 @@
 - ✅ Production audit (analytics + Telegram): удалён service account path и `getGa4DebugRaw`; консолидация `lib/analytics/{period,utils}`; документация `docs/ANALYTICS.md`; `.env.example` с Required/Deprecated; webhook только на `www`; `scripts/set-telegram-bot.ts` для webhook + commands.
 - ✅ Временные debug endpoint'ы `/api/debug/google` и `/api/debug/google/oauth` удалены после проверки.
 - ✅ `.env.example` обновлён под OAuth-переменные Google (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`); service account на Vercel не нужен.
+- ✅ Документация флоу: `docs/ANALYTICS.md` (архитектура, OAuth, webhook www/307, команды, cron, env); `docs/PLAN.MD.md` (ручные сценарии); `.env.example` (Required/Deprecated).
+- ⬜ На Vercel вручную добавить `CRON_SECRET` и при необходимости `STATS_API_TOKEN` (см. `docs/ANALYTICS.md`).
+- ✅ Push в `main`: commit `a7ba546` (analytics + Telegram production-ready).
 
 ---
 

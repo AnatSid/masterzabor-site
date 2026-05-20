@@ -78,7 +78,20 @@ Service account (`GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY`) **deprecated** —
 - `/api/cron/daily-report` — заявки (KV)
 - `/api/cron/analytics-report` — трафик за today
 
-Оба защищены `Authorization: Bearer CRON_SECRET`.
+Оба защищены `Authorization: Bearer CRON_SECRET` (если env задан).
+
+### `CRON_SECRET` (Vercel)
+
+- **Endpoints:** `GET /api/cron/daily-report`, `GET /api/cron/analytics-report`
+- **Код:** проверка только если `process.env.CRON_SECRET` не пустой; иначе endpoint **открыт**
+- **Vercel Cron:** при наличии `CRON_SECRET` в env проекта Vercel **сам** добавляет заголовок `Authorization: Bearer …` на cron-запросы
+- **Production:** env **обязателен** (без него любой может вызвать cron URL)
+
+### `STATS_API_TOKEN`
+
+- **Endpoint:** `GET /api/stats?period=today|week|month` — JSON заявок из KV
+- **Код:** env **обязателен** для этого route (без токена → `500`)
+- **Telegram `/stats_*`:** env **не нужен** — webhook читает KV через `lib/reporting.ts` напрямую
 
 ## Production env checklist
 

@@ -797,7 +797,7 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 - ✅ Подключён `@vercel/kv`, заявки сохраняются в KV по ключам `leads:YYYY-MM-DD`.
 - ✅ Реализован `GET /api/stats?period=today|week|month` с защитой по `STATS_API_TOKEN`.
 - ✅ Реализован `GET /api/cron/daily-report`, добавлен `vercel.json` с cron `0 17 * * *` (20:00 Минск).
-- ⬜ Опциональный Telegram webhook-бот (`/api/telegram-webhook`) не реализован.
+- ✅ Telegram webhook-бот (`/api/telegram-webhook`) — см. `docs/ANALYTICS.md`.
 - ✅ Выполнена ручная E2E-проверка: `/api/lead` → KV → `/api/stats` → `/api/cron/daily-report` → Telegram.
 - ✅ Логика «топ город» переведена на `source`/URL (`city-{slug}`), а не на свободный ввод `city` из формы: это убирает шум от опечаток, деревень и разных форматов ввода.
 - ✅ Telegram-сводка упрощена: оставлен `Топ страница` (читаемый URL), строка `Топ город` убрана как дублирующая сигнал источника.
@@ -841,6 +841,8 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
    Или вручную: `setWebhook` на `https://www.masterzabor.by/api/telegram-webhook` + `setMyCommands` (см. `TELEGRAM_BOT_COMMANDS` в `lib/telegram-bot-commands.ts`).
    
    Важно: URL **без www** (`https://masterzabor.by/...`) на Vercel отдаёт **307 → www**; Telegram на POST редирект не ходит → webhook «сломан». Используйте только `www.masterzabor.by` (см. `TELEGRAM_WEBHOOK_URL` в `lib/constants.ts`).
+   
+   Полное описание analytics/Telegram: **`docs/ANALYTICS.md`**.
 4) В webhook допущены команды только из чата `TELEGRAM_CHAT_ID` (защита от посторонних чатов).
 
 ---
