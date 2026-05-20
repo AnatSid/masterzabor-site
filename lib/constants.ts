@@ -2,6 +2,10 @@ export const COMPANY_NAME = "МастерЗабор";
 export const SITE_NAME = "МастерЗабор";
 export const SITE_URL = "https://masterzabor.by";
 
+/** Telegram POST не следует за 307; на Vercel apex → www, поэтому webhook только на www. */
+export const TELEGRAM_WEBHOOK_URL =
+  "https://www.masterzabor.by/api/telegram-webhook";
+
 export const PHONE = "+375333135072";
 export const PHONE_RAW = "375333135072";
 export const PHONE_DISPLAY = "+375 33 313-50-72";

@@ -190,6 +190,14 @@
 - ✅ Реализована отдельная Telegram-аналитика трафика (`analytics-report`) с источниками Google Analytics 4 и Яндекс.Метрика, отдельным cron и командами `/traffic`, `/traffic week`, `/traffic month`.
 - ✅ Для Яндекс.Метрики исправлен запрос top pages на namespace `ym:pv:*`, проверены visitors/top pages/mobile-desktop и корректная сборка Telegram-сообщения.
 - ✅ После API-диагностики удалён временный debug/log spam из `lib/analytics/yandex.ts` и `lib/analytics/reporting.ts`; оставлено минимальное production-логирование ошибок без raw dumps.
+- ✅ Добавлен OAuth fallback для Google Analytics Data API через `refresh_token` (без service account): получение `access_token` через `https://oauth2.googleapis.com/token` и запросы `runReport` через `https://analyticsdata.googleapis.com/v1beta/...`.
+- ✅ OAuth для Google Analytics завершён: `GOOGLE_REFRESH_TOKEN` сохранён в `.env.local`, `authMode: oauth_refresh_token`, GA4 Data API отвечает (users/top pages/mobile-desktop).
+- ✅ E2E проверка `/traffic` и `/traffic week`: оба блока (Google + Яндекс) собираются в Telegram-сообщение; за сегодня GA может быть 0 пользователей — это нормально при отсутствии трафика.
+- ✅ Исправлен Telegram webhook: причина 307 — Vercel редирект `masterzabor.by` → `www`; webhook на `https://www.masterzabor.by/api/telegram-webhook` (`scripts/set-telegram-bot.ts`).
+- ✅ UX Telegram: диапазон дат в заголовке трафика (week/month), команды `/traffic_week`, `/stats_week` и др. + `setMyCommands` для autocomplete; старые `/traffic week` сохранены.
+- ✅ Production audit (analytics + Telegram): удалён service account path и `getGa4DebugRaw`; консолидация `lib/analytics/{period,utils}`; документация `docs/ANALYTICS.md`; `.env.example` с Required/Deprecated; webhook только на `www`; `scripts/set-telegram-bot.ts` для webhook + commands.
+- ✅ Временные debug endpoint'ы `/api/debug/google` и `/api/debug/google/oauth` удалены после проверки.
+- ✅ `.env.example` обновлён под OAuth-переменные Google (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`); service account на Vercel не нужен.
 
 ---
 

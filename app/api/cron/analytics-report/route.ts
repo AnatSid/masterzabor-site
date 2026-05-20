@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTrafficReportText } from "@/lib/analytics/reporting";
+import { formatTrafficReportTitle } from "@/lib/telegram-period";
 import { sendTelegramText } from "@/lib/telegram";
 
 export const runtime = "nodejs";
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Analytics report generation failed", error);
     reportText = [
-      "📈 Трафик сайта за сегодня",
+      formatTrafficReportTitle("today"),
       "",
       "⚠️ Не удалось получить данные аналитики",
     ].join("\n");

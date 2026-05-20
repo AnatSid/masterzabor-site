@@ -156,7 +156,17 @@ async function sendTelegramRequest({
       },
     );
 
-    return response.ok;
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      console.error(
+        "Telegram sendMessage failed",
+        response.status,
+        errorText.slice(0, 500),
+      );
+      return false;
+    }
+
+    return true;
   } catch (error) {
     console.error("Failed to send Telegram message", error);
     return false;

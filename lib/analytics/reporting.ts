@@ -1,28 +1,18 @@
 import { Ga4Stats, getGa4Stats } from "@/lib/analytics/google";
+import {
+  AnalyticsPeriod,
+  getAnalyticsDays,
+} from "@/lib/analytics/period";
 import { getYandexMetrikaStats, YandexMetrikaStats } from "@/lib/analytics/yandex";
+import { formatTrafficReportTitle } from "@/lib/telegram-period";
 
-const MINSK_TIME_ZONE = "Europe/Minsk";
-
-export type TrafficPeriod = "today" | "week" | "month";
+export type TrafficPeriod = AnalyticsPeriod;
 
 type TrafficAnalyticsResult = {
   google: Ga4Stats | null;
   yandex: YandexMetrikaStats | null;
   warnings: string[];
 };
-
-const PERIOD_DAYS: Record<TrafficPeriod, number> = {
-  today: 1,
-  week: 7,
-  month: 30,
-};
-
-function getFormattedDate() {
-  return new Intl.DateTimeFormat("ru-BY", {
-    dateStyle: "long",
-    timeZone: MINSK_TIME_ZONE,
-  }).format(new Date());
-}
 
 function normalizeTopPages<T extends { path: string; views: number }>(pages: T[]) {
   const normalized = pages.slice(0, 3);
@@ -40,7 +30,7 @@ function buildTopPagesLines(topPages: Array<{ path: string; views: number }>) {
 export async function getTrafficAnalytics(
   period: TrafficPeriod,
 ): Promise<TrafficAnalyticsResult> {
-  const days = PERIOD_DAYS[period];
+  const days = getAnalyticsDays(period);
   const warnings: string[] = [];
 
   const [googleResult, yandexResult] = await Promise.allSettled([
@@ -54,12 +44,12 @@ export async function getTrafficAnalytics(
     yandexResult.status === "fulfilled" ? yandexResult.value : null;
 
   if (googleResult.status === "rejected") {
-    console.error("Google Analytics traffic request failed", googleResult.reason);
+    console.error("[analytics] Google request failed", googleResult.reason);
     warnings.push("⚠️ Google Analytics временно недоступен");
   }
 
   if (yandexResult.status === "rejected") {
-    console.error("Yandex Metrika traffic request failed", yandexResult.reason);
+    console.error("[analytics] Yandex request failed", yandexResult.reason);
     warnings.push("⚠️ Яндекс.Метрика временно недоступна");
   }
 
@@ -68,7 +58,7 @@ export async function getTrafficAnalytics(
 
 export async function getTrafficReportText(period: TrafficPeriod) {
   const analytics = await getTrafficAnalytics(period);
-  const lines: string[] = [`📈 Трафик сайта за ${getFormattedDate()}`, ""];
+  const lines: string[] = [formatTrafficReportTitle(period), ""];
 
   if (analytics.warnings.length) {
     lines.push(...analytics.warnings, "");

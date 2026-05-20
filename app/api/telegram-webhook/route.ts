@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAggregatedStats, getDailyReportSnapshot } from "@/lib/reporting";
-import { getTrafficReportText, TrafficPeriod } from "@/lib/analytics/reporting";
+import { getTrafficReportText } from "@/lib/analytics/reporting";
+import {
+  getTelegramBotHelpText,
+  resolveStatsPeriod,
+  resolveTrafficPeriod,
+} from "@/lib/telegram-bot-commands";
+import { formatStatsPeriodLabel } from "@/lib/telegram-period";
 import { sendTelegramTextToChat } from "@/lib/telegram";
 
 export const runtime = "nodejs";
@@ -27,36 +33,12 @@ function normalizeCommand(text: string) {
   return { command, arg };
 }
 
-function formatStatsLabel(period: "today" | "week" | "month") {
-  if (period === "today") {
-    return "сегодня";
-  }
-  if (period === "week") {
-    return "за 7 дней";
-  }
-  return "за 30 дней";
-}
-
 function formatTopSource(bySource: Record<string, number>) {
   const top = Object.entries(bySource).sort((a, b) => b[1] - a[1])[0];
   if (!top) {
     return "—";
   }
   return `${top[0]} (${top[1]})`;
-}
-
-function helpText() {
-  return [
-    "Доступные команды:",
-    "/report — отправить сводку за день",
-    "/stats — статистика за сегодня",
-    "/stats week — статистика за 7 дней",
-    "/stats month — статистика за 30 дней",
-    "/traffic — трафик за сегодня",
-    "/traffic week — трафик за 7 дней",
-    "/traffic month — трафик за 30 дней",
-    "/top — топ страницы за сегодня",
-  ].join("\n");
 }
 
 export async function POST(request: NextRequest) {
@@ -83,6 +65,10 @@ export async function POST(request: NextRequest) {
 
   const allowedChatId = process.env.TELEGRAM_CHAT_ID;
   if (allowedChatId && String(chatId) !== allowedChatId) {
+    await sendTelegramTextToChat(
+      String(chatId),
+      "⛔ Команды бота доступны только в основном чате. Откройте личный диалог с ботом и отправьте команду там.",
+    );
     return NextResponse.json({ ok: true });
   }
 
@@ -93,32 +79,41 @@ export async function POST(request: NextRequest) {
     if (command === "/report") {
       const snapshot = await getDailyReportSnapshot();
       responseText = snapshot.text;
-    } else if (command === "/stats") {
-      const period =
-        arg === "week" || arg === "month" || arg === "today" ? arg : "today";
-      const stats = await getAggregatedStats(period);
-      responseText = [
-        `Статистика ${formatStatsLabel(period)}:`,
-        `Заявок: ${stats.totalLeads}`,
-        `Топ страницы: ${formatTopSource(stats.bySource)}`,
-        `Городских лидов (по source city-{slug}): ${Object.values(stats.byCity).reduce((sum, value) => sum + value, 0)}`,
-      ].join("\n");
-    } else if (command === "/traffic") {
-      const period: TrafficPeriod =
-        arg === "week" || arg === "month" || arg === "today" ? arg : "today";
-      const traffic = await getTrafficReportText(period);
-      responseText = traffic.text;
-    } else if (command === "/top") {
-      const stats = await getAggregatedStats("today");
-      responseText = `Топ страница за сегодня: ${formatTopSource(stats.bySource)}`;
     } else {
-      responseText = helpText();
+      const statsPeriod = resolveStatsPeriod(command, arg);
+      if (statsPeriod) {
+        const stats = await getAggregatedStats(statsPeriod);
+        responseText = [
+          `Статистика за ${formatStatsPeriodLabel(statsPeriod)}:`,
+          `Заявок: ${stats.totalLeads}`,
+          `Топ страницы: ${formatTopSource(stats.bySource)}`,
+          `Городских лидов (по source city-{slug}): ${Object.values(stats.byCity).reduce((sum, value) => sum + value, 0)}`,
+        ].join("\n");
+      } else {
+        const trafficPeriod = resolveTrafficPeriod(command, arg);
+        if (trafficPeriod) {
+          const traffic = await getTrafficReportText(trafficPeriod);
+          responseText = traffic.text;
+        } else if (command === "/top") {
+          const stats = await getAggregatedStats("today");
+          responseText = `Топ страница за сегодня: ${formatTopSource(stats.bySource)}`;
+        } else if (command === "/help" || command === "/start") {
+          responseText = getTelegramBotHelpText();
+        } else {
+          responseText = getTelegramBotHelpText();
+        }
+      }
     }
   } catch (error) {
     console.error("Telegram webhook command failed", error);
     responseText = "⚠️ Временная ошибка при обработке команды";
   }
 
-  await sendTelegramTextToChat(String(chatId), responseText);
+  const sent = await sendTelegramTextToChat(String(chatId), responseText);
+  if (!sent) {
+    console.error("Telegram webhook: failed to send response", { chatId, command });
+    return NextResponse.json({ ok: false, error: "send_failed" }, { status: 502 });
+  }
+
   return NextResponse.json({ ok: true });
 }

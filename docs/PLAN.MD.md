@@ -813,6 +813,8 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 - ✅ Telegram webhook расширен командами `/traffic`, `/traffic week`, `/traffic month` для аналитики трафика по периодам.
 - ✅ Исправлены метрики top pages в Яндекс.Метрике (`ym:pv:*`), подтверждён рабочий ответ API.
 - ✅ Диагностический debug для Яндекс API убран после проверки: оставлено минимальное production-логирование ошибок.
+- ✅ Для Google Analytics добавлен fallback с OAuth2 refresh token (`GOOGLE_CLIENT_ID/SECRET/REFRESH_TOKEN`) вместо service account.
+- ✅ OAuth Google Analytics (refresh token) проверен end-to-end; временные debug endpoint'ы удалены.
 
 Как работает ручной вызов сводки/статистики:
 - Cron-режим (авто): Vercel вызывает `GET /api/cron/daily-report` по расписанию из `vercel.json` (`0 17 * * *` = 20:00 Минск).
@@ -824,16 +826,21 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
   - `/stats` — статистика за сегодня.
   - `/stats week` — статистика за 7 дней.
   - `/stats month` — статистика за 30 дней.
-  - `/traffic` — трафик сайта за сегодня.
-  - `/traffic week` — агрегированный трафик за 7 дней.
-  - `/traffic month` — агрегированный трафик за 30 дней.
+  - `/traffic_today`, `/traffic_week`, `/traffic_month` — трафик (autocomplete в Telegram).
+  - `/traffic`, `/traffic week`, `/traffic month` — те же периоды (обратная совместимость).
+  - `/stats_today`, `/stats_week`, `/stats_month` — заявки по периодам.
+  - `/stats`, `/stats week`, `/stats month` — обратная совместимость.
   - `/top` — топ страницы за сегодня.
 
 Как включить webhook у Telegram:
 1) Деплой с публичным HTTPS URL (например `https://masterzabor.by`).
 2) Добавить env: `TELEGRAM_WEBHOOK_SECRET`.
 3) Выполнить:
-   `https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/setWebhook?url=https://<домен>/api/telegram-webhook&secret_token=<TELEGRAM_WEBHOOK_SECRET>`
+   `npx tsx scripts/set-telegram-bot.ts` — webhook (`www`) + `setMyCommands` (autocomplete).
+   
+   Или вручную: `setWebhook` на `https://www.masterzabor.by/api/telegram-webhook` + `setMyCommands` (см. `TELEGRAM_BOT_COMMANDS` в `lib/telegram-bot-commands.ts`).
+   
+   Важно: URL **без www** (`https://masterzabor.by/...`) на Vercel отдаёт **307 → www**; Telegram на POST редирект не ходит → webhook «сломан». Используйте только `www.masterzabor.by` (см. `TELEGRAM_WEBHOOK_URL` в `lib/constants.ts`).
 4) В webhook допущены команды только из чата `TELEGRAM_CHAT_ID` (защита от посторонних чатов).
 
 ---

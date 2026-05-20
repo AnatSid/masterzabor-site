@@ -1,3 +1,5 @@
+import { normalizePercentage } from "@/lib/analytics/utils";
+
 export type YandexPageStats = {
   path: string;
   views: number;
@@ -20,15 +22,7 @@ type YandexStatsResponse = {
 
 const YANDEX_API_URL = "https://api-metrika.yandex.net/stat/v1/data";
 
-function normalizePercentage(value: number, total: number) {
-  if (!total) {
-    return 0;
-  }
-
-  return Math.round((value / total) * 100);
-}
-
-function getDateRange(days: number) {
+function getYandexDateRange(days: number) {
   if (days <= 1) {
     return { date1: "today", date2: "today" };
   }
@@ -46,17 +40,15 @@ async function requestYandexStats(
     accuracy: "full",
     ...query,
   });
-  const requestUrl = `${YANDEX_API_URL}?${search.toString()}`;
 
-  const response = await fetch(requestUrl, {
+  const response = await fetch(`${YANDEX_API_URL}?${search.toString()}`, {
     headers: {
       Authorization: `OAuth ${token}`,
     },
   });
 
   if (!response.ok) {
-    console.error(`[analytics] Yandex API returned ${response.status}`);
-    throw new Error(`Yandex Metrika API error: ${response.status}`);
+    throw new Error(`[analytics] Yandex Metrika API error: ${response.status}`);
   }
 
   return (await response.json()) as YandexStatsResponse;
@@ -69,10 +61,12 @@ export async function getYandexMetrikaStats(
   const counterId = process.env.YANDEX_METRIKA_COUNTER_ID;
 
   if (!token || !counterId) {
-    throw new Error("Yandex Metrika credentials are not configured");
+    throw new Error(
+      "Yandex Metrika credentials are not configured (YANDEX_METRIKA_TOKEN, YANDEX_METRIKA_COUNTER_ID)",
+    );
   }
 
-  const dateRange = getDateRange(days);
+  const dateRange = getYandexDateRange(days);
 
   const [visitorsResponse, deviceResponse, pagesResponse] = await Promise.all([
     requestYandexStats(token, counterId, {
