@@ -113,6 +113,13 @@
 - ✅ UX-проверка: `/molodechno`, `/gomel`, `/brest` — единая линия контента, `npm run build` проходит
 - ✅ Trust-card «Бесплатная доставка» на главной: подпись заменена с «по Гомелю и области» на «Организуем доставку и монтаж под ключ» (нейтральная формулировка для всей РБ)
 
+## Единая premium-layout система service pages
+- ✅ `ServicePage`: все секции переведены на `SiteContainer` (`max-w-[1350px]`), убраны смешанные `max-w-7xl` / `max-w-4xl`
+- ✅ SEO/article block: `serviceProseClassName` (`max-w-[960px]`, `leading-[1.75]`) — комфортная ширина чтения, выравнивание по левому краю контейнера
+- ✅ Hero subtitle: опциональное поле `heroSubtitle` в `content/services.ts` (lead + accent-line); применено для сетки-рабицы
+- ✅ Hero grid: `minmax(0,1.45fr)_minmax(280px,420px)`, стабильная картинка с `aspect-ratio`
+- ✅ FAQ на полную ширину контейнера; проверены `/zabory-iz-setki-rabitsy`, `/zabory-iz-profnastila`, `/zabory-iz-evroshtaketnika`
+
 ---
 
 ## Проблемы и заметки
@@ -209,6 +216,7 @@
 - ⬜ На Vercel вручную добавить `CRON_SECRET` и при необходимости `STATS_API_TOKEN` (см. `docs/ANALYTICS.md`).
 - ✅ Push в `main`: commit `a7ba546` (analytics + Telegram production-ready).
 - ✅ Единая вертикальная сетка city pages: `SiteContainer` (`max-w-[1350px]`), hero grid `1.45fr / 380px`, intro `max-w-5xl`; проверены `/molodechno`, `/gomel`, `/brest`.
+- ✅ Service pages (`ServicePage`): единый `SiteContainer`, article `max-w-[960px]`, hero subtitle lead/accent для сетки-рабицы; проверены 3 fence service pages.
 
 ---
 

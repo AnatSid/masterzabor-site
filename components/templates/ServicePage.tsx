@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { QuizForm } from "@/components/forms/QuizForm";
+import {
+  serviceProseClassName,
+  SiteContainer,
+} from "@/components/layout/SiteContainer";
 import { cities } from "@/content/cities";
 import { services, type Service } from "@/content/services";
 import { PHONE, PHONE_DISPLAY } from "@/lib/constants";
@@ -106,6 +110,27 @@ function getQuizDefaultsByServiceSlug(serviceSlug: string) {
   }
 }
 
+function ServiceHeroSubtitle({ service }: { service: Service }) {
+  if (service.heroSubtitle) {
+    return (
+      <div className="mt-6 min-w-0 max-w-2xl space-y-4">
+        <p className="text-lg leading-relaxed text-slate-200">
+          {service.heroSubtitle.lead}
+        </p>
+        <p className="text-base font-medium leading-relaxed text-slate-300/85">
+          {service.heroSubtitle.accent}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <p className="mt-6 min-w-0 max-w-2xl text-lg leading-relaxed text-slate-200">
+      {service.description}
+    </p>
+  );
+}
+
 export function ServicePage({ service }: ServicePageProps) {
   const quizDefaults = getQuizDefaultsByServiceSlug(service.slug);
   const relatedServices = services.filter((item) => item.slug !== service.slug);
@@ -135,8 +160,8 @@ export function ServicePage({ service }: ServicePageProps) {
       ))}
 
       <section className="bg-slate-950 text-white">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8 lg:py-20">
-          <div>
+        <SiteContainer className="grid gap-10 py-14 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,420px)] lg:items-start lg:py-20">
+          <div className="min-w-0">
             <nav aria-label="Хлебные крошки" className="text-sm text-slate-300">
               <ol className="flex flex-wrap gap-2">
                 {breadcrumbs.map((item, index) => (
@@ -154,9 +179,7 @@ export function ServicePage({ service }: ServicePageProps) {
               <br />
               <span className="sm:whitespace-nowrap">в Беларуси под ключ</span>
             </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-200">
-              {service.description}
-            </p>
+            <ServiceHeroSubtitle service={service} />
             <p className="mt-6 text-3xl font-bold text-amber-300">
               от {service.priceFrom} {service.priceUnit}
             </p>
@@ -176,7 +199,7 @@ export function ServicePage({ service }: ServicePageProps) {
             </div>
           </div>
 
-          <div className="relative min-h-80 overflow-hidden rounded-3xl">
+          <div className="relative aspect-[4/3] min-h-64 w-full overflow-hidden rounded-3xl sm:min-h-72 lg:aspect-auto lg:min-h-[420px]">
             <Image
               alt={`${service.title} — пример установки в Беларуси`}
               className="object-cover"
@@ -185,11 +208,11 @@ export function ServicePage({ service }: ServicePageProps) {
               src={imagePlaceholder(service.title, 0)}
             />
           </div>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Преимущества
           </h2>
@@ -203,11 +226,11 @@ export function ServicePage({ service }: ServicePageProps) {
               </article>
             ))}
           </div>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="bg-[#F5F5F5] py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Таблица цен
           </h2>
@@ -240,11 +263,11 @@ export function ServicePage({ service }: ServicePageProps) {
             Цены ориентировочные. Точный расчёт зависит от длины, высоты,
             комплектации, доставки и особенностей участка.
           </p>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Этапы работы
           </h2>
@@ -258,11 +281,11 @@ export function ServicePage({ service }: ServicePageProps) {
               </article>
             ))}
           </div>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="bg-[#F5F5F5] py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Галерея
           </h2>
@@ -278,24 +301,26 @@ export function ServicePage({ service }: ServicePageProps) {
               />
             ))}
           </div>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="py-16">
-        <article className="mx-auto max-w-4xl px-4 text-lg leading-8 text-slate-700 sm:px-6 lg:px-8">
+        <SiteContainer>
+          <article className={serviceProseClassName}>
           <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
             {service.title}: что важно знать
           </h2>
-          <div className="mt-6 space-y-5">
+          <div className="mt-6 space-y-6">
             {serviceSeoText(service).map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
-        </article>
+          </article>
+        </SiteContainer>
       </section>
 
       <section className="bg-[#F5F5F5] py-16">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+        <SiteContainer className="grid gap-8 lg:grid-cols-2">
           <div>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Другие услуги
@@ -329,11 +354,11 @@ export function ServicePage({ service }: ServicePageProps) {
               ))}
             </div>
           </div>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="bg-[#1B5E20] py-16" id="lead-form">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+        <SiteContainer className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="text-white">
             <p className="font-semibold uppercase tracking-wide text-amber-300">
               Получите расчёт по телефону
@@ -348,11 +373,11 @@ export function ServicePage({ service }: ServicePageProps) {
             </p>
           </div>
           <QuizForm source={`service-${service.slug}`} {...quizDefaults} />
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Частые вопросы
           </h2>
@@ -362,11 +387,11 @@ export function ServicePage({ service }: ServicePageProps) {
                 <summary className="cursor-pointer list-none font-semibold">
                   {item.question}
                 </summary>
-                <p className="mt-3 text-slate-600">{item.answer}</p>
+                <p className="mt-3 leading-relaxed text-slate-600">{item.answer}</p>
               </details>
             ))}
           </div>
-        </div>
+        </SiteContainer>
       </section>
     </main>
   );

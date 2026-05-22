@@ -7,6 +7,10 @@ export type Service = {
   priceFrom: number;
   priceUnit: string;
   description: string;
+  heroSubtitle?: {
+    lead: string;
+    accent: string;
+  };
   features: string[];
   faq: {
     question: string;
@@ -95,6 +99,11 @@ export const services: Service[] = [
     priceUnit: "BYN/м.п.",
     description:
       "Бюджетное решение для дачи, сада, огорода и технических зон. Сетка-рабица быстро ставится, не затеняет участок и подходит для больших периметров.",
+    heroSubtitle: {
+      lead: "Бюджетное решение для дачи, сада, огорода и технических зон.",
+      accent:
+        "Сетка-рабица быстро ставится, не затеняет участок и подходит для больших периметров.",
+    },
     features: [
       "Самый доступный вариант ограждения",
       "Быстрый монтаж больших периметров",

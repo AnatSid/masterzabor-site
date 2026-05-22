@@ -807,6 +807,7 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 - ✅ Для страниц услуг в `QuizForm` добавлены предвыборы (тип забора/ворота/калитка) и старт со 2 шага для заборных страниц.
 - ✅ Для городских страниц в `QuizForm` добавлена автоподстановка города с редактируемым полем и подсказкой «Укажите ваш населённый пункт, если он отличается».
 - ✅ Городские страницы (`CityPage`) используют единый `SiteContainer` (`max-w-[1350px]`, `px-4 sm:px-6 lg:px-8`) для hero, SEO-текста, карточек, формы и перелинковки; hero grid — `minmax(0,1.45fr)_minmax(300px,380px)`.
+- ✅ Страницы услуг (`ServicePage`) используют тот же `SiteContainer`; SEO/article — `serviceProseClassName` (`max-w-[960px]`); опциональный `heroSubtitle` (lead + accent) в `content/services.ts`.
 - ✅ Реализована отдельная система traffic analytics, независимая от lead-report.
 - ✅ Добавлена интеграция Google Analytics 4 API (`@google-analytics/data`) для users, mobile/desktop и top pages.
 - ✅ Добавлена интеграция Яндекс.Метрики API для visitors, mobile/desktop и top pages.
