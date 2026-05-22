@@ -106,6 +106,12 @@
 - ✅ fail-safe обработка ошибок аналитики
 - ✅ Консистентность форм: placeholder населённого пункта везде «Город, деревня или посёлок», комментарий с пометкой «Необязательно» и пустым placeholder
 
+## Единая вертикальная сетка городских страниц
+- ✅ Добавлен `components/layout/SiteContainer.tsx` — общий контейнер `max-w-[1350px]` + `px-4 sm:px-6 lg:px-8`
+- ✅ `CityPage`: hero, intro, секции карточек, форма и «Другие города» переведены на `SiteContainer` (убраны смешанные `max-w-7xl` / `max-w-[1350px]`)
+- ✅ Hero city pages: grid `minmax(0,1.45fr)_minmax(300px,380px)`, текстовая колонка без `max-w-3xl`, intro-текст расширен до `max-w-5xl`
+- ✅ UX-проверка: `/molodechno`, `/gomel`, `/brest` — единая линия контента, `npm run build` проходит
+
 ---
 
 ## Проблемы и заметки
@@ -201,6 +207,7 @@
 - ✅ Документация флоу: `docs/ANALYTICS.md` (архитектура, OAuth, webhook www/307, команды, cron, env); `docs/PLAN.MD.md` (ручные сценарии); `.env.example` (Required/Deprecated).
 - ⬜ На Vercel вручную добавить `CRON_SECRET` и при необходимости `STATS_API_TOKEN` (см. `docs/ANALYTICS.md`).
 - ✅ Push в `main`: commit `a7ba546` (analytics + Telegram production-ready).
+- ✅ Единая вертикальная сетка city pages: `SiteContainer` (`max-w-[1350px]`), hero grid `1.45fr / 380px`, intro `max-w-5xl`; проверены `/molodechno`, `/gomel`, `/brest`.
 
 ---
 

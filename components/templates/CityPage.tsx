@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { QuizForm } from "@/components/forms/QuizForm";
+import { SiteContainer } from "@/components/layout/SiteContainer";
 import { cities, type City } from "@/content/cities";
 import { services } from "@/content/services";
 import {
@@ -142,7 +143,7 @@ export function CityPage({ city }: CityPageProps) {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/30" />
 
-        <div className="relative mx-auto grid max-w-[1350px] gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-start lg:gap-12 lg:px-8 lg:py-24">
+        <SiteContainer className="relative grid gap-10 py-16 lg:grid-cols-[minmax(0,1.45fr)_minmax(300px,380px)] lg:items-start lg:gap-10 lg:py-24">
           <div>
           <nav aria-label="Хлебные крошки" className="text-sm text-slate-300">
             <ol className="flex flex-wrap gap-2">
@@ -157,16 +158,16 @@ export function CityPage({ city }: CityPageProps) {
             </ol>
           </nav>
 
-          <div className="mt-8 max-w-3xl">
+          <div className="mt-8 min-w-0">
             <p className="font-semibold uppercase tracking-[0.25em] text-amber-300">
               {city.oblast}
             </p>
-            <h1 className="mt-5 text-balance text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
+            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
               Установка заборов
               <br />
               в {city.namePrepositional} под ключ
             </h1>
-            <p className="mt-6 max-w-3xl text-xl leading-relaxed text-slate-200 sm:text-2xl">
+            <p className="mt-6 text-xl leading-relaxed text-slate-200 sm:text-2xl">
               Профнастил • Евроштакетник • Сетка-рабица
               <br />
               Цены от 30 BYN/м.п.
@@ -209,12 +210,12 @@ export function CityPage({ city }: CityPageProps) {
               </div>
             </div>
           </div>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="py-16">
-        <div className="mx-auto max-w-[1350px] px-4 sm:px-6 lg:px-8">
-          <article className="max-w-3xl text-lg leading-8 text-slate-700">
+        <SiteContainer>
+          <article className="max-w-5xl text-lg leading-8 text-slate-700">
           <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
             Заборы в {city.namePrepositional}: расчёт, доставка и монтаж
           </h2>
@@ -224,16 +225,16 @@ export function CityPage({ city }: CityPageProps) {
             ))}
           </div>
           </article>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="bg-[#F5F5F5] py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
+        <SiteContainer>
+          <div>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Типы заборов
             </h2>
-            <p className="mt-4 text-slate-600">
+            <p className="mt-4 max-w-3xl text-slate-600">
               Подберём ограждение для участка в {city.namePrepositional}: от
               бюджетного решения до фасадного забора с воротами.
             </p>
@@ -250,16 +251,16 @@ export function CityPage({ city }: CityPageProps) {
               />
             ))}
           </div>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
+        <SiteContainer>
+          <div>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Ворота и калитки
             </h2>
-            <p className="mt-4 text-slate-600">
+            <p className="mt-4 max-w-3xl text-slate-600">
               Изготавливаем въездную группу в едином стиле с забором:
               распашные, откатные ворота и калитки под размер проёма.
             </p>
@@ -276,12 +277,12 @@ export function CityPage({ city }: CityPageProps) {
               />
             ))}
           </div>
-        </div>
+        </SiteContainer>
       </section>
 
       {city.districts?.length ? (
         <section className="bg-[#F5F5F5] py-16">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SiteContainer>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Работаем во всех районах {city.nameGenitive}
             </h2>
@@ -295,12 +296,12 @@ export function CityPage({ city }: CityPageProps) {
                 </span>
               ))}
             </div>
-          </div>
+          </SiteContainer>
         </section>
       ) : null}
 
       <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SiteContainer>
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -327,11 +328,11 @@ export function CityPage({ city }: CityPageProps) {
               />
             ))}
           </div>
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="bg-[#1B5E20] py-16" id="lead-form">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+        <SiteContainer className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="text-white">
             <p className="font-semibold uppercase tracking-wide text-amber-300">
               Получите расчёт по телефону
@@ -346,11 +347,11 @@ export function CityPage({ city }: CityPageProps) {
             </p>
           </div>
           <QuizForm cityName={city.name} source={`city-${city.slug}`} />
-        </div>
+        </SiteContainer>
       </section>
 
       <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Другие города
           </h2>
@@ -369,7 +370,7 @@ export function CityPage({ city }: CityPageProps) {
               </Link>
             ))}
           </div>
-        </div>
+        </SiteContainer>
       </section>
     </main>
   );
