@@ -126,6 +126,14 @@ const citiesByOblast = cities.reduce<Record<string, typeof cities>>(
 
 const faqJsonLd = generateFaqJsonLd(faq);
 
+const sectionIntroClassName =
+  "w-full max-w-none lg:max-w-[70%] xl:max-w-[56rem]";
+
+const sectionIntroFlexClassName = `${sectionIntroClassName} min-w-0 flex-1`;
+
+const sectionSubtitleClassName =
+  "mt-4 text-pretty leading-relaxed text-slate-600 md:text-[1.0625rem] md:leading-[1.65]";
+
 function placeholderImage(title: string, index: number) {
   const colors = ["#1B5E20", "#2E7D32", "#F59E0B", "#334155"];
   const color = colors[index % colors.length];
@@ -184,13 +192,11 @@ export default function Home() {
                 по всей Беларуси под ключ
               </span>
             </h1>
-            <p className="mt-6 max-w-3xl text-xl leading-relaxed text-slate-200 sm:text-2xl">
-              Профнастил • Евроштакетник • Сетка-рабица
-              <br />
-              Цены от 30 BYN/м.п.
-              <br />
-              Рассрочка и оплата частями до 60 месяцев
-            </p>
+            <ul className="mt-6 max-w-2xl space-y-2 text-lg leading-snug text-slate-200 sm:text-xl">
+              <li>Профнастил • Евроштакетник • Сетка-рабица</li>
+              <li>Цены от 30 BYN/м.п.</li>
+              <li>Рассрочка и оплата частями до 60 месяцев</li>
+            </ul>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <a
                 className="inline-flex justify-center rounded-xl bg-[#F59E0B] px-6 py-3 font-bold text-white transition hover:bg-amber-600"
@@ -211,9 +217,9 @@ export default function Home() {
             <div className="flex flex-col lg:w-full lg:justify-between">
               <div>
                 <p className="text-2xl font-bold">Бесплатный расчёт сегодня</p>
-                <p className="mt-3 text-slate-200">
+                <p className="mt-3 text-pretty leading-snug text-slate-200">
                   Рассчитаем стоимость, подберём материалы и покажем варианты
-                  заборов под ваш участок.
+                  заборов под ваш&nbsp;участок.
                 </p>
               </div>
               <div className="mt-5 grid grid-cols-2 gap-3 text-sm lg:mt-6">
@@ -250,13 +256,13 @@ export default function Home() {
 
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
+          <div className={sectionIntroClassName}>
             <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
               Типы заборов
             </h2>
-            <p className="mt-4 text-slate-600">
-              Подбираем ограждение под бюджет, стиль участка и требования к
-              приватности.
+            <p className={sectionSubtitleClassName}>
+              Подбираем ограждение под бюджет, стиль участка и требования
+              к&nbsp;приватности.
             </p>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -276,13 +282,15 @@ export default function Home() {
 
       <section className="bg-[#F5F5F5] py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
+          <div className={sectionIntroClassName}>
             <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
               Ворота и калитки
             </h2>
-            <p className="mt-4 text-slate-600">
-              Изготавливаем въездные группы в одном стиле с забором и
-              подготавливаем конструкции под автоматику.
+            <p className={sectionSubtitleClassName}>
+              Изготавливаем ворота и калитки в едином стиле с&nbsp;забором.
+              <br />
+              Подготавливаем конструкции под автоматику и&nbsp;комфортное
+              ежедневное использование.
             </p>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -303,13 +311,13 @@ export default function Home() {
       <section className="bg-[#F5F5F5] py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
+            <div className={sectionIntroFlexClassName}>
               <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
                 Примеры работ
               </h2>
-              <p className="mt-4 text-slate-600">
-                Реальные типы объектов: частные дома, дачи, въездные группы и
-                большие периметры.
+              <p className={sectionSubtitleClassName}>
+                Реальные объекты: частные дома, дачи, въездные группы
+                и&nbsp;большие периметры.
               </p>
             </div>
             <Link
@@ -341,16 +349,16 @@ export default function Home() {
 
       <section className="py-16" id="quiz">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
-          <div>
+          <div className={sectionIntroClassName}>
             <p className="font-semibold uppercase tracking-wide text-[#1B5E20]">
               Калькулятор
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
               Рассчитайте стоимость забора за 1 минуту
             </h2>
-            <p className="mt-5 text-slate-600">
-              Ответьте на 6 вопросов. Мы подготовим предварительный расчёт и
-              уточним стоимость по телефону за 5 минут.
+            <p className={`${sectionSubtitleClassName} mt-5`}>
+              Ответьте на 6 вопросов — подготовим предварительный расчёт
+              и&nbsp;уточним стоимость по&nbsp;телефону за&nbsp;5&nbsp;минут.
             </p>
           </div>
           <QuizForm />
@@ -360,13 +368,13 @@ export default function Home() {
       <section className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
+            <div className={sectionIntroFlexClassName}>
               <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
                 Отзывы клиентов
               </h2>
-              <p className="mt-4 text-slate-600">
-                Клиенты отмечают точную смету, аккуратный монтаж и соблюдение
-                сроков.
+              <p className={sectionSubtitleClassName}>
+                Клиенты отмечают точную смету, аккуратный монтаж
+                и&nbsp;соблюдение сроков.
               </p>
             </div>
             <Link
@@ -397,13 +405,17 @@ export default function Home() {
 
       <section className="bg-[#F5F5F5] py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-            Работаем по всей Беларуси
-          </h2>
-          <p className="mt-4 max-w-3xl text-slate-600">
-            Основной регион — Гомель и Гомельская область. Также работаем в
-            Минске и ещё 39 городах по всей Беларуси.
-          </p>
+          <div className={sectionIntroClassName}>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Работаем по Беларуси
+            </h2>
+            <p className={sectionSubtitleClassName}>
+              Устанавливаем заборы для частных домов, дач и&nbsp;коммерческих
+              объектов по&nbsp;всей Беларуси. Работаем не только
+              в&nbsp;городах, но и&nbsp;в&nbsp;посёлках, деревнях
+              и&nbsp;небольших населённых пунктах.
+            </p>
+          </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {cityGroupOrder.map((oblast) => {
               const oblastCities = citiesByOblast[oblast] ?? [];
@@ -441,10 +453,10 @@ export default function Home() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
               Получите бесплатный расчёт
             </h2>
-            <p className="mt-5 text-green-50">
-              Оставьте номер — перезвоним и рассчитаем стоимость за 5 минут.
-              Для предварительной цены достаточно назвать длину забора и
-              выбранный материал.
+            <p className="mt-5 max-w-none text-pretty leading-relaxed text-green-50 md:text-[1.0625rem] md:leading-[1.65]">
+              Оставьте номер — перезвоним и&nbsp;рассчитаем стоимость
+              за&nbsp;5&nbsp;минут. Для предварительной цены достаточно назвать
+              длину забора и&nbsp;выбранный материал.
             </p>
           </div>
           <LeadForm source="home-lead-form" />

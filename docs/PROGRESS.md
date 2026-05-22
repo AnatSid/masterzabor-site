@@ -218,6 +218,15 @@
 - ✅ Единая вертикальная сетка city pages: `SiteContainer` (`max-w-[1350px]`), hero grid `1.45fr / 380px`, intro `max-w-5xl`; проверены `/molodechno`, `/gomel`, `/brest`.
 - ✅ Service pages (`ServicePage`): единый `SiteContainer`, article `max-w-[960px]`, hero subtitle lead/accent для сетки-рабицы; проверены 3 fence service pages.
 
+## Тексты и layout подзаголовков на главной
+- ✅ Обновлены тексты секций «Ворота и калитки» и «Работаем по Беларуси»: убрана формулировка «Основной регион — Гомель…», нейтральный профессиональный тон без SEO-спама
+- ✅ Подзаголовок «Ворота и калитки»: два предложения с явным переносом строки после первого
+- ✅ Единые классы intro/subtitle на главной: `sectionIntroClassName` (`lg:max-w-[70%]`, `xl:max-w-[56rem]`), `sectionIntroFlexClassName` для секций с ссылкой справа, `sectionSubtitleClassName` (`text-pretty`, `leading-relaxed`)
+- ✅ Расширены description-блоки секций (ранее узкая колонка ~640px): «Типы заборов», «Примеры работ», «Отзывы», «Калькулятор», CTA-форма; на mobile — полная ширина, естественные переносы
+- ✅ Типографика hero и CTA: список вместо `<br />`, неразрывные пробелы для «висячих» слов
+- ✅ Локальный dev: устранён `500` на `localhost:3000` (битый `.next` после параллельного `build`+`dev`); правила восстановления добавлены в `.cursorrules` и `docs/PLAN.MD.md`
+- ✅ `npm run build` проходит после правок
+
 ---
 
 ## Итоговая проверка
