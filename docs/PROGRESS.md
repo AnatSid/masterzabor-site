@@ -269,3 +269,68 @@
 - ⚠️ **Нельзя пропускать Telegram webhook через redirect.**
 - ⚠️ Endpoint `https://www.masterzabor.by/api/telegram-webhook` обязан отвечать напрямую (без 307/308).
 - ⚠️ При будущих изменениях redirects всегда проверять, что `/api/*` исключены из host-redirect правил.
+
+## Favicon и app icons (2026-05-23)
+- ✅ Аудит prod + Google Search Central: иконки в `public/`, разметка в `lib/seo.ts` → `generatePageMetadata()` (не file-based `app/favicon.*`).
+- ✅ `lib/seo.ts`: в `icons.icon` первыми 192×192 и 48×48 PNG, затем `.ico`/16/32, `icon.svg`; добавлен `shortcut` → `/favicon.ico`.
+- ✅ Новый файл `public/favicon-48x48.png` (рекомендация Google ≥48×48 для SERP).
+- ✅ Дубли в `public/` под Next-имена (прямой **200 OK**, без redirect): `apple-icon.png`, `icon-192.png`, `icon-512.png` — копии `apple-touch-icon`, `android-chrome-192x192`, `android-chrome-512x512`.
+- ✅ Принцип: favicon/app icons **не** через 301/308 (кэш ботов и стабильный URL важнее ~12 KB дублей); redirect только для каноникализации домена, не для PNG.
+- ✅ `next.config.ts`: без favicon-redirects.
+- 📋 После деплоя: Search Console → индексирование `https://www.masterzabor.by/`; глобус в выдаче может оставаться дни–недели (отдельный crawl Google).
+
+### Как заменить логотип / favicon (инструкция для человека и Cursor)
+
+> **Для ИИ (Cursor):** если пользователь просит новый логотип, favicon, иконку сайта или «обновить бренд» — прочитай этот блок целиком, обнови **все** файлы из таблицы ниже, **не** меняй пути в `lib/seo.ts` без необходимости (имена URL должны остаться прежними), **не** добавляй redirect для PNG. После правок: `npm run build`, `npm run lint`, напомнить про деплой и Search Console.
+
+**Исходник:** один квадратный мастер **512×512** (PNG с прозрачностью или на фоне `#1B5E20` — как в текущем стиле). Из него экспортируются все размеры.
+
+#### Таблица файлов (все обязательны при смене логотипа)
+
+| Файл | Размер | Роль |
+|------|--------|------|
+| `public/android-chrome-512x512.png` | 512×512 | PWA manifest, мастер для ресайза |
+| `public/android-chrome-192x192.png` | 192×192 | Manifest + **первый** `rel="icon"` (Google) |
+| `public/icon-512.png` | 512×512 | **Дубль** `android-chrome-512x512.png` (скопировать байт-в-байт) |
+| `public/icon-192.png` | 192×192 | **Дубль** `android-chrome-192x192.png` |
+| `public/apple-touch-icon.png` | 180×180 | iOS «На экран Домой» |
+| `public/apple-icon.png` | 180×180 | **Дубль** `apple-touch-icon.png` |
+| `public/favicon-48x48.png` | 48×48 | Google SERP (рекомендация ≥48) |
+| `public/favicon-32x32.png` | 32×32 | Вкладка браузера |
+| `public/favicon-16x16.png` | 16×16 | Старые браузеры |
+| `public/favicon.ico` | 16+32 (и желательно 48 в ICO) | Классический favicon, `shortcut icon` |
+| `public/icon.svg` | viewBox 64×64 | SVG в `<head>`, `mask-icon` (Safari) — перерисовать или упростить под новый знак |
+| `public/images/logo-512.png` | 512×512 | Schema.org `logo` / `image` (`LOGO_PATH` в `lib/constants.ts`) |
+| `public/images/og-masterzabor.jpg` | 1200×630 | Open Graph / Twitter (отдельный макет, не просто ресайз 512) |
+
+`public/manifest.webmanifest` — пути **не менять**, только заменить PNG по тем же именам.  
+`lib/seo.ts` — менять **только** если переименовываете файлы (лучше не переименовывать: стабильные URL для Google).
+
+#### Порядок работ (человек или ИИ)
+
+1. Подготовить мастер 512×512 (Figma, Illustrator, или [realfavicongenerator.net](https://realfavicongenerator.net/) → скачать пакет и разложить по именам из таблицы).
+2. Положить/перезаписать **основные** файлы: `android-chrome-512x512`, `192`, `apple-touch-icon`, `favicon-16/32/48`, `favicon.ico`, `icon.svg`, `images/logo-512.png`.
+3. **Скопировать дубли** (иначе 404 на Next-URL):
+   - `apple-icon.png` ← `apple-touch-icon.png`
+   - `icon-192.png` ← `android-chrome-192x192.png`
+   - `icon-512.png` ← `android-chrome-512x512.png`
+4. Обновить `public/images/og-masterzabor.jpg` (баннер с логотипом для соцсетей).
+5. `npm run build` && `npm run lint` → commit → deploy.
+6. Проверить в браузере (hard refresh): вкладка, «Добавить на экран», View Source — первый `rel="icon"` на 192×192.
+7. Search Console: URL Inspection → `https://www.masterzabor.by/` → запросить индексирование.
+
+#### Быстрая проверка после деплоя
+
+```text
+https://www.masterzabor.by/favicon.ico          → 200
+https://www.masterzabor.by/android-chrome-192x192.png → 200
+https://www.masterzabor.by/apple-icon.png       → 200 (не redirect)
+https://www.masterzabor.by/icon-192.png         → 200
+```
+
+#### Частые ошибки
+
+- Обновили только `favicon.ico`, забыли **дубли** `apple-icon` / `icon-192` / `icon-512`.
+- Заменили `android-chrome-192x192.png`, но не **`favicon-48x48.png`**.
+- Поставили redirect вместо копии файла в `public/`.
+- Переименовали файлы → сломали кэш Google и manifest; лучше те же имена, новое содержимое.
