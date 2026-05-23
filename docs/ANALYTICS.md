@@ -47,6 +47,28 @@ Service account (`GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY`) **deprecated** —
 
 **Vercel:** apex `masterzabor.by` → **307** → `www`. Telegram не следует за POST redirect → webhook только на **www**.
 
+### Redirect safety rule (critical)
+
+- Canonical SEO стратегия проекта остаётся на **apex** (`https://masterzabor.by`).
+- Telegram webhook остаётся на **www** (`https://www.masterzabor.by/api/telegram-webhook`).
+- Поэтому host-redirect `www -> apex` разрешён только для обычных страниц.
+- `/api/*` (включая `/api/telegram-webhook`) должны быть исключены из redirect.
+
+Обоснование:
+- Telegram webhook приходит как POST.
+- Telegram не гарантирует follow для POST redirects (307/308).
+- Если webhook endpoint отдаёт redirect вместо прямого 200, доставка апдейтов может сломаться.
+
+Текущее безопасное правило:
+- `next.config.ts`:
+  - redirect source: `/:path((?!api(?:/|$)).*)`
+  - host condition: `www.masterzabor.by`
+  - destination: `https://masterzabor.by/:path*`
+
+Итог:
+- страницы канонизуются на apex (SEO-consistent),
+- API/webhook отвечают напрямую без редиректов (Telegram-safe).
+
 Установка: `npx tsx scripts/set-telegram-bot.ts` (webhook + `setMyCommands`).
 
 ### Команды

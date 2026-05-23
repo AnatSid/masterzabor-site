@@ -6,7 +6,12 @@ import { FloatingButtons } from "@/components/layout/FloatingButtons";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { COORDINATES } from "@/lib/constants";
-import { generateLocalBusinessJsonLd, generatePageMetadata } from "@/lib/seo";
+import {
+  generateLocalBusinessJsonLd,
+  generateOrganizationJsonLd,
+  generatePageMetadata,
+  generateWebsiteJsonLd,
+} from "@/lib/seo";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -29,6 +34,8 @@ export const metadata: Metadata = {
 };
 
 const localBusinessJsonLd = generateLocalBusinessJsonLd();
+const organizationJsonLd = generateOrganizationJsonLd();
+const websiteJsonLd = generateWebsiteJsonLd();
 const ymId = process.env.NEXT_PUBLIC_YM_ID;
 const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
@@ -48,6 +55,21 @@ export default function RootLayout({
               "<",
               "\\u003c",
             ),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd).replaceAll(
+              "<",
+              "\\u003c",
+            ),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd).replaceAll("<", "\\u003c"),
           }}
         />
         {ymId ? (

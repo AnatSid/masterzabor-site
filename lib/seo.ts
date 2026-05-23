@@ -4,6 +4,7 @@ import {
   CITY,
   COMPANY_NAME,
   COORDINATES,
+  LOGO_PATH,
   PHONE,
   SITE_NAME,
   SITE_URL,
@@ -70,6 +71,22 @@ export function generatePageMetadata({
     alternates: {
       canonical: url,
     },
+    icons: {
+      icon: [
+        { url: "/favicon.ico" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+      other: [
+        { rel: "manifest", url: "/manifest.webmanifest" },
+        {
+          rel: "mask-icon",
+          url: "/icon.svg",
+          color: "#1B5E20",
+        },
+      ],
+    },
     keywords: [
       "заборы в Беларуси",
       "установка заборов",
@@ -96,6 +113,12 @@ export function generatePageMetadata({
           alt: `${COMPANY_NAME} — установка заборов в Беларуси`,
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
     },
   };
 }
@@ -127,6 +150,46 @@ export function generateLocalBusinessJsonLd() {
     areaServed: {
       "@type": "Country",
       name: "Беларусь",
+    },
+  };
+}
+
+export function generateOrganizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    name: COMPANY_NAME,
+    url: SITE_URL,
+    logo: absoluteUrl(LOGO_PATH),
+    image: absoluteUrl(LOGO_PATH),
+    telephone: PHONE,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "пр. Речицкий, 7А, оф. 5.11",
+      addressLocality: CITY,
+      postalCode: "246027",
+      addressCountry: "BY",
+    },
+    areaServed: "BY",
+  };
+}
+
+export function generateWebsiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: SITE_NAME,
+    publisher: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    inLanguage: "ru-BY",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE_URL}/blog/?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
     },
   };
 }

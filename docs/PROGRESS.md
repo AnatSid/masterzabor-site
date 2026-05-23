@@ -235,3 +235,37 @@
 - ⬜ Мобильная версия выглядит корректно
 - ✅ API заявок отправляет данные в Telegram
 - ⬜ UI-формы вручную проверить в браузере
+
+---
+
+## Redirect/Webhook Safety Fix (май 2026)
+- ✅ Выявлена архитектурная коллизия:
+  - canonical/SEO стратегия использует apex `https://masterzabor.by`;
+  - Telegram webhook зафиксирован на `https://www.masterzabor.by/api/telegram-webhook`;
+  - глобальный `www -> apex` redirect был потенциально опасен для webhook.
+- ✅ Почему это было опасно:
+  - Telegram отправляет webhook как **POST**;
+  - Telegram не гарантирует следование за POST-redirect (307/308);
+  - если webhook получает redirect вместо прямого `200`, события могут перестать доставляться.
+- ✅ Принятое решение (без ломки SEO):
+  - canonical, sitemap, robots, metadata остаются на apex;
+  - webhook остаётся на `www`;
+  - `/api/*` исключены из `www -> apex` redirect.
+- ✅ Реализация:
+  - `next.config.ts`: redirect ограничен только не-API маршрутами:
+    - `source: "/:path((?!api(?:/|$)).*)"`
+    - `has: host=www.masterzabor.by`
+    - `destination: https://masterzabor.by/:path*`
+- ✅ Почему это безопасно:
+  - SEO-канонизация сохраняется для обычных страниц;
+  - API и webhook получают прямой ответ без redirect;
+  - не затронуты `generateStaticParams`, sitemap/robots, analytics и команды Telegram.
+- ✅ Проверка поведения:
+  - `GET /` с host `www.masterzabor.by` → `308` на apex (ожидаемо);
+  - `GET /api/telegram-webhook` с host `www.masterzabor.by` → `405` (нет redirect);
+  - `POST /api/telegram-webhook` с host `www.masterzabor.by` → `200` (прямой ответ).
+
+### Важно (защитное предупреждение)
+- ⚠️ **Нельзя пропускать Telegram webhook через redirect.**
+- ⚠️ Endpoint `https://www.masterzabor.by/api/telegram-webhook` обязан отвечать напрямую (без 307/308).
+- ⚠️ При будущих изменениях redirects всегда проверять, что `/api/*` исключены из host-redirect правил.
