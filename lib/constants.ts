@@ -1,7 +1,7 @@
 export const COMPANY_NAME = "МастерЗабор";
 export const SITE_NAME = "МастерЗабор";
-export const SITE_URL = "https://masterzabor.by";
-export const SITE_HOST = "masterzabor.by";
+export const SITE_URL = "https://www.masterzabor.by";
+export const SITE_HOST = "www.masterzabor.by";
 export const LOGO_PATH = "/images/logo-512.png";
 
 /** Telegram POST не следует за 307; на Vercel apex → www, поэтому webhook только на www. */
