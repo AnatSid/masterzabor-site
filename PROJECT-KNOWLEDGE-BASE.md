@@ -234,6 +234,14 @@ Dependency decisions:
 - Pin versions in `package.json`; avoid `latest`.
 - Replace `next lint` before Next.js 16 upgrade.
 
+Next 16 / MCP decision:
+
+- Do not mix Next 16 upgrade with `P0-01 Canonical / sitemap / no-slash URL policy`.
+- Add dedicated stage `P0-01.5 Next 16 / MCP readiness` immediately after P0-01.
+- Do P0-01.5 before P0-02/P0-03 and before large frontend/mobile/CRO/design work.
+- Main reason: Next 16+ enables runtime Next DevTools MCP (`/_next/mcp`) for route/error/metadata diagnostics.
+- Required checks: Node.js `20.9+` locally and on Vercel, official codemod, ESLint CLI instead of `next lint`, async Request APIs, `next/image`, Turbopack dev/build, canonical/sitemap regression.
+
 ## Сильные стороны
 
 - Используется современный Next.js App Router.
@@ -395,6 +403,7 @@ Add or formalize:
 Critical now:
 
 - Fix no-slash canonical/sitemap/internal/schema URL policy.
+- After P0-01, run dedicated `P0-01.5 Next 16 / MCP readiness`.
 - Close `masterzabor-site.vercel.app` duplicate surface.
 - Make lead storage atomic.
 - Fail-close cron/webhook secrets.

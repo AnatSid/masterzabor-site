@@ -92,6 +92,7 @@ Production/preview:
 | S00 Audit docs | done | Созданы `AUDIT-MASTERZABOR-2026.md` и `PROJECT-KNOWLEDGE-BASE.md`. |
 | S01 Tracker | done | Создан этот файл. |
 | P0-01 Canonical / sitemap / no-slash URL policy | not_started | Главный SEO-блокер. |
+| P0-01.5 Next 16 / MCP readiness | not_started | Отдельный upgrade после P0-01, до P0-02/P0-03 и больших frontend/mobile правок. |
 | P0-02 Close duplicate Vercel URL | not_started | `masterzabor-site.vercel.app` отдаёт 200. |
 | P0-03 Lead reliability + production secrets | not_started | KV atomic write, Telegram fallback, fail-closed secrets. |
 | P0-04 Build/lint/tooling diagnosis | not_started | Ранее завис `next build`; `next lint` deprecated. |
@@ -130,6 +131,45 @@ Done criteria:
 - OpenGraph URL совпадает с canonical;
 - JSON-LD URL не указывает на redirecting slash URL;
 - локально проверены homepage, service, city, blog, prices.
+
+### P0-01.5 Next 16 / MCP Readiness
+
+Цель:
+
+- перейти с Next 15.5.18 на Next 16+ отдельным controlled stage;
+- включить runtime diagnostics через Next DevTools MCP (`/_next/mcp`);
+- не смешивать upgrade с canonical/sitemap SEO-fix.
+
+Когда делать:
+
+- строго после завершения и проверки `P0-01 Canonical / sitemap / no-slash URL policy`;
+- до `P0-02`, `P0-03` и больших frontend/mobile/CRO/design правок.
+
+Рабочая ветка:
+
+- `codex/p0-next16-mcp-readiness`
+
+Scope:
+
+- проверить Node.js `20.9+` локально и на Vercel;
+- выполнить официальный Next 16 codemod на clean git state;
+- заменить deprecated `next lint` на ESLint CLI;
+- проверить async Request APIs (`params`, `searchParams`, `cookies`, `headers`) и route handlers;
+- проверить `next/image` breaking changes;
+- проверить Turbopack dev/build поведение;
+- после `npm run dev` проверить Next MCP discovery/tools;
+- не включать Cache Components, React Compiler и крупные refactors в этом этапе.
+
+Done criteria:
+
+- `package.json` / lockfile обновлены на Next 16+;
+- `npm run dev` стартует;
+- `npm run lint` или новая lint-команда проходит;
+- `npm run build` проходит или причина documented с точным blocker;
+- Next DevTools MCP видит running server и доступны runtime tools;
+- canonical/sitemap/no-slash policy из P0-01 не сломана;
+- smoke test пройден для homepage, service, city, blog, prices, lead form;
+- `PROJECT-ROADMAP-TRACKER.md` и при необходимости `PROJECT-KNOWLEDGE-BASE.md` обновлены.
 
 ### P0-02 Close Duplicate Vercel URL
 
