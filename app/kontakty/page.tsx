@@ -19,12 +19,12 @@ export const metadata = generatePageMetadata({
   title: "Контакты МастерЗабор — Гомель | Телефон и адрес",
   description:
     "Контакты МастерЗабор: телефон, мессенджеры, адрес в Гомеле, реквизиты и график работы. Оставьте заявку, чтобы получить расчёт стоимости забора.",
-  path: "/kontakty/",
+  path: "/kontakty",
 });
 
 const breadcrumbJsonLd = generateBreadcrumbJsonLd([
   { name: "Главная", url: "/" },
-  { name: "Контакты", url: "/kontakty/" },
+  { name: "Контакты", url: "/kontakty" },
 ]);
 
 const messengers = [

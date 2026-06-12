@@ -5,7 +5,7 @@ export const metadata = generatePageMetadata({
   title: "Отзывы клиентов о МастерЗабор | Беларусь",
   description:
     "Реальные отзывы клиентов МастерЗабор о монтаже заборов, ворот и калиток в Беларуси. Оцените качество работ и точность расчётов перед заказом.",
-  path: "/otzyvy/",
+  path: "/otzyvy",
 });
 
 const reviews = [
@@ -37,7 +37,7 @@ const reviews = [
 
 const breadcrumbJsonLd = generateBreadcrumbJsonLd([
   { name: "Главная", url: "/" },
-  { name: "Отзывы", url: "/otzyvy/" },
+  { name: "Отзывы", url: "/otzyvy" },
 ]);
 
 const GOOGLE_MAPS_REVIEWS_LINK =

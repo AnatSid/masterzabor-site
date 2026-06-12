@@ -7,7 +7,7 @@ const service = getRequiredServiceBySlug("zabory-iz-evroshtaketnika");
 export const metadata = generatePageMetadata({
   title: service.metaTitle,
   description: service.metaDescription,
-  path: `/${service.slug}/`,
+  path: `/${service.slug}`,
   keywords: service.keywords,
 });
 

@@ -11,7 +11,7 @@ export const metadata = generatePageMetadata({
   title: "Цены на заборы в Беларуси — 2026 | МастерЗабор",
   description:
     "Актуальные цены на заборы, ворота и калитки в Беларуси в 2026 году. Профнастил, евроштакетник, сетка-рабица. Бесплатный расчёт стоимости по телефону.",
-  path: "/tseny/",
+  path: "/tseny",
 });
 
 const fenceServices = services.filter((service) =>
@@ -28,7 +28,7 @@ const gateServices = services.filter((service) =>
 
 const breadcrumbJsonLd = generateBreadcrumbJsonLd([
   { name: "Главная", url: "/" },
-  { name: "Цены", url: "/tseny/" },
+  { name: "Цены", url: "/tseny" },
 ]);
 
 const productJsonLdList = services.map((service) =>

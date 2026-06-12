@@ -7,7 +7,7 @@ const service = getRequiredServiceBySlug("zabory-iz-profnastila");
 export const metadata = generatePageMetadata({
   title: service.metaTitle,
   description: service.metaDescription,
-  path: `/${service.slug}/`,
+  path: `/${service.slug}`,
 });
 
 export default function ZaboryIzProfnastilaPage() {

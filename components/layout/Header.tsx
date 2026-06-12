@@ -12,17 +12,17 @@ import {
 } from "@/lib/constants";
 
 const navigation = [
-  { label: "Профнастил", href: "/zabory-iz-profnastila/" },
-  { label: "Штакетник", href: "/zabory-iz-evroshtaketnika/" },
-  { label: "Сетка-рабица", href: "/zabory-iz-setki-rabitsy/" },
-  { label: "Наши работы", href: "/nashi-raboty/" },
-  { label: "Контакты", href: "/kontakty/" },
+  { label: "Профнастил", href: "/zabory-iz-profnastila" },
+  { label: "Штакетник", href: "/zabory-iz-evroshtaketnika" },
+  { label: "Сетка-рабица", href: "/zabory-iz-setki-rabitsy" },
+  { label: "Наши работы", href: "/nashi-raboty" },
+  { label: "Контакты", href: "/kontakty" },
 ] as const;
 
 const gateNavigation = [
-  { label: "Ворота распашные", href: "/vorota-raspashnye/" },
-  { label: "Ворота откатные", href: "/vorota-otkatnye/" },
-  { label: "Калитки", href: "/kalitki/" },
+  { label: "Ворота распашные", href: "/vorota-raspashnye" },
+  { label: "Ворота откатные", href: "/vorota-otkatnye" },
+  { label: "Калитки", href: "/kalitki" },
 ] as const;
 
 const iconClassName = "h-[22px] w-[22px]";

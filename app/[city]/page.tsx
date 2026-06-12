@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: CityRouteProps) {
     ...generatePageMetadata({
       title: `Заборы в ${city.namePrepositional} — купить и установить | МастерЗабор`,
       description: `Установка заборов в ${city.namePrepositional} и ${city.oblastGenitive}. Профнастил, штакетник, сетка-рабица. Цены от 30 BYN/м.п. Гарантия 20 лет.`,
-      path: `/${city.slug}/`,
+      path: `/${city.slug}`,
     }),
     other: {
       "geo.region": "BY",

@@ -13,20 +13,20 @@ import {
 
 const footerNavigation = [
   { label: "Главная", href: "/" },
-  { label: "Цены", href: "/tseny/" },
-  { label: "Наши работы", href: "/nashi-raboty/" },
-  { label: "Отзывы", href: "/otzyvy/" },
-  { label: "Контакты", href: "/kontakty/" },
-  { label: "Блог", href: "/blog/" },
+  { label: "Цены", href: "/tseny" },
+  { label: "Наши работы", href: "/nashi-raboty" },
+  { label: "Отзывы", href: "/otzyvy" },
+  { label: "Контакты", href: "/kontakty" },
+  { label: "Блог", href: "/blog" },
 ] as const;
 
 const footerServices = [
-  { label: "Профнастил", href: "/zabory-iz-profnastila/" },
-  { label: "Евроштакетник", href: "/zabory-iz-evroshtaketnika/" },
-  { label: "Сетка-рабица", href: "/zabory-iz-setki-rabitsy/" },
-  { label: "Ворота распашные", href: "/vorota-raspashnye/" },
-  { label: "Ворота откатные", href: "/vorota-otkatnye/" },
-  { label: "Калитки", href: "/kalitki/" },
+  { label: "Профнастил", href: "/zabory-iz-profnastila" },
+  { label: "Евроштакетник", href: "/zabory-iz-evroshtaketnika" },
+  { label: "Сетка-рабица", href: "/zabory-iz-setki-rabitsy" },
+  { label: "Ворота распашные", href: "/vorota-raspashnye" },
+  { label: "Ворота откатные", href: "/vorota-otkatnye" },
+  { label: "Калитки", href: "/kalitki" },
 ] as const;
 
 const messengers = [

@@ -5,6 +5,7 @@ import {
   getRangeKeys,
   getTodayLeadKey,
 } from "@/lib/leads";
+import { normalizePath } from "@/lib/url";
 
 const MINSK_TIME_ZONE = "Europe/Minsk";
 
@@ -23,17 +24,17 @@ export function getTopEntry(values: Record<string, number>) {
 export function sourceToPagePath(source: string) {
   if (source.startsWith("city-")) {
     const slug = source.slice("city-".length);
-    return slug ? `/${slug}/` : source;
+    return slug ? normalizePath(`/${slug}`) : source;
   }
 
   if (source.startsWith("service-")) {
     const slug = source.slice("service-".length);
-    return slug ? `/${slug}/` : source;
+    return slug ? normalizePath(`/${slug}`) : source;
   }
 
   if (source.startsWith("blog-post-")) {
     const slug = source.slice("blog-post-".length);
-    return slug ? `/blog/${slug}/` : source;
+    return slug ? normalizePath(`/blog/${slug}`) : source;
   }
 
   if (source === "home-quiz" || source === "home-lead-form") {
@@ -41,11 +42,11 @@ export function sourceToPagePath(source: string) {
   }
 
   if (source === "prices-page") {
-    return "/tseny/";
+    return "/tseny";
   }
 
   if (source === "contacts-page") {
-    return "/kontakty/";
+    return "/kontakty";
   }
 
   return source;

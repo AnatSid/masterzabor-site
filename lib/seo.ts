@@ -11,6 +11,7 @@ import {
   UNP,
   WORKING_HOURS,
 } from "@/lib/constants";
+import { canonicalUrl } from "@/lib/url";
 
 type PageMetadataInput = {
   title: string;
@@ -45,13 +46,14 @@ type ArticleJsonLdInput = {
 };
 
 const DEFAULT_IMAGE = "/images/og-masterzabor.jpg";
+const URI_SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
 
 const absoluteUrl = (path: string) => {
-  if (path.startsWith("http")) {
+  if (URI_SCHEME_PATTERN.test(path)) {
     return path;
   }
 
-  return new URL(path, SITE_URL).toString();
+  return canonicalUrl(path);
 };
 
 export function generatePageMetadata({
@@ -196,7 +198,7 @@ export function generateWebsiteJsonLd() {
     inLanguage: "ru-BY",
     potentialAction: {
       "@type": "SearchAction",
-      target: `${SITE_URL}/blog/?q={search_term_string}`,
+      target: `${canonicalUrl("/blog")}?q={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };
@@ -250,7 +252,7 @@ export function generateBreadcrumbJsonLd(items: ReadonlyArray<BreadcrumbItem>) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: absoluteUrl(item.url),
+      item: canonicalUrl(item.url),
     })),
   };
 }
@@ -268,7 +270,7 @@ export function generateArticleJsonLd({
     description,
     datePublished: date,
     dateModified: date,
-    mainEntityOfPage: absoluteUrl(url),
+    mainEntityOfPage: canonicalUrl(url),
     author: {
       "@type": "Organization",
       name: COMPANY_NAME,

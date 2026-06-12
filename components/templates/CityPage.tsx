@@ -10,12 +10,12 @@ import {
   COMPANY_NAME,
   PHONE,
   PHONE_DISPLAY,
-  SITE_URL,
   TRUST_FACTS,
   UNP,
   WORKING_HOURS,
 } from "@/lib/constants";
 import { generateBreadcrumbJsonLd } from "@/lib/seo";
+import { canonicalUrl } from "@/lib/url";
 
 type CityPageProps = {
   city: City;
@@ -81,9 +81,9 @@ function generateCityLocalBusinessJsonLd(city: City) {
   return {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "@id": `${SITE_URL}/${city.slug}/#localbusiness`,
+    "@id": `${canonicalUrl(`/${city.slug}`)}#localbusiness`,
     name: `${COMPANY_NAME} — заборы в ${city.namePrepositional}`,
-    url: `${SITE_URL}/${city.slug}/`,
+    url: canonicalUrl(`/${city.slug}`),
     telephone: PHONE_DISPLAY,
     priceRange: "$$",
     taxID: UNP,
@@ -112,7 +112,7 @@ export function CityPage({ city }: CityPageProps) {
   const relatedCities = getRelatedCities(city);
   const breadcrumbs = [
     { name: "Главная", url: "/" },
-    { name: `Заборы в ${city.namePrepositional}`, url: `/${city.slug}/` },
+    { name: `Заборы в ${city.namePrepositional}`, url: `/${city.slug}` },
   ];
   const jsonLd = [
     generateCityLocalBusinessJsonLd(city),
@@ -243,7 +243,7 @@ export function CityPage({ city }: CityPageProps) {
             {fenceServices.map((service) => (
               <ProductCard
                 description={service.description}
-                href={`/${service.slug}/`}
+                href={`/${service.slug}`}
                 key={service.slug}
                 priceFrom={service.priceFrom}
                 priceUnit={service.priceUnit}
@@ -269,7 +269,7 @@ export function CityPage({ city }: CityPageProps) {
             {gateServices.map((service) => (
               <ProductCard
                 description={service.description}
-                href={`/${service.slug}/`}
+                href={`/${service.slug}`}
                 key={service.slug}
                 priceFrom={service.priceFrom}
                 priceUnit={service.priceUnit}
@@ -363,7 +363,7 @@ export function CityPage({ city }: CityPageProps) {
             {relatedCities.map((item) => (
               <Link
                 className="rounded-full bg-[#F5F5F5] px-4 py-2 text-sm font-semibold text-slate-800 transition hover:bg-[#1B5E20] hover:text-white"
-                href={`/${item.slug}/`}
+                href={`/${item.slug}`}
                 key={item.slug}
               >
                 {item.name}

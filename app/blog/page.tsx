@@ -7,7 +7,7 @@ export const metadata = generatePageMetadata({
   title: "Блог о заборах в Беларуси: советы и цены 2026",
   description:
     "Полезные статьи от МастерЗабор: сравнение материалов, актуальные цены на заборы в Беларуси и практические рекомендации перед установкой.",
-  path: "/blog/",
+  path: "/blog",
 });
 
 const posts = [...blogPosts].sort((a, b) =>
@@ -46,7 +46,7 @@ export default function BlogPage() {
               className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
               key={post.slug}
             >
-              <Link href={`/blog/${post.slug}/`}>
+              <Link href={`/blog/${post.slug}`}>
                 <Image
                   alt={post.title}
                   className="h-52 w-full object-cover"
@@ -62,7 +62,7 @@ export default function BlogPage() {
                 <h2 className="mt-3 text-xl font-bold leading-tight">
                   <Link
                     className="transition hover:text-[#1B5E20]"
-                    href={`/blog/${post.slug}/`}
+                    href={`/blog/${post.slug}`}
                   >
                     {post.title}
                   </Link>
@@ -80,7 +80,7 @@ export default function BlogPage() {
                 </div>
                 <Link
                   className="mt-5 inline-flex font-semibold text-[#1B5E20] hover:text-green-800"
-                  href={`/blog/${post.slug}/`}
+                  href={`/blog/${post.slug}`}
                 >
                   Читать статью →
                 </Link>

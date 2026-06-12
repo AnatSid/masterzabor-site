@@ -269,7 +269,7 @@ export default function Home() {
             {fenceServices.map((service) => (
               <ProductCard
                 description={service.description}
-                href={`/${service.slug}/`}
+                href={`/${service.slug}`}
                 key={service.slug}
                 priceFrom={service.priceFrom}
                 priceUnit={service.priceUnit}
@@ -297,7 +297,7 @@ export default function Home() {
             {gateServices.map((service) => (
               <ProductCard
                 description={service.description}
-                href={`/${service.slug}/`}
+                href={`/${service.slug}`}
                 key={service.slug}
                 priceFrom={service.priceFrom}
                 priceUnit={service.priceUnit}
@@ -322,7 +322,7 @@ export default function Home() {
             </div>
             <Link
               className="font-semibold text-[#1B5E20] hover:text-green-800"
-              href="/nashi-raboty/"
+              href="/nashi-raboty"
             >
               Смотреть портфолио
             </Link>
@@ -379,7 +379,7 @@ export default function Home() {
             </div>
             <Link
               className="font-semibold text-[#1B5E20] hover:text-green-800"
-              href="/otzyvy/"
+              href="/otzyvy"
             >
               Все отзывы
             </Link>
@@ -430,7 +430,7 @@ export default function Home() {
                     {oblastCities.map((city) => (
                       <Link
                         className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-[#1B5E20] hover:text-white"
-                        href={`/${city.slug}/`}
+                        href={`/${city.slug}`}
                         key={city.slug}
                       >
                         {city.name}

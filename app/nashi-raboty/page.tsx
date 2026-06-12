@@ -6,12 +6,12 @@ export const metadata = generatePageMetadata({
   title: "Наши работы — фото установленных заборов | МастерЗабор",
   description:
     "Портфолио установленных заборов, ворот и калиток в Беларуси. Фото-заглушки по типам ограждений с фильтрами для быстрого выбора решений.",
-  path: "/nashi-raboty/",
+  path: "/nashi-raboty",
 });
 
 const breadcrumbJsonLd = generateBreadcrumbJsonLd([
   { name: "Главная", url: "/" },
-  { name: "Наши работы", url: "/nashi-raboty/" },
+  { name: "Наши работы", url: "/nashi-raboty" },
 ]);
 
 export default function NashiRabotyPage() {

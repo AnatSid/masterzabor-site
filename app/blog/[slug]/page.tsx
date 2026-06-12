@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: BlogRouteProps) {
   return generatePageMetadata({
     title: post.metaTitle,
     description: post.metaDescription,
-    path: `/blog/${post.slug}/`,
+    path: `/blog/${post.slug}`,
     image: post.image,
   });
 }
@@ -55,13 +55,13 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
     title: post.title,
     description: post.metaDescription,
     date: post.date,
-    url: `/blog/${post.slug}/`,
+    url: `/blog/${post.slug}`,
   });
 
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { name: "Главная", url: "/" },
-    { name: "Блог", url: "/blog/" },
-    { name: post.title, url: `/blog/${post.slug}/` },
+    { name: "Блог", url: "/blog" },
+    { name: post.title, url: `/blog/${post.slug}` },
   ]);
 
   return (
@@ -89,7 +89,7 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
             </li>
             <li aria-hidden="true">/</li>
             <li>
-              <Link className="hover:text-[#1B5E20]" href="/blog/">
+              <Link className="hover:text-[#1B5E20]" href="/blog">
                 Блог
               </Link>
             </li>
@@ -159,7 +159,7 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
                   <li key={item.slug}>
                     <Link
                       className="font-medium text-slate-800 transition hover:text-[#1B5E20]"
-                      href={`/blog/${item.slug}/`}
+                      href={`/blog/${item.slug}`}
                     >
                       {item.title}
                     </Link>

@@ -136,7 +136,7 @@ export function ServicePage({ service }: ServicePageProps) {
   const relatedServices = services.filter((item) => item.slug !== service.slug);
   const breadcrumbs = [
     { name: "Главная", url: "/" },
-    { name: service.title, url: `/${service.slug}/` },
+    { name: service.title, url: `/${service.slug}` },
   ];
   const productJsonLd = generateProductJsonLd({
     name: service.title,
@@ -329,7 +329,7 @@ export function ServicePage({ service }: ServicePageProps) {
               {relatedServices.map((item) => (
                 <Link
                   className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-[#1B5E20] hover:text-white"
-                  href={`/${item.slug}/`}
+                  href={`/${item.slug}`}
                   key={item.slug}
                 >
                   {item.title}
@@ -346,7 +346,7 @@ export function ServicePage({ service }: ServicePageProps) {
               {priorityCities.map((city) => (
                 <Link
                   className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-[#1B5E20] hover:text-white"
-                  href={`/${city.slug}/`}
+                  href={`/${city.slug}`}
                   key={city.slug}
                 >
                   {city.name}

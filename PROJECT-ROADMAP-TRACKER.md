@@ -91,7 +91,7 @@ Production/preview:
 |---|---|---|
 | S00 Audit docs | done | Созданы `AUDIT-MASTERZABOR-2026.md` и `PROJECT-KNOWLEDGE-BASE.md`. |
 | S01 Tracker | done | Создан этот файл. |
-| P0-01 Canonical / sitemap / no-slash URL policy | not_started | Главный SEO-блокер. |
+| P0-01 Canonical / sitemap / no-slash URL policy | done | Кодовые правки, локальная проверка и пользовательское подтверждение выполнены; commit/push разрешены. |
 | P0-01.5 Next 16 / MCP readiness | not_started | Отдельный upgrade после P0-01, до P0-02/P0-03 и больших frontend/mobile правок. |
 | P0-02 Close duplicate Vercel URL | not_started | `masterzabor-site.vercel.app` отдаёт 200. |
 | P0-03 Lead reliability + production secrets | not_started | KV atomic write, Telegram fallback, fail-closed secrets. |
@@ -366,3 +366,8 @@ Checks:
 
 - Создан tracker.
 - Следующий этап: `P0-01 Canonical / sitemap / no-slash URL policy`.
+- P0-01: добавлена единая нормализация canonical URL/no-slash для sitemap, metadata, OG, JSON-LD breadcrumbs/article, reporting paths и внутренних ссылок.
+- P0-01 local checks: `npm run lint` passed; `npm run dev` проверен на `http://localhost:3001`, потому что `localhost:3000` занят PID 15144.
+- P0-01 local checks: homepage, service, city, blog, blog article, prices и `/sitemap.xml` отдают 200; slash-варианты service/city/blog/prices отдают 308 на no-slash.
+- P0-01 local checks: sitemap содержит 55 URL, terminal slash URL = 0, все 55 sitemap URL локально отдают 200 без redirect.
+- P0-01.5 Next 16 / MCP readiness не начинался.
