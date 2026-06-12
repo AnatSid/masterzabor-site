@@ -186,7 +186,7 @@
   - `lib/seo.ts`: для LocalBusiness нормализован телефон в международном формате (`+375333135072`).
   - Подтверждено: `app/robots.ts`, `app/sitemap.ts`, canonical-логика и `.env.example` соответствуют требованиям (без `www`).
   - Добавлены отсутствующие ассеты: `public/images/og-masterzabor.jpg`, `public/icon.svg`, `public/favicon.ico`.
-- ✅ Фикс для Яндекс.Вебмастера: в `app/robots.ts` директива `Host` изменена на домен без протокола (`masterzabor.by`) для корректного определения главного зеркала.
+- ✅ Фикс для Яндекс.Вебмастера (2026-05, superseded): `Host` временно ставили `masterzabor.by`; **актуально:** `Host: www.masterzabor.by` (= `SITE_HOST`, commit `00feddf`, audit 26.05.2026).
 - ✅ Обновлены Vercel env для аналитики: `NEXT_PUBLIC_GA_ID=G-DT0TXHL4DM` и `NEXT_PUBLIC_YM_ID=109298310` (Production); проверено, что `app/layout.tsx` условно подключает GA4 и Яндекс.Метрику через эти переменные с `next/script` и `strategy="afterInteractive"`.
 - ✅ Фикс навигации Header/Footer: пункт «Ворота» в шапке переведён на dropdown (desktop) и accordion (mobile) с отдельными ссылками на `/vorota-raspashnye/`, `/vorota-otkatnye/`, `/kalitki/`; в колонке «Услуги» футера названия приведены к формату «Ворота распашные/Ворота откатные/Калитки`.
 - ✅ В `Header` восстановлена очередность верхнего меню под прежний UX: `Профнастил → Штакетник → Сетка-рабица → Ворота → Наши работы → Контакты` (при сохранении dropdown/accordion для пункта «Ворота»).
@@ -238,37 +238,65 @@
 
 ---
 
-## Redirect/Webhook Safety Fix (май 2026)
-- ✅ Выявлена архитектурная коллизия:
-  - canonical/SEO стратегия использует apex `https://masterzabor.by`;
-  - Telegram webhook зафиксирован на `https://www.masterzabor.by/api/telegram-webhook`;
-  - глобальный `www -> apex` redirect был потенциально опасен для webhook.
-- ✅ Почему это было опасно:
-  - Telegram отправляет webhook как **POST**;
-  - Telegram не гарантирует следование за POST-redirect (307/308);
-  - если webhook получает redirect вместо прямого `200`, события могут перестать доставляться.
-- ✅ Принятое решение (без ломки SEO):
-  - canonical, sitemap, robots, metadata остаются на apex;
-  - webhook остаётся на `www`;
-  - `/api/*` исключены из `www -> apex` redirect.
-- ✅ Реализация:
-  - `next.config.ts`: redirect ограничен только не-API маршрутами:
-    - `source: "/:path((?!api(?:/|$)).*)"`
-    - `has: host=www.masterzabor.by`
-    - `destination: https://masterzabor.by/:path*`
-- ✅ Почему это безопасно:
-  - SEO-канонизация сохраняется для обычных страниц;
-  - API и webhook получают прямой ответ без redirect;
-  - не затронуты `generateStaticParams`, sitemap/robots, analytics и команды Telegram.
-- ✅ Проверка поведения:
-  - `GET /` с host `www.masterzabor.by` → `308` на apex (ожидаемо);
-  - `GET /api/telegram-webhook` с host `www.masterzabor.by` → `405` (нет redirect);
-  - `POST /api/telegram-webhook` с host `www.masterzabor.by` → `200` (прямой ответ).
+## Production Domain Architecture (зафиксировано, май 2026)
 
-### Важно (защитное предупреждение)
+Полный audit: `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`.
+
+**Source of truth:** `www.masterzabor.by` — canonical, runtime, Vercel Primary Domain.
+
+| System | Host | Notes |
+|--------|------|-------|
+| Runtime | **www** | Pages + API отдаются на www |
+| Vercel redirect | apex → **307** → www | Platform-level, все пути включая `/api/*` |
+| `next.config.ts` | **empty** | Custom host redirects **удалены** (hotfix loop) |
+| Canonical / sitemap / robots / OG / JSON-LD | **www** | `SITE_URL` в `lib/constants.ts` |
+| Telegram webhook | **www only** | `https://www.masterzabor.by/api/telegram-webhook` |
+
+- ✅ Production audit (26.05.2026): подтверждено live HTTP — apex 307→www, www 200, webhook POST 200 на www.
+- ✅ Документация синхронизирована: `.cursorrules`, `ANALYTICS.md`, `PLAN.MD.md`, `PROGRESS.md`.
+
+### Redirect loop incident (май 2026) — история и финальное решение
+
+**Incident:**
+- Infinite redirect loop → сайт недоступен.
+- **Причина:** Vercel `apex→www` (307) **+** custom `www→apex` в `next.config.ts` (`480f18a`).
+
+**Hotfix (`2526efe`):**
+- Custom redirect **полностью удалён** из `next.config.ts`.
+
+**Финальная stable strategy (`00feddf` + audit 2026):**
+- **WWW = canonical + runtime host** (не apex).
+- Apex только redirect alias → www.
+- Telegram webhook **только на www**.
+- **Нет** custom host redirects в коде.
+
+**Production checks (26.05.2026):**
+- `GET masterzabor.by/` → 307 → `www.masterzabor.by/` → 200
+- `GET www.masterzabor.by/` → 200 (без redirect)
+- `POST www.masterzabor.by/api/telegram-webhook` → 200 (direct)
+- `POST masterzabor.by/api/telegram-webhook` → 307 (unsafe для Telegram)
+
+### Запреты для AI / developers (domain)
+
+- ⛔ Не добавлять `www→apex` в `next.config.ts` — **redirect loop** с Vercel.
+- ⛔ Не мигрировать `SITE_URL`/canonical/sitemap на apex.
+- ⛔ Не менять webhook URL на apex.
+- ⛔ Не менять Vercel domain settings без domain audit.
+
+### Важно (защитное предупреждение — актуально)
 - ⚠️ **Нельзя пропускать Telegram webhook через redirect.**
-- ⚠️ Endpoint `https://www.masterzabor.by/api/telegram-webhook` обязан отвечать напрямую (без 307/308).
-- ⚠️ При будущих изменениях redirects всегда проверять, что `/api/*` исключены из host-redirect правил.
+- ⚠️ Endpoint `https://www.masterzabor.by/api/telegram-webhook` обязан отвечать напрямую (POST → 200, без 307/308).
+- ⚠️ **Не добавлять** www→apex redirects — риск infinite loop с Vercel apex→www.
+- ⚠️ При любых изменениях domain/redirect — читать `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md` первым.
+
+<details>
+<summary>Архив: промежуточное решение Redirect/Webhook Fix (480f18a, отменено 2526efe)</summary>
+
+- Была попытка: canonical на apex + `www→apex` redirect в `next.config.ts` (API excluded).
+- Привело к **redirect loop** с Vercel `apex→www`.
+- Hotfix `2526efe`: redirect удалён; `00feddf`: SEO constants → www.
+
+</details>
 
 ## Favicon и app icons (2026-05-23)
 - ✅ Аудит prod + Google Search Central: иконки в `public/`, разметка в `lib/seo.ts` → `generatePageMetadata()` (не file-based `app/favicon.*`).

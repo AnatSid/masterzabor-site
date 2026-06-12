@@ -20,11 +20,13 @@
 - Директор: Сидоренко Александр Вячеславович
 - Режим работы: Пн-Вс 10:00-19:00
 - Координаты: 52.4345, 30.9754
-- Домен: https://masterzabor.by
+- Домен (production, canonical): https://www.masterzabor.by
+- Домен (apex alias): https://masterzabor.by → 307 → www (Vercel, не менять без audit)
 
 ## План и прогресс
 - Полный план работы: docs/PLAN.MD.md
 - Прогресс выполнения: docs/PROGRESS.md
+- Production domain audit: docs/AUDIT-PRODUCTION-HOST-DOMAIN.md
 - После выполнения каждого промпта из PLAN.MD.md — обнови PROGRESS.md:
   отметь что сделано (✅), что осталось (⬜), какие проблемы возникли.
 
@@ -36,6 +38,56 @@
 - API Routes для бэкенда (отправка заявок в Telegram)
 - Деплой: Vercel
 
+## Production Domain Architecture (НЕ МЕНЯТЬ без полного audit)
+
+**Source of truth:** `www.masterzabor.by` — canonical host, runtime host, Vercel Primary Domain.
+
+| System | Host | Где задано |
+|--------|------|------------|
+| Runtime (pages + API) | **www** | Vercel Primary Domain |
+| Redirect | apex → **307** → www | Vercel Domain Settings (platform-level) |
+| `SITE_URL` / `SITE_HOST` | **www** | `lib/constants.ts` |
+| Canonical / metadataBase / OG / JSON-LD | **www** | `lib/seo.ts` → `SITE_URL` |
+| Sitemap / robots Host | **www** | `app/sitemap.ts`, `app/robots.ts` |
+| Telegram webhook | **www only** | `TELEGRAM_WEBHOOK_URL` в `lib/constants.ts` |
+
+**Redirect architecture (текущая, stable):**
+- Vercel: `masterzabor.by/*` → **307** → `www.masterzabor.by/*` (все пути, включая `/api/*`).
+- `next.config.ts`: **пустой** — custom host redirects **отсутствуют** (намеренно).
+- Apex — только alias для входящих ссылок, **не** canonical.
+
+**Telegram webhook constraints (critical):**
+- Webhook URL: `https://www.masterzabor.by/api/telegram-webhook` — **только www**.
+- POST на apex → **307** → www; Telegram **не следует** за POST redirect (307/308).
+- Endpoint на www обязан отвечать **напрямую** (POST → 200), без redirect.
+- Регистрация: `npx tsx scripts/set-telegram-bot.ts` (читает `TELEGRAM_WEBHOOK_URL`).
+
+**Incident history (май 2026 — redirect loop):**
+- Причина: конфликт **Vercel apex→www** + custom **www→apex** в `next.config.ts` (commit `480f18a`).
+- Симптом: infinite redirect loop, сайт недоступен.
+- Hotfix: удалён custom redirect из `next.config.ts` (commit `2526efe`).
+- SEO унифицирован на www (commit `00feddf`: `SITE_URL`/`SITE_HOST` → www).
+
+**ЗАПРЕЩЕНО (без явного запроса пользователя + полного domain audit):**
+- Добавлять `www→apex` redirect в `next.config.ts`, middleware или Vercel config.
+- Мигрировать canonical/SEO/`SITE_URL` на apex (`masterzabor.by`).
+- Менять `TELEGRAM_WEBHOOK_URL` на apex или любой URL с redirect.
+- Менять Vercel Primary Domain или apex→www redirect без проверки webhook + SEO.
+- «Исправлять» mixed-host, возвращая apex-canonical — это **сломает** текущую stable config.
+
+**Безопасно менять (без impact на host architecture):**
+- Контент страниц, формы, UI, analytics env, cron secrets.
+- Документацию (кроме попыток вернуть apex-canonical в rules).
+
+**Safest production setup (текущий — не трогать):**
+1. Vercel Primary Domain = `www.masterzabor.by`; apex → 307 → www.
+2. `next.config.ts` без host redirects.
+3. `SITE_URL` = `https://www.masterzabor.by` в `lib/constants.ts`.
+4. Telegram webhook только на www.
+
+Подробный audit: `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`.
+Analytics/webhook ops: `docs/ANALYTICS.md`.
+
 ## SEO-требования (ВЫПОЛНЯТЬ ВСЕГДА на каждой странице)
 1. Уникальный <title> (50-60 символов) с ключевым словом + город.
 2. Уникальный <meta description> (150-160 символов, продающий).
@@ -44,7 +96,7 @@
 5. JSON-LD: LocalBusiness (везде), Product (услуги), FAQPage (FAQ),
    BreadcrumbList (хлебные крошки), Article (блог).
 6. Geo-метатеги: geo.region=BY, geo.placename, geo.position, ICBM.
-7. Canonical URL на каждой странице.
+7. Canonical URL на каждой странице (host: **www.masterzabor.by**, через `SITE_URL`).
 8. Семантический HTML: <main>, <article>, <section>, <nav>, <header>, <footer>.
 9. Хлебные крошки на всех внутренних страницах.
 10. Внутренняя перелинковка между связанными страницами.
@@ -206,3 +258,36 @@
 - Для спорных UI/UX-изменений, которые пользователь просит сначала проверить вручную:
   сначала внести изменения, дать пользователю проверить в браузере,
   и только после явного подтверждения пользователя выполнять commit/push.
+
+## Дополнительные AI Skills
+
+Проект использует локальные skills:
+- .cursor/skills/code-reviewer/
+- .cursor/skills/feature-dev/
+
+Правила проекта и .cursorrules всегда важнее generic skills.
+
+## Workflow Requirements
+
+Перед любыми изменениями AI обязан:
+
+1. Сначала анализировать текущую реализацию.
+2. Определять риски и side-effects.
+3. Предлагать краткий план изменений.
+4. Только после этого изменять код.
+
+При любых изменениях обязательно проверять:
+- SEO impact
+- redirect impact
+- localhost/dev-server stability
+- Telegram webhook safety
+- production regression risks
+
+Нельзя:
+- сразу делать массовые изменения без анализа,
+- менять redirect/domain logic без полного audit (`docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`),
+- ломать existing SEO architecture,
+- менять production behavior без проверки side-effects,
+- добавлять www→apex redirects (риск redirect loop с Vercel apex→www),
+- мигрировать canonical/SITE_URL/webhook на apex,
+- менять Vercel domain settings или `TELEGRAM_WEBHOOK_URL` без domain audit.

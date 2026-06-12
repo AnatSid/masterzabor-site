@@ -1,0 +1,457 @@
+# PROJECT KNOWLEDGE BASE: MASTERZABOR
+
+Дата начала базы знаний: 2026-06-03  
+Проект: `masterzabor`  
+Production: https://www.masterzabor.by
+
+## Рабочие файлы проекта
+
+- `PROJECT-ROADMAP-TRACKER.md` - текущие этапы исправлений, статусы, порядок работы и инструкция для нового чата.
+- `PROJECT-KNOWLEDGE-BASE.md` - архитектурная память проекта.
+- `AUDIT-MASTERZABOR-2026.md` - полный аудит, причины решений и roadmap.
+- `docs/` - история проекта, production/domain/analytics/OAuth runbooks.
+
+## Назначение проекта
+
+Коммерческий сайт для установки заборов и ворот в Беларуси. Главные бизнес-цели:
+
+- получать заявки через формы;
+- получать звонки;
+- получать обращения в мессенджеры и Telegram;
+- получать SEO-трафик;
+- масштабировать города, услуги, блог и портфолио без переписывания проекта.
+
+## Текущая техническая база
+
+- Framework: Next.js App Router.
+- Version: `next ^15.5.18`.
+- React: `latest`.
+- Styling: Tailwind CSS.
+- Forms: `react-hook-form`.
+- Storage: `@vercel/kv`.
+- Hosting: Vercel.
+- Integrations: Telegram, Google Analytics, Yandex Metrika, reporting APIs.
+
+## История проекта и уже принятые решения
+
+Эта база знаний объединяет текущий аудит с историей из `docs/`, а не начинает проект с нуля.
+
+Изученные документы:
+
+- `docs/PROGRESS.md`
+- `docs/PLAN.MD.md`
+- `docs/ANALYTICS.md`
+- `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`
+- `docs/AUDIT-ANALYTICS-DOMAIN-CONSISTENCY.md`
+- `docs/GOOGLE-OAUTH-RECOVERY.md`
+
+### Исторически выполнено
+
+- Создан сайт на Next.js 15 App Router.
+- Созданы 6 service pages.
+- Созданы 40 city pages через `app/[city]/page.tsx` и `generateStaticParams`.
+- Созданы страницы `/tseny`, `/nashi-raboty`, `/otzyvy`, `/kontakty`.
+- Создан блог на 3 статьи.
+- Созданы `sitemap.ts` и `robots.ts`.
+- Добавлены metadata, OpenGraph, Twitter Cards, JSON-LD.
+- Добавлены `LeadForm`, `QuizForm`, `BelarusPhoneField`.
+- Добавлены API routes для лидов, статистики, Telegram webhook и cron reports.
+- Подключены Vercel KV, Telegram, GA4, Yandex Metrika.
+- City/Service layouts унифицированы через `SiteContainer`.
+- Favicon/app icons приведены к стабильным public paths.
+
+### Исторические инциденты и запреты
+
+- Был redirect loop: Vercel `apex -> www` плюс custom `www -> apex` в `next.config.ts`.
+- Hotfix удалил custom host redirects из `next.config.ts`.
+- `www.masterzabor.by` стал canonical/runtime/source of truth.
+- Запрещено добавлять `www -> apex` redirect.
+- Запрещено переносить Telegram webhook на apex.
+- Запрещено менять Vercel domain strategy без отдельного domain audit.
+
+### Исторически найдено, но ещё актуально
+
+- `CRON_SECRET` должен быть обязательным в production, но код fail-open при пустом env.
+- `TELEGRAM_WEBHOOK_SECRET` и `TELEGRAM_CHAT_ID` должны быть обязательными в production.
+- In-memory rate limit слаб для serverless.
+- KV storage для leads неатомарен.
+- `SearchAction` в JSON-LD есть без реального поиска.
+- Header не содержит явный пункт `Цены` в основной навигации.
+- Нужны реальные фото вместо placeholder-графики.
+- Нужны conversion events для звонков, мессенджеров, форм и квиза.
+
+### Новое уточнение текущего аудита
+
+Прошлые документы правильно выбрали `www` и заметили trailing slash как отдельный от host вопрос. Текущий production-аудит показывает, что trailing slash стал не косметикой, а основной причиной индексирующих конфликтов:
+
+- sitemap содержит slash URL;
+- canonical часто содержит slash URL;
+- production final URL без slash;
+- slash URL делает 308 redirect;
+- canonical указывает на redirecting URL.
+
+Целевое решение: сохранять `www`, но нормализовать все внутренние canonical/sitemap/internal/schema URL в no-slash style.
+
+## Canonical Project Decisions
+
+### Canonical host
+
+Текущий canonical host: `https://www.masterzabor.by`.
+
+Решение: оставить `www` как основной host.
+
+Причины:
+
+- `SITE_URL` уже настроен на `www`.
+- `robots.txt` указывает `Host: www.masterzabor.by`.
+- sitemap указывает `www`.
+- Telegram webhook URL указывает `www`.
+- История проекта содержит предупреждение не возвращать redirect `www -> apex`, чтобы не получить redirect loop.
+
+### URL style
+
+Текущее production-поведение: URL без trailing slash являются конечными 200 URL.
+
+Текущее кодовое поведение: sitemap/canonical часто создают URL со trailing slash.
+
+Целевое решение: привести проект к no-slash URL style.
+
+Причины:
+
+- Next.js по умолчанию редиректит slash URL на no-slash.
+- Production уже работает как no-slash.
+- Менять весь проект на `trailingSlash: true` рискованнее, чем убрать slash из генераторов URL.
+
+## Repository Map
+
+- `app/` - App Router pages, layout, metadata routes, API routes.
+- `app/layout.tsx` - global metadata, LocalBusiness/Organization/WebSite JSON-LD, GA/Yandex scripts, Header/Footer/FloatingButtons.
+- `app/page.tsx` - homepage, hero, trust, services, works, quiz, reviews, geography, lead form, FAQ.
+- `app/[city]/page.tsx` - 40 city pages from `content/cities.ts`; `dynamicParams = false`.
+- `app/blog/page.tsx` - blog index.
+- `app/blog/[slug]/page.tsx` - 3 статей from `content/blog-posts.ts`; Article/Breadcrumb JSON-LD.
+- `app/sitemap.ts` - generated sitemap; currently slash URLs.
+- `app/robots.ts` - generated robots; correct host/sitemap.
+- `app/api/*` - lead, stats, Telegram webhook, daily reports, analytics reports.
+- `components/layout/` - global layout and shared container.
+- `components/forms/` - lead capture forms and phone field.
+- `components/templates/` - reusable page templates for city/service pages.
+- `components/cards/` - repeated product card.
+- `components/portfolio/` - portfolio filter/gallery.
+- `content/` - 40 cities, 6 services, 3 posts.
+- `lib/` - constants, SEO, phone, Telegram, leads, reporting, analytics.
+- `public/` - icons, manifest, logo, OG image.
+- `docs/` - project history and runbooks.
+- `scripts/` - Telegram operational script.
+
+## Route Map
+
+Основные маршруты:
+
+- `/`
+- `/zabory-iz-profnastila`
+- `/zabory-iz-evroshtaketnika`
+- `/zabory-iz-setki-rabitsy`
+- `/vorota-raspashnye`
+- `/vorota-otkatnye`
+- `/kalitki`
+- `/[city]`
+- `/tseny`
+- `/nashi-raboty`
+- `/otzyvy`
+- `/kontakty`
+- `/blog`
+- `/blog/[slug]`
+
+API routes:
+
+- `/api/lead`
+- `/api/stats`
+- `/api/telegram-webhook`
+- `/api/cron/daily-report`
+- `/api/cron/analytics-report`
+
+Sitemap coverage: all main routes are covered, but current sitemap URLs use trailing slash and redirect in production.
+
+Robots coverage: `/api/` is disallowed; public routes are allowed.
+
+## Component Map
+
+Ключевые компоненты:
+
+- `Header`
+- `Footer`
+- `FloatingButtons`
+- `SiteContainer`
+- `LeadForm`
+- `QuizForm`
+- `BelarusPhoneField`
+- `ServicePage`
+- `CityPage`
+- `ProductCard`
+- `PortfolioGallery`
+
+Usage and risks:
+
+- `Header`: global navigation, phone and messengers. Missing `Цены` in main nav.
+- `Footer`: has full nav including prices/blog/reviews, better coverage than header.
+- `FloatingButtons`: mobile conversion layer for calls and messengers.
+- `SiteContainer`: good shared layout primitive; should continue expanding to all sections.
+- `ServicePage`: good service template; has Product/FAQ/Breadcrumb JSON-LD; uses placeholder images.
+- `CityPage`: good city template; unique city text is generated from city data; doorway/thin risk remains if no real city proof.
+- `QuizForm`: main conversion form; good qualification flow, but multi-step friction on mobile.
+- `LeadForm`: simpler fallback form on homepage.
+- `PortfolioGallery`: useful client filter, but current items are generated placeholder images.
+
+Duplicated/centralization candidates:
+
+- Messenger icons in `Header` and `FloatingButtons`.
+- Placeholder SVG generation in multiple files.
+- Trailing slash link construction.
+- Breadcrumb URL construction.
+- Analytics source-to-page conversion still returns slash paths.
+
+## Dependency Map
+
+Current lockfile versions:
+
+- `next`: 15.5.18
+- `react`: 19.2.6
+- `react-dom`: 19.2.6
+- `tailwindcss`: 4.3.0
+- `@tailwindcss/postcss`: 4.3.0
+- `@vercel/kv`: 3.0.0
+- `react-hook-form`: 7.75.0
+- `typescript`: 6.0.3
+- `eslint`: 9.39.4
+- `eslint-config-next`: 15.5.18
+
+Dependency decisions:
+
+- Keep Next.js/App Router.
+- Keep React Hook Form.
+- Keep Vercel KV for now, but change data model for leads.
+- Pin versions in `package.json`; avoid `latest`.
+- Replace `next lint` before Next.js 16 upgrade.
+
+## Сильные стороны
+
+- Используется современный Next.js App Router.
+- Есть статическая генерация городских и блоговых страниц.
+- Есть sitemap и robots.
+- Есть metadata и JSON-LD.
+- Есть Telegram-интеграция для заявок.
+- Есть daily/analytics reporting.
+- Есть базовые страницы: услуги, города, цены, работы, отзывы, контакты, блог.
+- Есть единый `SITE_URL`.
+- Canonical host в коде в целом согласован как `www`.
+
+## Важные риски
+
+- Главный SEO-риск: slash/no-slash конфликт между sitemap/canonical и production.
+- Главный duplicate-риск: `masterzabor-site.vercel.app` отдаёт production 200.
+- Главный lead-риск: неатомарная запись заявок в KV.
+- Главный security-риск: optional secrets для cron/webhook.
+- Главный CRO-риск: placeholder-изображения вместо реальных работ.
+- Главный scale-риск: city pages могут стать doorway/thin pages при расширении без уникального контента.
+
+## Frontend / Mobile / CRO Notes
+
+- Header глобальный, но его nav беднее footer: добавить `Цены`, возможно `Отзывы` и `Блог`.
+- Mobile bottom CTA уже есть и body имеет `pb-20`, чтобы не перекрывать контент.
+- Мобильный phone+burger может быть тесным на малых ширинах.
+- `QuizForm` основной канал заявок; добавить "Не знаю длину" и analytics по шагам.
+- `LeadForm` остаётся хорошим быстрым fallback.
+- Portfolio/reviews требуют реальных доказательств: фото, город, материал, срок, диапазон цены, внешний отзыв.
+- Placeholder graphics нельзя считать production portfolio.
+- Для таблиц цен на mobile лучше card view или явный горизонтальный scroll.
+
+## Performance Notes
+
+- `next/font` для Inter - правильное решение.
+- GA/Yandex scripts подключены `afterInteractive`.
+- `Image` используется, но `fill` images требуют `sizes`.
+- После добавления реальных фото проверить LCP.
+- `next build` завис во время аудита и был остановлен; нужна отдельная диагностика.
+- `next lint` deprecated; перед Next 16 заменить на ESLint CLI.
+- Yandex Webvisor может ухудшить INP/TTI, проверять в Lighthouse/CrUX после запуска трафика.
+
+## SEO Notes
+
+- `www` как canonical host подтверждён историей и production.
+- URL policy должна быть no-slash.
+- Sitemap/canonical/OpenGraph/JSON-LD/internal links должны совпадать с final 200 URL.
+- `SearchAction` удалить или реализовать поиск.
+- Product Offer URL должен быть URL конкретной услуги.
+- City pages требуют уникальных proof-assets, иначе doorway/thin risk.
+- Blog должен перейти на MDX/CMS/data model перед ростом до 500+ статей.
+
+## Target Architecture
+
+### Keep
+
+- Next.js App Router.
+- Vercel.
+- `www.masterzabor.by` as canonical/runtime host.
+- No custom host redirects in `next.config.ts`.
+- `CityPage` and `ServicePage` templates.
+- `SiteContainer`.
+- Telegram and analytics reporting.
+
+### Canonical URL Policy
+
+- No trailing slash for all canonical URLs.
+- `normalizePath()` / `canonicalUrl()` helper should be the single source for sitemap, metadata, breadcrumbs, JSON-LD and reports.
+- Never point canonical to a redirecting URL.
+- Never set webhook to apex while apex redirects to www.
+
+### Content Model
+
+Short term:
+
+- `services`
+- `cities`
+- `blogPosts`
+- `projects`
+
+Future:
+
+- MDX or CMS for `articles`.
+- Structured `projects` for portfolio/case studies.
+- Typed schema validation for content records.
+
+### Project Entity
+
+Fields:
+
+- `id`
+- `citySlug`
+- `serviceSlug`
+- `title`
+- `material`
+- `length`
+- `height`
+- `priceRange`
+- `completedAt`
+- `photos`
+- `review`
+- `isFeatured`
+
+### Image Structure
+
+- `public/images/projects/{project-id}/main.webp`
+- `public/images/projects/{project-id}/before.webp`
+- `public/images/projects/{project-id}/after.webp`
+- `public/images/services/{service-slug}/hero.webp`
+- `public/images/blog/{slug}/cover.webp`
+- `public/images/og/...`
+
+### Component System
+
+Add or formalize:
+
+- `Section`
+- `SectionHeader`
+- `Button`
+- `PhoneLink`
+- `MessengerLinks`
+- `Breadcrumbs`
+- `JsonLdScript`
+- `ProjectCard`
+- `ProjectGallery`
+- `PriceTable` / `PriceCardsMobile`
+- `FAQ`
+- `RelatedLinks`
+
+### Lead Pipeline Target
+
+1. Validate request.
+2. Assign `leadId`.
+3. Atomically persist lead.
+4. Send Telegram.
+5. If Telegram fails, keep lead as `pending_delivery`.
+6. Retry/report delivery failures.
+7. Return success once lead is safely stored.
+
+### Analytics Event Taxonomy
+
+- `click_call`
+- `click_telegram`
+- `click_whatsapp`
+- `click_viber`
+- `form_start`
+- `form_submit`
+- `form_success`
+- `form_error`
+- `quiz_start`
+- `quiz_step`
+- `quiz_success`
+- `price_view`
+- `portfolio_filter`
+- `project_view`
+
+## Roadmap Summary
+
+Critical now:
+
+- Fix no-slash canonical/sitemap/internal/schema URL policy.
+- Close `masterzabor-site.vercel.app` duplicate surface.
+- Make lead storage atomic.
+- Fail-close cron/webhook secrets.
+- Remove or implement `SearchAction`.
+- Add image `sizes`.
+- Diagnose `next build` hang.
+
+Important:
+
+- Real portfolio/project photos.
+- Project content model.
+- Conversion events.
+- Header `Цены`.
+- Quiz "Не знаю длину".
+- Product JSON-LD service URLs.
+- Pin dependencies and replace `next lint`.
+- Tests for sitemap/canonical/API.
+
+Desirable:
+
+- MDX/CMS for 500+ articles.
+- Blog categories/clusters.
+- Image sitemap.
+- Case study pages.
+- Mobile price cards.
+- CRM/inbox for leads.
+
+## Решения: оставить / улучшить / удалить / перепроектировать
+
+Оставить:
+
+- Next.js App Router.
+- Static generation для текущего объёма страниц.
+- `www` canonical host.
+- Telegram как быстрый канал для лидов.
+- `content/` как временно достаточную структуру для малого объёма.
+
+Улучшить:
+
+- URL/canonical builder.
+- Sitemap generation.
+- Lead delivery/storage.
+- Analytics events.
+- City/service content uniqueness.
+- Real image pipeline.
+- Design system tokens/components.
+
+Удалить или заменить:
+
+- Фальшивый `SearchAction`, если поиск не реализован.
+- Placeholder visuals как production portfolio.
+- `latest` dependency pins.
+- `next lint` script после проверки текущей версии tooling.
+
+Перепроектировать:
+
+- Lead storage на атомарную модель.
+- Reporting security.
+- Content architecture для 500-1000 статей.
+- Portfolio/image structure.

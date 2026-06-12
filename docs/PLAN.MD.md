@@ -9,6 +9,22 @@
 
 Хороший выбор: содержит ключевое слово «забор», без дефиса, легко запоминается, подходит для всей Беларуси (нет привязки к городу).
 
+**Production (зафиксировано, май 2026):**
+
+| | |
+|---|---|
+| **Canonical + runtime host** | `https://www.masterzabor.by` |
+| **Vercel Primary Domain** | `www.masterzabor.by` |
+| **Apex alias** | `masterzabor.by` → **307** → `www` (Vercel platform redirect) |
+| **Sitemap** | `https://www.masterzabor.by/sitemap.xml` |
+| **Telegram webhook** | `https://www.masterzabor.by/api/telegram-webhook` (только www) |
+| **`SITE_URL` в коде** | `https://www.masterzabor.by` (`lib/constants.ts`) |
+| **`next.config.ts`** | Без host redirects (намеренно, после hotfix redirect loop) |
+
+Подробный audit и запреты: `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`, `.cursorrules` (раздел Production Domain Architecture).
+
+**⛔ Запрещено без domain audit:** www→apex redirect, миграция canonical на apex, webhook на apex, смена Vercel Primary Domain.
+
 ### Правильный порядок
 
 ```
@@ -196,7 +212,8 @@ masterzabor.by/                              — Главная
 - Директор: Сидоренко Александр Вячеславович
 - Режим работы: Пн-Вс 10:00-19:00
 - Координаты: 52.4345, 30.9754
-- Домен: https://masterzabor.by
+- Домен (production, canonical): https://www.masterzabor.by
+- Домен (apex alias): https://masterzabor.by → 307 → www
 
 ## Стек
 - Next.js 15 (App Router, TypeScript, SSG через generateStaticParams)
@@ -375,7 +392,7 @@ masterzabor.by/                              — Главная
    COMPANY_NAME, PHONE, PHONE_RAW, PHONE_DISPLAY, ADDRESS, CITY,
    POSTAL_CODE, TELEGRAM_USERNAME, TELEGRAM_LINK, WHATSAPP_LINK,
    VIBER_LINK, COORDINATES, UNP, WORKING_HOURS, BANK_DETAILS,
-   SITE_URL ("https://masterzabor.by"), SITE_NAME.
+   SITE_URL ("https://www.masterzabor.by"), SITE_NAME.
 
 2. lib/seo.ts — SEO-хелперы:
    - generatePageMetadata({ title, description, path, image? }) → Metadata
@@ -762,13 +779,13 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
    Города: priority 0.8, monthly.
    Блог: priority 0.6, weekly.
    Остальные: priority 0.7, monthly.
-   URL: https://masterzabor.by
+   URL: https://www.masterzabor.by
 
 2. app/robots.ts:
    Allow: /
    Disallow: /api/
-   Sitemap: https://masterzabor.by/sitemap.xml
-   Host: https://masterzabor.by
+   Sitemap: https://www.masterzabor.by/sitemap.xml
+   Host: www.masterzabor.by
 
 3. В layout.tsx добавь (условно, через env):
    - Яндекс.Метрика (NEXT_PUBLIC_YM_ID)
@@ -845,7 +862,7 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
   - `/top` — топ страницы за сегодня.
 
 Как включить webhook у Telegram:
-1) Деплой с публичным HTTPS URL (например `https://masterzabor.by`).
+1) Деплой с публичным HTTPS URL (`https://www.masterzabor.by`).
 2) Добавить env: `TELEGRAM_WEBHOOK_SECRET`.
 3) Выполнить:
    `npx tsx scripts/set-telegram-bot.ts` — webhook (`www`) + `setMyCommands` (autocomplete).
@@ -889,6 +906,72 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 
 ---
 
+## Часть 5.1. Production Domain Architecture (фиксировано)
+
+> **Для AI, Cursor, Codex, developers.** Не менять без `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`.
+
+### Текущая стратегия (stable)
+
+**WWW-primary unified architecture:**
+
+| System | Host |
+|--------|------|
+| Vercel Primary Domain | `www.masterzabor.by` |
+| Runtime (pages, API) | `www.masterzabor.by` |
+| Canonical / metadataBase / OG / JSON-LD | `www.masterzabor.by` |
+| Sitemap / robots Host | `www.masterzabor.by` |
+| Platform redirect | `masterzabor.by` → **307** → `www.masterzabor.by` |
+| App redirects (`next.config.ts`) | **None** |
+| Telegram webhook | `https://www.masterzabor.by/api/telegram-webhook` |
+
+### Redirect architecture
+
+```
+Пользователь / бот
+       │
+       ▼
+masterzabor.by ──307 (Vercel)──► www.masterzabor.by ──200──► контент / API
+       │
+       └── apex = alias only, NOT canonical
+```
+
+- Custom host redirects в коде **отсутствуют** (`next.config.ts` пустой).
+- Это **намеренно** после production incident (см. ниже).
+
+### Telegram webhook constraints
+
+- Webhook **только** на `https://www.masterzabor.by/api/telegram-webhook`.
+- POST на apex → 307; Telegram не следует за POST redirect → webhook ломается.
+- Регистрация: `npx tsx scripts/set-telegram-bot.ts`.
+
+### Incident: infinite redirect loop (май 2026)
+
+| Шаг | Что произошло |
+|-----|---------------|
+| `480f18a` | Добавлен `www→apex` redirect в `next.config.ts` (API excluded) |
+| Конфликт | Vercel уже делал `apex→www` (307) |
+| Результат | Loop: apex→www→apex→… — сайт недоступен |
+| `2526efe` | Hotfix: redirect **удалён** из `next.config.ts` |
+| `00feddf` | `SITE_URL`/`SITE_HOST` → www для SEO consistency |
+
+### Запрещено (risky)
+
+- ⛔ `www→apex` redirect в `next.config.ts` / middleware / Vercel config
+- ⛔ Миграция `SITE_URL`/canonical/sitemap на apex
+- ⛔ Webhook на `masterzabor.by` (apex)
+- ⛔ Смена Vercel Primary Domain без domain audit
+
+### Безопасно
+
+- ✅ Контент, формы, UI, analytics env
+- ✅ Обновление docs (не возвращая apex-canonical)
+
+**Полный audit:** `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`  
+**Ops (Telegram/analytics):** `docs/ANALYTICS.md`  
+**Project rules:** `.cursorrules` → Production Domain Architecture
+
+---
+
 ## Часть 6. Чеклист перед запуском
 
 - [ ] Все страницы открываются без ошибок
@@ -901,8 +984,8 @@ Env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
 - [ ] JSON-LD Product на страницах услуг
 - [ ] JSON-LD FAQPage на страницах с вопросами
 - [ ] JSON-LD BreadcrumbList на внутренних страницах
-- [ ] sitemap.xml содержит все ~40 URL
-- [ ] robots.txt корректен
+- [ ] sitemap.xml содержит все URL на **www** (`https://www.masterzabor.by/sitemap.xml`)
+- [ ] robots.txt: `Host: www.masterzabor.by`, sitemap на www
 - [ ] Все изображения имеют alt-теги
 - [ ] Телефон кликабельный на мобильном
 - [ ] Плавающие кнопки видны на мобильном

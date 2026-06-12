@@ -2,6 +2,26 @@
 
 Отдельная система трафика, независимая от lead-report (`/api/cron/daily-report`, `lib/reporting.ts`).
 
+> **Production domain:** canonical и runtime host — **`www.masterzabor.by`**.  
+> Apex `masterzabor.by` → 307 → www (Vercel). Подробный audit: `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`.
+
+## Production domain architecture (фиксировано)
+
+| System | Current host |
+|--------|--------------|
+| Vercel Primary Domain | `www.masterzabor.by` |
+| Runtime (pages, API) | `www.masterzabor.by` |
+| Canonical / sitemap / robots / OG / JSON-LD | `www.masterzabor.by` (`SITE_URL` в `lib/constants.ts`) |
+| Platform redirect | `masterzabor.by` → **307** → `www.masterzabor.by` |
+| App redirects (`next.config.ts`) | **None** (empty config — намеренно) |
+| Telegram webhook | `https://www.masterzabor.by/api/telegram-webhook` **only** |
+
+**Safest production setup (текущий — не менять без audit):**
+1. Vercel: apex → 307 → www; Primary Domain = www.
+2. `next.config.ts`: без host-based redirects.
+3. `SITE_URL` / `SITE_HOST` = www в `lib/constants.ts`.
+4. Webhook регистрируется **только** на www.
+
 ## Architecture
 
 ```
@@ -47,29 +67,40 @@ Service account (`GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY`) **deprecated** —
 
 **Vercel:** apex `masterzabor.by` → **307** → `www`. Telegram не следует за POST redirect → webhook только на **www**.
 
-### Redirect safety rule (critical)
+### Domain & redirect constraints (critical)
 
-- Canonical SEO стратегия проекта остаётся на **apex** (`https://masterzabor.by`).
-- Telegram webhook остаётся на **www** (`https://www.masterzabor.by/api/telegram-webhook`).
-- Поэтому host-redirect `www -> apex` разрешён только для обычных страниц.
-- `/api/*` (включая `/api/telegram-webhook`) должны быть исключены из redirect.
+**Текущая стратегия (stable, май 2026):** **WWW-primary unified architecture.**
 
-Обоснование:
-- Telegram webhook приходит как POST.
-- Telegram не гарантирует follow для POST redirects (307/308).
-- Если webhook endpoint отдаёт redirect вместо прямого 200, доставка апдейтов может сломаться.
+- **Canonical + runtime:** `https://www.masterzabor.by` (не apex).
+- **Vercel Primary Domain:** `www.masterzabor.by`.
+- **Platform redirect:** Vercel `masterzabor.by/*` → **307** → `www.masterzabor.by/*` (все пути, включая `/api/*`).
+- **`next.config.ts`:** пустой — **нет** custom host redirects (намеренно).
+- **Apex** — только alias (307 → www), не canonical, не webhook host.
 
-Текущее безопасное правило:
-- `next.config.ts`:
-  - redirect source: `/:path((?!api(?:/|$)).*)`
-  - host condition: `www.masterzabor.by`
-  - destination: `https://masterzabor.by/:path*`
+**Telegram webhook constraints:**
+- Webhook URL: `https://www.masterzabor.by/api/telegram-webhook` (`TELEGRAM_WEBHOOK_URL` в `lib/constants.ts`).
+- POST на apex → 307; Telegram **не гарантирует** follow POST redirect → доставка ломается.
+- Endpoint на www: POST → **200 direct**, без 307/308.
 
-Итог:
-- страницы канонизуются на apex (SEO-consistent),
-- API/webhook отвечают напрямую без редиректов (Telegram-safe).
+**Incident history (май 2026 — infinite redirect loop):**
 
-Установка: `npx tsx scripts/set-telegram-bot.ts` (webhook + `setMyCommands`).
+| | |
+|---|---|
+| **Причина** | Конфликт Vercel `apex→www` + custom `www→apex` в `next.config.ts` |
+| **Commit (добавлен redirect)** | `480f18a` |
+| **Commit (hotfix, redirect удалён)** | `2526efe` |
+| **Commit (SEO → www)** | `00feddf` — `SITE_URL`/`SITE_HOST` на www |
+| **Симптом** | Infinite loop: apex→www→apex→…, сайт недоступен |
+
+**ЗАПРЕЩЕНО без явного domain audit:**
+- Добавлять `www→apex` redirect в `next.config.ts` или middleware.
+- Менять canonical/`SITE_URL`/sitemap/robots на apex.
+- Регистрировать webhook на `masterzabor.by` (apex).
+- Менять Vercel Primary Domain или apex→www без проверки webhook + SEO.
+
+**НЕ пытаться «исправить mixed-host» возвратом apex-canonical** — текущая www-primary config проверена в production (audit 26.05.2026) и stable.
+
+Установка webhook: `npx tsx scripts/set-telegram-bot.ts` (webhook + `setMyCommands`).
 
 ### Команды
 
@@ -124,3 +155,17 @@ Service account (`GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY`) **deprecated** —
 - OAuth refresh token выдаётся один раз (локальный OAuth flow); на Vercel хранить `GOOGLE_REFRESH_TOKEN`.
 - Rate limits GA4/Yandex — ошибки логируются, в Telegram warning-блок.
 - Нет debug API routes в production.
+
+## OAuth recovery (GOOGLE_REFRESH_TOKEN)
+
+Если Vercel logs показывают `invalid_grant` / `Token has been expired or revoked` — см. **`docs/GOOGLE-OAUTH-RECOVERY.md`**.
+
+Кратко:
+
+1. Scope: `https://www.googleapis.com/auth/analytics.readonly`
+2. Новый token через [OAuth 2.0 Playground](https://developers.google.com/oauthplayground/) + существующие `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
+3. Redirect URI в Google Cloud: `https://developers.google.com/oauthplayground`
+4. Обновить только `GOOGLE_REFRESH_TOKEN` на Vercel → redeploy
+5. Проверка: `/traffic_today` в Telegram без warning «Google Analytics временно недоступен»
+
+**Testing mode:** refresh tokens истекают через 7 дней → Publish OAuth app to Production.
