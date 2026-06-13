@@ -60,7 +60,7 @@ Canonical host: `https://www.masterzabor.by`
 9. Проверить Preview deployment и отличать его от Production.
 10. После явного подтверждения пользователя написать, что дальше будет merge/push в `main` и это запустит Production deploy.
 11. Merge/push stage branch into `main`.
-12. Дождаться Vercel Production deployment.
+12. Дождаться Vercel Production deployment; после `git push origin main` ждать минимум 40 секунд перед первым production smoke, иначе можно попасть в старый deployment/cache.
 13. Проверить live production: ключевые URL, status codes, canonical/sitemap/robots/redirects, формы/Telegram/API по scope этапа.
 14. Дать пользователю production URL/сценарии для ручной проверки.
 15. После ручной проверки пользователя и повторной проверки агента отметить этап `done`.
@@ -117,7 +117,7 @@ Production/preview:
 | P0-02 Close duplicate Vercel URL | done | `masterzabor-site.vercel.app` redirects to canonical `www.masterzabor.by`; local, preview/main and production checks passed. |
 | P0-03 Lead reliability + production secrets | done | Atomic KV list storage, Telegram delivery status and production fail-closed secrets implemented; local checks, main merge and production smoke passed. |
 | P0-04 Build/lint/tooling diagnosis | done | Superseded by P0-01.5 and rechecked: `npm run lint`, `npm run build`, Next MCP, Browser smoke and curl status checks pass. |
-| P1-01 Contact click + quiz funnel analytics | in_progress | Contact clicks and minimal quiz funnel implemented locally; preview/production verification remains. |
+| P1-01 Contact click + quiz funnel analytics | done | Contact clicks and minimal quiz funnel implemented; branch, main merge and production smoke passed. |
 | P1-02 Header/mobile CRO quick wins | not_started | `Цены` в header, mobile phone/menu refinements. |
 | P1-03 Real portfolio photos + project model foundation | not_started | Начать замену placeholder visuals. |
 | P1-04 JSON-LD cleanup | not_started | SearchAction, Product Offer URLs, breadcrumbs URL policy. |
@@ -430,3 +430,5 @@ Checks:
 - P1-01: added `/api/events` and `analytics-events:v1:{date}` KV hash counters; browser also sends GA4/Yandex events when counters exist.
 - P1-01: daily lead report now includes contact click counts and quiz funnel counts; `/api/stats` returns `conversionEvents`.
 - P1-01 local checks: `npm run lint` passes with known `QuizForm` warning; `npm run build` passes; Browser payload smoke captures contact and quiz events without writing KV; Next MCP `get_routes` includes `/api/events` and `get_errors` is clean.
+- P1-01 production checks after merge `4509b14`: waited for Vercel rollout; homepage `200` with fresh deployment, `/api/events` invalid payload returns `400`, `/api/stats?period=today` without token returns `401`, live Browser smoke console errors/warnings = 0.
+- Workflow note: after every future `git push origin main`, wait at least 40 seconds before production smoke checks.

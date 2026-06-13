@@ -259,6 +259,7 @@ Future check protocol after `npm run dev`:
 - After local checks, Preview checks and explicit user approval, merge/push the branch into `main`.
 - Before merging to `main`, tell the user that this action will trigger a Vercel Production deployment.
 - After the Production deployment is ready, verify live URLs with Browser/Playwright and `curl`/status codes, then ask the user to click through manually.
+- After `git push origin main`, wait at least 40 seconds before the first production smoke check because Vercel rollout/cache can still serve the previous deployment.
 - Mark a stage `done` only after both agent production checks and user production checks pass.
 - Never stage unrelated local files such as `.cursor/` or user-modified workspace files.
 
