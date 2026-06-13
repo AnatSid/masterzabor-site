@@ -116,7 +116,7 @@ Production/preview:
 | P0-01.5 Next 16 / MCP readiness | done | Next 16.2.9 upgrade завершён; `npm run dev`, `npm run lint`, `npm run build` и MCP checks прошли. |
 | P0-02 Close duplicate Vercel URL | done | `masterzabor-site.vercel.app` redirects to canonical `www.masterzabor.by`; local, preview/main and production checks passed. |
 | P0-03 Lead reliability + production secrets | done | Atomic KV list storage, Telegram delivery status and production fail-closed secrets implemented; local checks, main merge and production smoke passed. |
-| P0-04 Build/lint/tooling diagnosis | not_started | Ранее завис `next build`; `next lint` deprecated. |
+| P0-04 Build/lint/tooling diagnosis | done | Superseded by P0-01.5 and rechecked: `npm run lint`, `npm run build`, Next MCP, Browser smoke and curl status checks pass. |
 | P1-01 Conversion analytics events | not_started | Calls, messengers, forms, quiz, errors. |
 | P1-02 Header/mobile CRO quick wins | not_started | `Цены` в header, mobile phone/menu refinements. |
 | P1-03 Real portfolio photos + project model foundation | not_started | Начать замену placeholder visuals. |
@@ -259,6 +259,14 @@ Done criteria:
 - build проходит или причина документирована;
 - lint command не зависит от deprecated `next lint`;
 - dependency versions pinned or planned.
+
+Result:
+
+- Closed by P0-01.5 Next 16 / MCP readiness and rechecked on `codex/P0-04-build-lint-tooling-diagnosis`.
+- `npm run lint` passes with the known React Compiler warning from React Hook Form `watch()` in `QuizForm`.
+- `npm run build` passes on Next.js `16.2.9` Turbopack; sandbox-only EPERM on `.next` was resolved by rerunning outside sandbox.
+- Next DevTools MCP finds the dev server on `http://localhost:3000`; `get_routes` works and `get_errors` returns empty `configErrors`/`sessionErrors` after Browser smoke.
+- Browser/curl smoke: homepage/service/city/blog/prices return `200`; `/sitemap.xml` and `/robots.txt` return `200`; slash service URL redirects `308` to no-slash; duplicate Vercel host redirects `308` to canonical `www`.
 
 ### P1-01 Conversion Analytics Events
 
@@ -416,3 +424,6 @@ Checks:
 - P0-03: lead API saves first, returns success with `leadId` and `deliveryStatus`; Telegram failure marks `telegram_failed` instead of losing the lead or returning 502.
 - P0-03: `CRON_SECRET`, `STATS_API_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` and `TELEGRAM_CHAT_ID` now fail-closed in Vercel Production.
 - P0-03 production checks after merge `a2d585a`: homepage `200`, `/api/stats?period=today` without token `401`, `/api/cron/daily-report` without token `401`, `masterzabor-site.vercel.app/zabory-iz-profnastila` `308` to canonical `www`, Browser smoke on homepage has no console errors.
+- P0-04 started on branch `codex/P0-04-build-lint-tooling-diagnosis`; no code changes needed.
+- P0-04 checks: `npm run lint` passes with known `QuizForm` React Hook Form warning; `npm run build` passes on Next `16.2.9`; Next MCP `get_routes` works and `get_errors` is clean after Browser smoke.
+- P0-04 curl smoke: `/sitemap.xml` `200`, `/robots.txt` `200`, `/zabory-iz-profnastila/` `308` to no-slash, duplicate host header `308` to canonical `www`.

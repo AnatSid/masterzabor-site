@@ -239,6 +239,7 @@ Next 16 / MCP status:
 - Runtime Next DevTools MCP is available through `nextjs_index` / `nextjs_call` on a running dev server and exposes project metadata, routes and error diagnostics.
 - `npm run lint` uses ESLint CLI and ignores `.cursor/**`; current app lint passes with one React Compiler warning from `react-hook-form` `watch()`.
 - `npm run build` passes with Turbopack.
+- P0-04 rechecked the tooling baseline: lint/build/dev server/Next MCP/Browser/curl smoke pass; no extra code changes needed.
 
 Future check protocol after `npm run dev`:
 
@@ -428,7 +429,7 @@ Critical now:
 - Fail-close cron/webhook secrets.
 - Remove or implement `SearchAction`.
 - Add image `sizes`.
-- Diagnose `next build` hang.
+- Keep lint/build/MCP checks in every stage to catch regressions.
 
 Important:
 
