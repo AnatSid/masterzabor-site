@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { QuizForm } from "@/components/forms/QuizForm";
 import {
   ADDRESS,
@@ -28,9 +29,9 @@ const breadcrumbJsonLd = generateBreadcrumbJsonLd([
 ]);
 
 const messengers = [
-  { label: "Telegram", href: TELEGRAM_LINK },
-  { label: "WhatsApp", href: WHATSAPP_LINK },
-  { label: "Viber", href: VIBER_LINK },
+  { label: "Telegram", channel: "click_telegram", href: TELEGRAM_LINK },
+  { label: "WhatsApp", channel: "click_whatsapp", href: WHATSAPP_LINK },
+  { label: "Viber", channel: "click_viber", href: VIBER_LINK },
 ] as const;
 
 export default function KontaktyPage() {
@@ -74,9 +75,15 @@ export default function KontaktyPage() {
             <div className="mt-6 space-y-5 text-slate-700">
               <p>
                 <span className="font-semibold text-slate-950">Телефон:</span>{" "}
-                <a className="text-[#1B5E20] hover:underline" href={`tel:${PHONE}`}>
+                <TrackedContactLink
+                  channel="click_call"
+                  className="text-[#1B5E20] hover:underline"
+                  eventLocation="contacts_page"
+                  href={`tel:${PHONE}`}
+                  source="contacts-page"
+                >
                   {PHONE_DISPLAY}
-                </a>
+                </TrackedContactLink>
               </p>
               <p>
                 <span className="font-semibold text-slate-950">Адрес:</span>{" "}
@@ -101,15 +108,18 @@ export default function KontaktyPage() {
 
             <div className="mt-7 flex flex-wrap gap-3">
               {messengers.map((item) => (
-                <a
+                <TrackedContactLink
+                  channel={item.channel}
                   className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-[#1B5E20] hover:text-[#1B5E20]"
+                  eventLocation="contacts_page"
                   href={item.href}
                   key={item.label}
                   rel="noopener noreferrer"
+                  source="contacts-page"
                   target={item.href.startsWith("http") ? "_blank" : undefined}
                 >
                   {item.label}
-                </a>
+                </TrackedContactLink>
               ))}
             </div>
           </section>

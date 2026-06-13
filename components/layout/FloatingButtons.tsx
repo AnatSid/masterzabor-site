@@ -1,3 +1,4 @@
+import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import {
   PHONE,
   TELEGRAM_LINK,
@@ -68,25 +69,29 @@ function ViberIcon() {
 }
 
 const messengers = [
-  { label: "Telegram", href: TELEGRAM_LINK, color: "#229ED9", icon: TelegramIcon },
-  { label: "WhatsApp", href: WHATSAPP_LINK, color: "#25D366", icon: WhatsAppIcon },
-  { label: "Viber", href: VIBER_LINK, color: "#7360F2", icon: ViberIcon },
+  { label: "Telegram", channel: "click_telegram", href: TELEGRAM_LINK, color: "#229ED9", icon: TelegramIcon },
+  { label: "WhatsApp", channel: "click_whatsapp", href: WHATSAPP_LINK, color: "#25D366", icon: WhatsAppIcon },
+  { label: "Viber", channel: "click_viber", href: VIBER_LINK, color: "#7360F2", icon: ViberIcon },
 ] as const;
 
 export function FloatingButtons() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-slate-200 bg-white p-3 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] md:hidden">
-      <a
+      <TrackedContactLink
+        channel="click_call"
         className="flex items-center justify-center rounded-xl bg-[#1B5E20] px-4 py-3 text-sm font-bold text-white"
+        eventLocation="floating_mobile"
         href={`tel:${PHONE}`}
       >
         📞 Позвонить
-      </a>
+      </TrackedContactLink>
       <div className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-2">
         {messengers.map((item) => (
-          <a
+          <TrackedContactLink
             aria-label={item.label}
+            channel={item.channel}
             className="flex size-10 items-center justify-center rounded-full transition-transform duration-200 hover:scale-110"
+            eventLocation="floating_mobile"
             href={item.href}
             key={item.href}
             rel="noopener noreferrer"
@@ -94,7 +99,7 @@ export function FloatingButtons() {
             target={item.href.startsWith("http") ? "_blank" : undefined}
           >
             <item.icon />
-          </a>
+          </TrackedContactLink>
         ))}
       </div>
     </div>

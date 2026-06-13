@@ -117,7 +117,7 @@ Production/preview:
 | P0-02 Close duplicate Vercel URL | done | `masterzabor-site.vercel.app` redirects to canonical `www.masterzabor.by`; local, preview/main and production checks passed. |
 | P0-03 Lead reliability + production secrets | done | Atomic KV list storage, Telegram delivery status and production fail-closed secrets implemented; local checks, main merge and production smoke passed. |
 | P0-04 Build/lint/tooling diagnosis | done | Superseded by P0-01.5 and rechecked: `npm run lint`, `npm run build`, Next MCP, Browser smoke and curl status checks pass. |
-| P1-01 Conversion analytics events | not_started | Calls, messengers, forms, quiz, errors. |
+| P1-01 Contact click + quiz funnel analytics | in_progress | Contact clicks and minimal quiz funnel implemented locally; preview/production verification remains. |
 | P1-02 Header/mobile CRO quick wins | not_started | `Цены` в header, mobile phone/menu refinements. |
 | P1-03 Real portfolio photos + project model foundation | not_started | Начать замену placeholder visuals. |
 | P1-04 JSON-LD cleanup | not_started | SearchAction, Product Offer URLs, breadcrumbs URL policy. |
@@ -268,11 +268,11 @@ Result:
 - Next DevTools MCP finds the dev server on `http://localhost:3000`; `get_routes` works and `get_errors` returns empty `configErrors`/`sessionErrors` after Browser smoke.
 - Browser/curl smoke: homepage/service/city/blog/prices return `200`; `/sitemap.xml` and `/robots.txt` return `200`; slash service URL redirects `308` to no-slash; duplicate Vercel host redirects `308` to canonical `www`.
 
-### P1-01 Conversion Analytics Events
+### P1-01 Contact Click + Quiz Funnel Analytics
 
 Цель:
 
-- бизнес видит, какие CTA и страницы дают лиды.
+- бизнес видит звонки/мессенджеры и базовую воронку квиза без лишней аналитической сложности.
 
 Events:
 
@@ -280,20 +280,18 @@ Events:
 - `click_telegram`
 - `click_whatsapp`
 - `click_viber`
-- `form_start`
-- `form_success`
-- `form_error`
-- `quiz_start`
-- `quiz_step`
-- `quiz_success`
-- `price_view`
-- `portfolio_filter`
+- `quiz_started`
+- `quiz_step_3_reached`
+- `quiz_contact_step_reached`
 
 Done criteria:
 
-- events sent to GA/Yandex where configured;
-- no errors when counters are absent;
-- source/page data included.
+- contact clicks are counted by day in KV and sent to GA/Yandex when configured;
+- minimal quiz funnel is counted by day in KV and sent to GA/Yandex when configured;
+- daily Telegram report includes contact clicks and quiz funnel counts;
+- `/api/stats` includes `conversionEvents`;
+- no errors when browser counters are absent;
+- source/page/location data included without PII.
 
 ### P1-02 Header / Mobile CRO Quick Wins
 
@@ -427,3 +425,8 @@ Checks:
 - P0-04 started on branch `codex/P0-04-build-lint-tooling-diagnosis`; no code changes needed.
 - P0-04 checks: `npm run lint` passes with known `QuizForm` React Hook Form warning; `npm run build` passes on Next `16.2.9`; Next MCP `get_routes` works and `get_errors` is clean after Browser smoke.
 - P0-04 curl smoke: `/sitemap.xml` `200`, `/robots.txt` `200`, `/zabory-iz-profnastila/` `308` to no-slash, duplicate host header `308` to canonical `www`.
+- P1-01 started on branch `codex/P1-01-contact-click-quiz-funnel`.
+- P1-01 scope narrowed by decision: contact clicks (`click_call`, `click_telegram`, `click_whatsapp`, `click_viber`) plus minimal quiz funnel (`quiz_started`, `quiz_step_3_reached`, `quiz_contact_step_reached`); no form-success duplication because lead stats already count submitted заявки.
+- P1-01: added `/api/events` and `analytics-events:v1:{date}` KV hash counters; browser also sends GA4/Yandex events when counters exist.
+- P1-01: daily lead report now includes contact click counts and quiz funnel counts; `/api/stats` returns `conversionEvents`.
+- P1-01 local checks: `npm run lint` passes with known `QuizForm` warning; `npm run build` passes; Browser payload smoke captures contact and quiz events without writing KV; Next MCP `get_routes` includes `/api/events` and `get_errors` is clean.

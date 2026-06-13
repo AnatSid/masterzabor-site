@@ -25,5 +25,6 @@ export async function GET(request: NextRequest) {
     bySource: aggregated.bySource,
     byCity: aggregated.byCity,
     byDay: aggregated.byDay,
+    conversionEvents: aggregated.conversionEvents,
   });
 }

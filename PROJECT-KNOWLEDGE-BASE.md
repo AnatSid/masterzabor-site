@@ -77,7 +77,7 @@ Production: https://www.masterzabor.by
 - `SearchAction` в JSON-LD есть без реального поиска.
 - Header не содержит явный пункт `Цены` в основной навигации.
 - Нужны реальные фото вместо placeholder-графики.
-- Нужны conversion events для звонков, мессенджеров, форм и квиза.
+- P1-01 adds lightweight conversion events for contact clicks and minimal quiz funnel; submitted forms remain covered by lead stats.
 
 ### Новое уточнение текущего аудита
 
@@ -407,16 +407,15 @@ Add or formalize:
 - `click_telegram`
 - `click_whatsapp`
 - `click_viber`
-- `form_start`
-- `form_submit`
-- `form_success`
-- `form_error`
-- `quiz_start`
-- `quiz_step`
-- `quiz_success`
-- `price_view`
-- `portfolio_filter`
-- `project_view`
+- `quiz_started`
+- `quiz_step_3_reached`
+- `quiz_contact_step_reached`
+
+Current decision:
+
+- Do not duplicate successful form/quiz submissions in analytics because lead storage and daily/monthly reports already count submitted заявки.
+- Store contact/funnel counters in KV by day under `analytics-events:v1:{date}` and also send browser events to GA4/Yandex when configured.
+- Keep event payload free of PII: event type, page path, source and UI location only.
 
 ## Roadmap Summary
 
@@ -435,7 +434,7 @@ Important:
 
 - Real portfolio/project photos.
 - Project content model.
-- Conversion events.
+- Contact click and quiz funnel events.
 - Header `Цены`.
 - Quiz "Не знаю длину".
 - Product JSON-LD service URLs.

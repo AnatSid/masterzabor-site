@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import {
   ADDRESS,
   COMPANY_NAME,
@@ -30,9 +31,9 @@ const footerServices = [
 ] as const;
 
 const messengers = [
-  { label: "Telegram", href: TELEGRAM_LINK },
-  { label: "WhatsApp", href: WHATSAPP_LINK },
-  { label: "Viber", href: VIBER_LINK },
+  { label: "Telegram", channel: "click_telegram", href: TELEGRAM_LINK },
+  { label: "WhatsApp", channel: "click_whatsapp", href: WHATSAPP_LINK },
+  { label: "Viber", channel: "click_viber", href: VIBER_LINK },
 ] as const;
 
 export function Footer() {
@@ -80,24 +81,31 @@ export function Footer() {
           <h2 className="text-base font-semibold">Контакты</h2>
           <address className="mt-4 space-y-3 text-sm not-italic leading-6 text-slate-300">
             <p>
-              <a className="transition hover:text-white" href={`tel:${PHONE}`}>
+              <TrackedContactLink
+                channel="click_call"
+                className="transition hover:text-white"
+                eventLocation="footer"
+                href={`tel:${PHONE}`}
+              >
                 {PHONE_DISPLAY}
-              </a>
+              </TrackedContactLink>
             </p>
             <p>{ADDRESS}</p>
             <p>{WORKING_HOURS}</p>
           </address>
           <div className="mt-5 flex flex-wrap gap-3">
             {messengers.map((item) => (
-              <a
+              <TrackedContactLink
+                channel={item.channel}
                 className="rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-white hover:text-white"
+                eventLocation="footer"
                 href={item.href}
                 key={item.href}
                 rel="noopener noreferrer"
                 target={item.href.startsWith("http") ? "_blank" : undefined}
               >
                 {item.label}
-              </a>
+              </TrackedContactLink>
             ))}
           </div>
         </section>

@@ -39,6 +39,35 @@ app/api/cron/analytics-report/route.ts  ← cron 20:00 Минск (vercel.json)
 
 Fail-safe: `Promise.allSettled` — при падении одного источника второй блок всё равно попадает в сообщение.
 
+## Lightweight conversion events
+
+P1-01 intentionally tracks only the signals not covered by lead stats:
+
+| Event | Meaning |
+|---|---|
+| `click_call` | user clicked a phone link |
+| `click_telegram` | user clicked Telegram |
+| `click_whatsapp` | user clicked WhatsApp |
+| `click_viber` | user clicked Viber |
+| `quiz_started` | user interacted with the quiz |
+| `quiz_step_3_reached` | user completed the first two quiz steps |
+| `quiz_contact_step_reached` | user reached the quiz contact step |
+
+Submitted forms are not duplicated as analytics events: they are already counted by the lead pipeline and daily/monthly lead stats.
+
+Storage:
+
+- Browser sends `POST /api/events`.
+- Server increments daily KV hash counters under `analytics-events:v1:{YYYY-MM-DD}`.
+- Payload stores only event type, `pagePath`, `source` and UI `location`; no names, phones or comments.
+- Browser also sends the same event to GA4 (`gtag`) and Yandex Metrika (`ym(..., "reachGoal")`) when counters are configured.
+- If GA/Yandex or `/api/events` fails, contact click/quiz UX must continue normally.
+
+Daily lead report includes:
+
+- contact clicks: calls, Telegram, WhatsApp, Viber;
+- quiz funnel: started, reached step 3, reached contact step.
+
 ## Google Analytics (GA4 Data API)
 
 - **Auth:** OAuth2 refresh token only (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`).

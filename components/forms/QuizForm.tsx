@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { BelarusPhoneField } from "@/components/forms/BelarusPhoneField";
+import { trackQuizFunnel } from "@/lib/client-analytics";
 import { isValidBelarusPhone, normalizeBelarusPhone } from "@/lib/phone";
 
 type QuizFormValues = {
@@ -191,6 +192,7 @@ export function QuizForm({
     ? defaultWicketType
     : "Калитка не нужна";
   const initialStep = sanitizeDefaultStep(defaultStep);
+  const trackedQuizEvents = useRef(new Set<string>());
   const initialResetValues = useMemo(
     () => ({
       fenceType: initialFenceType,
@@ -239,12 +241,30 @@ export function QuizForm({
     setStatus("idle");
     setStep(initialStep);
     reset(initialResetValues);
+    trackedQuizEvents.current.clear();
   }, [initialResetValues, initialStep, reset, source]);
 
   const values = watch();
   const progress = (step / 6) * 100;
 
+  const trackQuizEventOnce = (
+    type: "quiz_started" | "quiz_step_3_reached" | "quiz_contact_step_reached",
+  ) => {
+    if (trackedQuizEvents.current.has(type)) {
+      return;
+    }
+
+    trackedQuizEvents.current.add(type);
+    trackQuizFunnel(type, {
+      location: "quiz",
+      source,
+      pagePath: undefined,
+    });
+  };
+
   const nextStep = async () => {
+    trackQuizEventOnce("quiz_started");
+
     const fieldsByStep: Record<number, (keyof QuizFormValues)[]> = {
       1: ["fenceType"],
       2: ["length"],
@@ -257,7 +277,17 @@ export function QuizForm({
     const isValid = await trigger(fieldsByStep[step]);
 
     if (isValid) {
-      setStep((current) => Math.min(current + 1, 6));
+      const next = Math.min(step + 1, 6);
+
+      if (next >= 3) {
+        trackQuizEventOnce("quiz_step_3_reached");
+      }
+
+      if (next >= 6) {
+        trackQuizEventOnce("quiz_contact_step_reached");
+      }
+
+      setStep(next);
     }
   };
 
@@ -323,9 +353,10 @@ export function QuizForm({
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
                   }`}
                   key={type}
-                  onClick={() =>
+                  onClick={() => {
+                    trackQuizEventOnce("quiz_started");
                     setValue("fenceType", type, { shouldValidate: true })
-                  }
+                  }}
                   type="button"
                 >
                   <FenceOptionPreview label={type} />

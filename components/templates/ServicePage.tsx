@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { QuizForm } from "@/components/forms/QuizForm";
 import {
   serviceProseClassName,
@@ -190,12 +191,15 @@ export function ServicePage({ service }: ServicePageProps) {
               >
                 Рассчитать стоимость
               </a>
-              <a
+              <TrackedContactLink
+                channel="click_call"
                 className="inline-flex justify-center rounded-xl bg-white px-6 py-3 font-bold text-[#1B5E20] transition hover:bg-slate-100"
+                eventLocation="service_hero"
                 href={`tel:${PHONE}`}
+                source={`service-${service.slug}`}
               >
                 Позвонить: {PHONE_DISPLAY}
-              </a>
+              </TrackedContactLink>
             </div>
           </div>
 

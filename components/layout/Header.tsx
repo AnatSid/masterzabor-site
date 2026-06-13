@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import {
   COMPANY_NAME,
   PHONE,
@@ -72,18 +73,21 @@ function ViberIcon() {
 const messengers = [
   {
     label: "Telegram",
+    channel: "click_telegram",
     href: TELEGRAM_LINK,
     color: "#229ED9",
     icon: TelegramIcon,
   },
   {
     label: "WhatsApp",
+    channel: "click_whatsapp",
     href: WHATSAPP_LINK,
     color: "#25D366",
     icon: WhatsAppIcon,
   },
   {
     label: "Viber",
+    channel: "click_viber",
     href: VIBER_LINK,
     color: "#7360F2",
     icon: ViberIcon,
@@ -184,17 +188,21 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <a
+          <TrackedContactLink
+            channel="click_call"
             className="font-semibold text-[#1B5E20] transition hover:text-green-800"
+            eventLocation="header_desktop"
             href={`tel:${PHONE}`}
           >
             {PHONE_DISPLAY}
-          </a>
+          </TrackedContactLink>
           <div className="flex items-start gap-3">
             {messengers.map((item) => (
-              <a
+              <TrackedContactLink
                 aria-label={item.label}
+                channel={item.channel}
                 className="flex flex-col items-center gap-1 transition-transform duration-200 hover:scale-105"
+                eventLocation="header_desktop"
                 href={item.href}
                 key={item.href}
                 rel="noopener noreferrer"
@@ -203,15 +211,20 @@ export function Header() {
               >
                 <item.icon />
                 <span className="text-[10px] leading-none">{item.label}</span>
-              </a>
+              </TrackedContactLink>
             ))}
           </div>
         </div>
 
         <div className="flex items-center gap-3 lg:hidden">
-          <a className="font-semibold text-[#1B5E20]" href={`tel:${PHONE}`}>
+          <TrackedContactLink
+            channel="click_call"
+            className="font-semibold text-[#1B5E20]"
+            eventLocation="header_mobile"
+            href={`tel:${PHONE}`}
+          >
             {PHONE_DISPLAY}
-          </a>
+          </TrackedContactLink>
           <button
             aria-expanded={isOpen}
             aria-label={isOpen ? "Закрыть меню" : "Открыть меню"}
@@ -292,17 +305,21 @@ export function Header() {
         </nav>
 
         <div className="mt-8 border-t border-slate-200 pt-6">
-          <a
+          <TrackedContactLink
+            channel="click_call"
             className="block text-lg font-bold text-[#1B5E20]"
+            eventLocation="header_mobile_menu"
             href={`tel:${PHONE}`}
           >
             {PHONE_DISPLAY}
-          </a>
+          </TrackedContactLink>
           <div className="mt-4 flex gap-4">
             {messengers.map((item) => (
-              <a
+              <TrackedContactLink
                 aria-label={item.label}
+                channel={item.channel}
                 className="flex flex-col items-center gap-1 transition-transform duration-200 hover:scale-105"
+                eventLocation="header_mobile_menu"
                 href={item.href}
                 key={item.href}
                 rel="noopener noreferrer"
@@ -311,7 +328,7 @@ export function Header() {
               >
                 <item.icon />
                 <span className="text-[10px] leading-none">{item.label}</span>
-              </a>
+              </TrackedContactLink>
             ))}
           </div>
         </div>

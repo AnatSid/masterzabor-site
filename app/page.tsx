@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { QuizForm } from "@/components/forms/QuizForm";
@@ -204,12 +205,15 @@ export default function Home() {
               >
                 Рассчитать стоимость
               </a>
-              <a
+              <TrackedContactLink
+                channel="click_call"
                 className="inline-flex justify-center rounded-xl bg-white px-6 py-3 font-bold text-[#1B5E20] transition hover:bg-slate-100"
+                eventLocation="homepage_hero"
                 href={`tel:${PHONE}`}
+                source="home-hero"
               >
                 Позвонить: {PHONE_DISPLAY}
-              </a>
+              </TrackedContactLink>
             </div>
           </div>
 

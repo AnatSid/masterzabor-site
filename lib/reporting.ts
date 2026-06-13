@@ -5,6 +5,7 @@ import {
   getRangeKeys,
   getTodayLeadKey,
 } from "@/lib/leads";
+import { getConversionEventSummaryByKeys } from "@/lib/conversion-events";
 import { normalizePath } from "@/lib/url";
 
 const MINSK_TIME_ZONE = "Europe/Minsk";
@@ -61,17 +62,25 @@ export function formatReportDate() {
 
 export async function getAggregatedStats(period: StatsPeriod) {
   const keys = getRangeKeys(PERIOD_DAYS[period]);
-  const leadsByKey = await getLeadsByKeys(keys);
+  const [leadsByKey, conversionEvents] = await Promise.all([
+    getLeadsByKeys(keys),
+    getConversionEventSummaryByKeys(keys),
+  ]);
   const leads = leadsByKey.flatMap((entry) => entry.leads);
 
   return {
     period,
+    conversionEvents,
     ...aggregateLeads(leads),
   };
 }
 
 export async function getDailyReportSnapshot() {
-  const todayLeads = await getLeadsByKeys([getTodayLeadKey()]);
+  const todayKey = getTodayLeadKey();
+  const [todayLeads, todayEvents] = await Promise.all([
+    getLeadsByKeys([todayKey]),
+    getConversionEventSummaryByKeys([todayKey]),
+  ]);
   const todayItems = todayLeads.flatMap((entry) => entry.leads);
 
   const monthLeads = await getLeadsByKeys(getMonthToDateKeys());
@@ -89,6 +98,8 @@ export async function getDailyReportSnapshot() {
       "",
       `Заявок за день: ${todayItems.length}`,
       `Топ страница: ${topSource ? `${sourceToPagePath(topSource[0])} (${topSource[1]})` : "—"}`,
+      `Контактные клики: звонки ${todayEvents.contactClicks.call}, Telegram ${todayEvents.contactClicks.telegram}, WhatsApp ${todayEvents.contactClicks.whatsapp}, Viber ${todayEvents.contactClicks.viber}`,
+      `Квиз: начали ${todayEvents.quizFunnel.started}, прошли 2 шага ${todayEvents.quizFunnel.step3Reached}, дошли до контактов ${todayEvents.quizFunnel.contactStepReached}`,
       `Итого за месяц: ${monthItems.length}`,
     ].join("\n"),
   };
