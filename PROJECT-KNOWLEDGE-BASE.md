@@ -417,6 +417,8 @@ Current decision:
 - Do not duplicate successful form/quiz submissions in analytics because lead storage and daily/monthly reports already count submitted заявки.
 - Store contact/funnel counters in KV by day under `analytics-events:v1:{date}` and also send browser events to GA4/Yandex when configured.
 - Keep event payload free of PII: event type, page path, source and UI location only.
+- Daily Telegram `/report` shows conversion analytics in separated sections: daily contact clicks, month-to-date contact clicks, daily quiz funnel and month-to-date quiz funnel.
+- Daily Telegram `/report` date labels omit the Russian `г.` suffix after years.
 
 ## Roadmap Summary
 

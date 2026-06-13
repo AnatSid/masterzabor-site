@@ -65,8 +65,12 @@ Storage:
 
 Daily lead report includes:
 
-- contact clicks: calls, Telegram, WhatsApp, Viber;
-- quiz funnel: started, reached step 3, reached contact step.
+- daily leads, top page and month-to-date lead total;
+- daily contact clicks split by calls, Telegram, WhatsApp and Viber;
+- month-to-date contact clicks split by channel plus total contact clicks;
+- daily and month-to-date quiz funnel: started, completed 2+ steps, reached contact step.
+
+Daily Telegram report date labels intentionally omit the `г.` suffix after years: `13 июня 2026`, `июнь 2026`.
 
 ## Google Analytics (GA4 Data API)
 

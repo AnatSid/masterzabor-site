@@ -118,6 +118,7 @@ Production/preview:
 | P0-03 Lead reliability + production secrets | done | Atomic KV list storage, Telegram delivery status and production fail-closed secrets implemented; local checks, main merge and production smoke passed. |
 | P0-04 Build/lint/tooling diagnosis | done | Superseded by P0-01.5 and rechecked: `npm run lint`, `npm run build`, Next MCP, Browser smoke and curl status checks pass. |
 | P1-01 Contact click + quiz funnel analytics | done | Contact clicks and minimal quiz funnel implemented; branch, main merge and production smoke passed. |
+| P1-01.1 Telegram analytics report formatting | done | Follow-up: `/report` and `/stats_*` split into leads, contact clicks and quiz funnel sections; local simulation, lint/build, MCP, Browser and curl checks passed. |
 | P1-02 Header/mobile CRO quick wins | not_started | `Цены` в header, mobile phone/menu refinements. |
 | P1-03 Real portfolio photos + project model foundation | not_started | Начать замену placeholder visuals. |
 | P1-04 JSON-LD cleanup | not_started | SearchAction, Product Offer URLs, breadcrumbs URL policy. |
@@ -293,6 +294,12 @@ Done criteria:
 - no errors when browser counters are absent;
 - source/page/location data included without PII.
 
+Follow-up P1-01.1:
+
+- `/report` shows separated daily/month-to-date sections for leads, contact clicks and quiz funnel;
+- `/stats_today`, `/stats_week`, `/stats_month` and legacy `/stats ...` include contact click and quiz funnel blocks for the requested period;
+- Daily `/report` year labels omit the `г.` suffix after years.
+
 ### P1-02 Header / Mobile CRO Quick Wins
 
 Цель:
@@ -432,3 +439,11 @@ Checks:
 - P1-01 local checks: `npm run lint` passes with known `QuizForm` warning; `npm run build` passes; Browser payload smoke captures contact and quiz events without writing KV; Next MCP `get_routes` includes `/api/events` and `get_errors` is clean.
 - P1-01 production checks after merge `4509b14`: waited for Vercel rollout; homepage `200` with fresh deployment, `/api/events` invalid payload returns `400`, `/api/stats?period=today` without token returns `401`, live Browser smoke console errors/warnings = 0.
 - Workflow note: after every future `git push origin main`, wait at least 40 seconds before production smoke checks.
+
+2026-06-14:
+
+- P1-01.1 started on branch `codex/P1-01-report-format-analytics`.
+- P1-01.1: Telegram `/report` format split into leads, contact clicks and quiz funnel sections; daily and month-to-date totals are shown separately.
+- P1-01.1: `/stats_today`, `/stats_week`, `/stats_month` and legacy `/stats ...` now include contact click and quiz funnel blocks for the selected period.
+- P1-01.1: daily Telegram `/report` date/year labels omit the `г.` suffix after years; traffic titles are unchanged.
+- P1-01.1 local checks: simulated 15 bot command texts; `npm run lint` passes with known `QuizForm` warning; `npm run build` passes; Next MCP `get_routes` works and `get_errors` is clean after Browser smoke; curl checks returned `/api/stats` `401`, invalid `/api/events` `400`, wrong-secret webhook `200`, `/sitemap.xml` `200`.

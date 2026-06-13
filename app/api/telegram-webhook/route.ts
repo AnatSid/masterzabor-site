@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAggregatedStats, getDailyReportSnapshot } from "@/lib/reporting";
+import {
+  formatAggregatedStatsText,
+  formatTopSource,
+  getAggregatedStats,
+  getDailyReportSnapshot,
+} from "@/lib/reporting";
 import { getTrafficReportText } from "@/lib/analytics/reporting";
 import {
   getTelegramBotHelpText,
@@ -32,14 +37,6 @@ function normalizeCommand(text: string) {
   const arg = rest.join(" ").trim().toLowerCase();
 
   return { command, arg };
-}
-
-function formatTopSource(bySource: Record<string, number>) {
-  const top = Object.entries(bySource).sort((a, b) => b[1] - a[1])[0];
-  if (!top) {
-    return "—";
-  }
-  return `${top[0]} (${top[1]})`;
 }
 
 export async function POST(request: NextRequest) {
@@ -94,12 +91,10 @@ export async function POST(request: NextRequest) {
       const statsPeriod = resolveStatsPeriod(command, arg);
       if (statsPeriod) {
         const stats = await getAggregatedStats(statsPeriod);
-        responseText = [
-          `Статистика за ${formatStatsPeriodLabel(statsPeriod)}:`,
-          `Заявок: ${stats.totalLeads}`,
-          `Топ страницы: ${formatTopSource(stats.bySource)}`,
-          `Городских лидов (по source city-{slug}): ${Object.values(stats.byCity).reduce((sum, value) => sum + value, 0)}`,
-        ].join("\n");
+        responseText = formatAggregatedStatsText(
+          stats,
+          formatStatsPeriodLabel(statsPeriod),
+        );
       } else {
         const trafficPeriod = resolveTrafficPeriod(command, arg);
         if (trafficPeriod) {

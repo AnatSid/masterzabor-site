@@ -5,10 +5,16 @@ import {
   getRangeKeys,
   getTodayLeadKey,
 } from "@/lib/leads";
+import type { ConversionEventSummary } from "@/lib/conversion-events";
 import { getConversionEventSummaryByKeys } from "@/lib/conversion-events";
 import { normalizePath } from "@/lib/url";
 
 const MINSK_TIME_ZONE = "Europe/Minsk";
+const SECTION_SEPARATOR = "___________";
+
+function stripYearSuffix(value: string) {
+  return value.replace(/\s*г\.?$/u, "");
+}
 
 export type StatsPeriod = "today" | "week" | "month";
 
@@ -53,11 +59,45 @@ export function sourceToPagePath(source: string) {
   return source;
 }
 
-export function formatReportDate() {
-  return new Intl.DateTimeFormat("ru-BY", {
+export function formatTopSource(bySource: Record<string, number>) {
+  const topSource = getTopEntry(bySource);
+  if (!topSource) {
+    return "—";
+  }
+
+  return `${sourceToPagePath(topSource[0])} (${topSource[1]})`;
+}
+
+export function formatReportDate(date = new Date()) {
+  return stripYearSuffix(new Intl.DateTimeFormat("ru-BY", {
     dateStyle: "long",
     timeZone: MINSK_TIME_ZONE,
-  }).format(new Date());
+  }).format(date));
+}
+
+export function formatReportMonth(date = new Date()) {
+  return stripYearSuffix(new Intl.DateTimeFormat("ru-RU", {
+    month: "long",
+    year: "numeric",
+    timeZone: MINSK_TIME_ZONE,
+  }).format(date));
+}
+
+function formatContactClickLines(events: ConversionEventSummary) {
+  return [
+    `звонки: ${events.contactClicks.call}`,
+    `Telegram: ${events.contactClicks.telegram}`,
+    `WhatsApp: ${events.contactClicks.whatsapp}`,
+    `Viber: ${events.contactClicks.viber}`,
+  ];
+}
+
+function formatQuizFunnelLines(events: ConversionEventSummary) {
+  return [
+    `начали: ${events.quizFunnel.started}`,
+    `прошли 2 шага и более: ${events.quizFunnel.step3Reached}`,
+    `дошли до шага контактов: ${events.quizFunnel.contactStepReached}`,
+  ];
 }
 
 export async function getAggregatedStats(period: StatsPeriod) {
@@ -75,32 +115,104 @@ export async function getAggregatedStats(period: StatsPeriod) {
   };
 }
 
+export function formatAggregatedStatsText(
+  stats: Awaited<ReturnType<typeof getAggregatedStats>>,
+  periodLabel: string,
+) {
+  return [
+    `📊 Статистика за ${periodLabel}`,
+    "",
+    `Заявок: ${stats.totalLeads}`,
+    `Топ страница: ${formatTopSource(stats.bySource)}`,
+    `Городских лидов (по source city-{slug}): ${Object.values(stats.byCity).reduce((sum, value) => sum + value, 0)}`,
+    "",
+    SECTION_SEPARATOR,
+    "",
+    "Контактные клики:",
+    ...formatContactClickLines(stats.conversionEvents),
+    `Итого контактных кликов: ${stats.conversionEvents.contactClicks.total}`,
+    "",
+    SECTION_SEPARATOR,
+    "",
+    "Квиз:",
+    ...formatQuizFunnelLines(stats.conversionEvents),
+  ].join("\n");
+}
+
+export function formatDailyReportText({
+  reportDate,
+  monthLabel,
+  todayLeads,
+  monthLeads,
+  topSource,
+  todayEvents,
+  monthEvents,
+}: {
+  reportDate: string;
+  monthLabel: string;
+  todayLeads: number;
+  monthLeads: number;
+  topSource: string;
+  todayEvents: ConversionEventSummary;
+  monthEvents: ConversionEventSummary;
+}) {
+  return [
+    `📊 Сводка за ${reportDate}`,
+    "",
+    `Заявок за день: ${todayLeads}`,
+    `Топ страница: ${topSource}`,
+    `Итого заявок за ${monthLabel}: ${monthLeads}`,
+    "",
+    SECTION_SEPARATOR,
+    "",
+    `Контактные клики за ${reportDate}:`,
+    ...formatContactClickLines(todayEvents),
+    "",
+    `Контактные клики за ${monthLabel}:`,
+    ...formatContactClickLines(monthEvents),
+    `Итого контактных кликов за ${monthLabel}: ${monthEvents.contactClicks.total}`,
+    "",
+    SECTION_SEPARATOR,
+    "",
+    `Квиз за ${reportDate}:`,
+    ...formatQuizFunnelLines(todayEvents),
+    "",
+    `Квиз за ${monthLabel}:`,
+    ...formatQuizFunnelLines(monthEvents),
+  ].join("\n");
+}
+
 export async function getDailyReportSnapshot() {
   const todayKey = getTodayLeadKey();
-  const [todayLeads, todayEvents] = await Promise.all([
+  const monthKeys = getMonthToDateKeys();
+  const [todayLeads, todayEvents, monthLeads, monthEvents] = await Promise.all([
     getLeadsByKeys([todayKey]),
     getConversionEventSummaryByKeys([todayKey]),
+    getLeadsByKeys(monthKeys),
+    getConversionEventSummaryByKeys(monthKeys),
   ]);
   const todayItems = todayLeads.flatMap((entry) => entry.leads);
-
-  const monthLeads = await getLeadsByKeys(getMonthToDateKeys());
   const monthItems = monthLeads.flatMap((entry) => entry.leads);
 
   const todayAggregated = aggregateLeads(todayItems);
   const topSource = getTopEntry(todayAggregated.bySource);
+  const reportDate = formatReportDate();
+  const monthLabel = formatReportMonth();
 
   return {
     today: todayItems.length,
     month: monthItems.length,
     topSource,
-    text: [
-      `📊 Сводка за ${formatReportDate()}`,
-      "",
-      `Заявок за день: ${todayItems.length}`,
-      `Топ страница: ${topSource ? `${sourceToPagePath(topSource[0])} (${topSource[1]})` : "—"}`,
-      `Контактные клики: звонки ${todayEvents.contactClicks.call}, Telegram ${todayEvents.contactClicks.telegram}, WhatsApp ${todayEvents.contactClicks.whatsapp}, Viber ${todayEvents.contactClicks.viber}`,
-      `Квиз: начали ${todayEvents.quizFunnel.started}, прошли 2 шага ${todayEvents.quizFunnel.step3Reached}, дошли до контактов ${todayEvents.quizFunnel.contactStepReached}`,
-      `Итого за месяц: ${monthItems.length}`,
-    ].join("\n"),
+    text: formatDailyReportText({
+      reportDate,
+      monthLabel,
+      todayLeads: todayItems.length,
+      monthLeads: monthItems.length,
+      topSource: topSource
+        ? `${sourceToPagePath(topSource[0])} (${topSource[1]})`
+        : "—",
+      todayEvents,
+      monthEvents,
+    }),
   };
 }
