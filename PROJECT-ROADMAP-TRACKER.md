@@ -43,8 +43,9 @@ Canonical host: `https://www.masterzabor.by`
 - Не регистрировать Telegram webhook на `masterzabor.by`.
 - Не пропускать Telegram webhook через redirect.
 - Не исправлять всё одной большой пачкой.
-- Один этап = отдельная ветка/commit/preview.
+- Один этап = отдельная ветка/commit/preview -> user approval -> merge to `main` -> production verification.
 - После каждого этапа обновлять этот tracker.
+- Preview deployments are for branch validation only; Production changes happen only after merge/push to `main`.
 
 ## Рабочий цикл этапа
 
@@ -52,12 +53,24 @@ Canonical host: `https://www.masterzabor.by`
 2. Сделать только изменения выбранного этапа.
 3. Обновить `PROJECT-ROADMAP-TRACKER.md`.
 4. При необходимости обновить `PROJECT-KNOWLEDGE-BASE.md`.
-5. Проверить локально.
+5. Проверить локально: `git status`, `npm run lint`, `npm run build`, `npm run dev`, Next MCP, Browser/Playwright, `curl`/status codes по scope этапа.
 6. Дать пользователю список URL/сценариев для ручной проверки на `localhost:3000`.
-7. После подтверждения сделать commit.
-8. Push -> Vercel Preview.
-9. Проверить preview.
-10. После подтверждения выкатывать production.
+7. После подтверждения сделать commit в stage branch.
+8. Push stage branch -> Vercel Preview.
+9. Проверить Preview deployment и отличать его от Production.
+10. После явного подтверждения пользователя написать, что дальше будет merge/push в `main` и это запустит Production deploy.
+11. Merge/push stage branch into `main`.
+12. Дождаться Vercel Production deployment.
+13. Проверить live production: ключевые URL, status codes, canonical/sitemap/robots/redirects, формы/Telegram/API по scope этапа.
+14. Дать пользователю production URL/сценарии для ручной проверки.
+15. После ручной проверки пользователя и повторной проверки агента отметить этап `done`.
+
+Важно:
+
+- `git push origin codex/<stage-name>` создаёт Preview и не меняет `main`.
+- Только `git push origin main` или merge PR в `main` запускает Production deployment.
+- Не считать этап завершённым только по Preview.
+- Если в рабочем дереве есть чужие изменения (`.gitignore`, `.cursor/`, etc.), не трогать их и не включать в stage.
 
 ## Проверки по умолчанию
 

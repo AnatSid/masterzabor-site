@@ -250,6 +250,17 @@ Future check protocol after `npm run dev`:
 5. `nextjs_call get_errors` after pages are opened - catch browser/runtime/hydration errors.
 6. `curl` / status codes - verify sitemap, canonical, robots, redirects and no-slash policy.
 
+## Delivery Workflow Memory
+
+- Work on every stage in a separate `codex/<stage-name>` branch.
+- Commit and push the stage branch first; this creates a Vercel Preview deployment only.
+- Preview deployments validate branch work, but do not update `main` or the live production site.
+- After local checks, Preview checks and explicit user approval, merge/push the branch into `main`.
+- Before merging to `main`, tell the user that this action will trigger a Vercel Production deployment.
+- After the Production deployment is ready, verify live URLs with Browser/Playwright and `curl`/status codes, then ask the user to click through manually.
+- Mark a stage `done` only after both agent production checks and user production checks pass.
+- Never stage unrelated local files such as `.cursor/` or user-modified workspace files.
+
 ## Сильные стороны
 
 - Используется современный Next.js App Router.
