@@ -66,6 +66,13 @@ Canonical host: `https://www.masterzabor.by`
 - `npm run lint` или актуальная замена после миграции с `next lint`;
 - `npm run build` после отдельной диагностики зависания;
 - `npm run dev`;
+- Runtime Next DevTools MCP protocol после `npm run dev`:
+  1. `nextjs_index` - найти running Next.js server и runtime tools.
+  2. `nextjs_call get_errors` - проверить config/build/runtime errors до ручного smoke.
+  3. `nextjs_call get_routes` - подтвердить App Router route map.
+  4. Browser/Playwright page smoke - открыть homepage, service, city, blog, commercial pages, lead form.
+  5. `nextjs_call get_errors` после открытия страниц - поймать browser/runtime/hydration errors.
+  6. `curl`/status codes - проверить sitemap/canonical/robots/redirects и no-slash policy.
 - ручная проверка на `http://localhost:3000`.
 
 Production/preview:
@@ -92,7 +99,7 @@ Production/preview:
 | S00 Audit docs | done | Созданы `AUDIT-MASTERZABOR-2026.md` и `PROJECT-KNOWLEDGE-BASE.md`. |
 | S01 Tracker | done | Создан этот файл. |
 | P0-01 Canonical / sitemap / no-slash URL policy | done | Кодовые правки, локальная проверка и пользовательское подтверждение выполнены; commit/push разрешены. |
-| P0-01.5 Next 16 / MCP readiness | not_started | Отдельный upgrade после P0-01, до P0-02/P0-03 и больших frontend/mobile правок. |
+| P0-01.5 Next 16 / MCP readiness | done | Next 16.2.9 upgrade завершён; `npm run dev`, `npm run lint`, `npm run build` и MCP checks прошли. |
 | P0-02 Close duplicate Vercel URL | not_started | `masterzabor-site.vercel.app` отдаёт 200. |
 | P0-03 Lead reliability + production secrets | not_started | KV atomic write, Telegram fallback, fail-closed secrets. |
 | P0-04 Build/lint/tooling diagnosis | not_started | Ранее завис `next build`; `next lint` deprecated. |
@@ -136,8 +143,8 @@ Done criteria:
 
 Цель:
 
-- перейти с Next 15.5.18 на Next 16+ отдельным controlled stage;
-- включить runtime diagnostics через Next DevTools MCP (`/_next/mcp`);
+- перейти с Next 15.5.18 на Next 16.2.9 отдельным controlled stage;
+- включить runtime diagnostics через Next DevTools MCP (`/_next/mcp`) и `nextjs_index`/`nextjs_call`;
 - не смешивать upgrade с canonical/sitemap SEO-fix.
 
 Когда делать:
@@ -162,11 +169,11 @@ Scope:
 
 Done criteria:
 
-- `package.json` / lockfile обновлены на Next 16+;
+- `package.json` / lockfile обновлены на Next 16.2.9;
 - `npm run dev` стартует;
-- `npm run lint` или новая lint-команда проходит;
-- `npm run build` проходит или причина documented с точным blocker;
-- Next DevTools MCP видит running server и доступны runtime tools;
+- `npm run lint` проходит через ESLint CLI (`eslint .`);
+- `npm run build` проходит на Next 16.2.9 Turbopack;
+- Next DevTools MCP видит running server через `nextjs_index`, доступны runtime tools через `nextjs_call`;
 - canonical/sitemap/no-slash policy из P0-01 не сломана;
 - smoke test пройден для homepage, service, city, blog, prices, lead form;
 - `PROJECT-ROADMAP-TRACKER.md` и при необходимости `PROJECT-KNOWLEDGE-BASE.md` обновлены.
@@ -370,4 +377,14 @@ Checks:
 - P0-01 local checks: `npm run lint` passed; `npm run dev` проверен на `http://localhost:3001`, потому что `localhost:3000` занят PID 15144.
 - P0-01 local checks: homepage, service, city, blog, blog article, prices и `/sitemap.xml` отдают 200; slash-варианты service/city/blog/prices отдают 308 на no-slash.
 - P0-01 local checks: sitemap содержит 55 URL, terminal slash URL = 0, все 55 sitemap URL локально отдают 200 без redirect.
-- P0-01.5 Next 16 / MCP readiness не начинался.
+- P0-01.5 Next 16 / MCP readiness начат отдельной веткой `codex/p0-next16-mcp-readiness`.
+
+2026-06-13:
+
+- P0-01.5: зависимости обновлены до Next.js `16.2.9`, React `19.2.7`, `eslint-config-next` `16.2.9`; `next lint` заменён на `eslint .`.
+- P0-01.5: ESLint flat config переведён на прямой `eslint-config-next/core-web-vitals` + `eslint-config-next/typescript`, `.cursor/**` исключён из lint scope.
+- P0-01.5: `npm run lint` проходит с 1 warning по `react-hook-form`/React Compiler в `QuizForm`; `npm run build` проходит на Next.js 16.2.9 Turbopack.
+- P0-01.5: Next DevTools MCP обнаружил dev server на `http://localhost:3001`, `get_errors` вернул пустые ошибки, routes доступны.
+- P0-01.5: после resume dev server проверен на `http://localhost:3000`; Next MCP обнаружил 6 tools, `get_errors` чистый, browser console errors/warnings = 0.
+- P0-01.5: homepage, service, city, blog, blog article, prices и `/sitemap.xml` отдают 200; slash-варианты service/city/blog/prices отдают 308 на no-slash.
+- P0-01.5: sitemap содержит 55 URL, terminal slash URL = 0, все 55 sitemap URL локально отдают 200 без redirect.

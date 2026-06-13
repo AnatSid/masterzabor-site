@@ -112,11 +112,19 @@ export function Header() {
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      setIsGateMenuOpen(false);
+  const closeMobileMenu = () => {
+    setIsOpen(false);
+    setIsGateMenuOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    if (isOpen) {
+      closeMobileMenu();
+      return;
     }
-  }, [isOpen]);
+
+    setIsOpen(true);
+  };
 
   return (
     <header
@@ -128,7 +136,7 @@ export function Header() {
         <Link
           className="text-2xl font-bold tracking-tight text-[#1B5E20]"
           href="/"
-          onClick={() => setIsOpen(false)}
+          onClick={closeMobileMenu}
         >
           {COMPANY_NAME}
         </Link>
@@ -208,7 +216,7 @@ export function Header() {
             aria-expanded={isOpen}
             aria-label={isOpen ? "Закрыть меню" : "Открыть меню"}
             className="inline-flex size-11 items-center justify-center rounded-lg border border-slate-300 text-slate-900"
-            onClick={() => setIsOpen((value) => !value)}
+            onClick={toggleMobileMenu}
             type="button"
           >
             <span className="text-2xl leading-none">{isOpen ? "×" : "≡"}</span>
@@ -222,7 +230,7 @@ export function Header() {
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
         }`}
-        onClick={() => setIsOpen(false)}
+        onClick={closeMobileMenu}
       />
       <aside
         className={`fixed right-0 top-[69px] z-40 h-[calc(100dvh-69px)] w-80 max-w-[85vw] bg-white p-6 shadow-2xl transition-transform lg:hidden ${
@@ -235,7 +243,7 @@ export function Header() {
               className="rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20]"
               href={item.href}
               key={item.href}
-              onClick={() => setIsOpen(false)}
+              onClick={closeMobileMenu}
             >
               {item.label}
             </Link>
@@ -263,7 +271,7 @@ export function Header() {
                     className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-[#1B5E20]"
                     href={item.href}
                     key={item.href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={closeMobileMenu}
                   >
                     {item.label}
                   </Link>
@@ -276,7 +284,7 @@ export function Header() {
               className="rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20]"
               href={item.href}
               key={item.href}
-              onClick={() => setIsOpen(false)}
+              onClick={closeMobileMenu}
             >
               {item.label}
             </Link>

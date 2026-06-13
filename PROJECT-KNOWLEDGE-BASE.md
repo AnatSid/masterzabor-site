@@ -24,8 +24,8 @@ Production: https://www.masterzabor.by
 ## Текущая техническая база
 
 - Framework: Next.js App Router.
-- Version: `next ^15.5.18`.
-- React: `latest`.
+- Version: `next 16.2.9`.
+- React: `19.2.7`.
 - Styling: Tailwind CSS.
 - Forms: `react-hook-form`.
 - Storage: `@vercel/kv`.
@@ -47,7 +47,7 @@ Production: https://www.masterzabor.by
 
 ### Исторически выполнено
 
-- Создан сайт на Next.js 15 App Router.
+- Создан сайт на Next.js App Router; в P0-01.5 локально обновлён до Next.js 16.2.9.
 - Созданы 6 service pages.
 - Созданы 40 city pages через `app/[city]/page.tsx` и `generateStaticParams`.
 - Созданы страницы `/tseny`, `/nashi-raboty`, `/otzyvy`, `/kontakty`.
@@ -84,11 +84,10 @@ Production: https://www.masterzabor.by
 
 Прошлые документы правильно выбрали `www` и заметили trailing slash как отдельный от host вопрос. Текущий production-аудит показывает, что trailing slash стал не косметикой, а основной причиной индексирующих конфликтов:
 
-- sitemap содержит slash URL;
-- canonical часто содержит slash URL;
+- до P0-01 sitemap/canonical/часть JSON-LD содержали slash URL;
 - production final URL без slash;
 - slash URL делает 308 redirect;
-- canonical указывает на redirecting URL.
+- P0-01 нормализовал sitemap/canonical/OG/JSON-LD/internal links на no-slash URL.
 
 Целевое решение: сохранять `www`, но нормализовать все внутренние canonical/sitemap/internal/schema URL в no-slash style.
 
@@ -112,7 +111,7 @@ Production: https://www.masterzabor.by
 
 Текущее production-поведение: URL без trailing slash являются конечными 200 URL.
 
-Текущее кодовое поведение: sitemap/canonical часто создают URL со trailing slash.
+Текущее кодовое поведение после P0-01: sitemap/canonical/OG/JSON-LD/internal links нормализуются в no-slash style.
 
 Целевое решение: привести проект к no-slash URL style.
 
@@ -130,7 +129,7 @@ Production: https://www.masterzabor.by
 - `app/[city]/page.tsx` - 40 city pages from `content/cities.ts`; `dynamicParams = false`.
 - `app/blog/page.tsx` - blog index.
 - `app/blog/[slug]/page.tsx` - 3 статей from `content/blog-posts.ts`; Article/Breadcrumb JSON-LD.
-- `app/sitemap.ts` - generated sitemap; currently slash URLs.
+- `app/sitemap.ts` - generated sitemap; P0-01 normalizes all loc URLs to no-slash canonical URLs.
 - `app/robots.ts` - generated robots; correct host/sitemap.
 - `app/api/*` - lead, stats, Telegram webhook, daily reports, analytics reports.
 - `components/layout/` - global layout and shared container.
@@ -171,7 +170,7 @@ API routes:
 - `/api/cron/daily-report`
 - `/api/cron/analytics-report`
 
-Sitemap coverage: all main routes are covered, but current sitemap URLs use trailing slash and redirect in production.
+Sitemap coverage: all main routes are covered; after P0-01 sitemap loc URLs use no-slash final URLs.
 
 Robots coverage: `/api/` is disallowed; public routes are allowed.
 
@@ -209,38 +208,47 @@ Duplicated/centralization candidates:
 - Placeholder SVG generation in multiple files.
 - Trailing slash link construction.
 - Breadcrumb URL construction.
-- Analytics source-to-page conversion still returns slash paths.
+- Analytics source-to-page conversion was normalized to no-slash paths in P0-01.
 
 ## Dependency Map
 
 Current lockfile versions:
 
-- `next`: 15.5.18
-- `react`: 19.2.6
-- `react-dom`: 19.2.6
+- `next`: 16.2.9
+- `react`: 19.2.7
+- `react-dom`: 19.2.7
 - `tailwindcss`: 4.3.0
 - `@tailwindcss/postcss`: 4.3.0
 - `@vercel/kv`: 3.0.0
 - `react-hook-form`: 7.75.0
 - `typescript`: 6.0.3
 - `eslint`: 9.39.4
-- `eslint-config-next`: 15.5.18
+- `eslint-config-next`: 16.2.9
 
 Dependency decisions:
 
 - Keep Next.js/App Router.
 - Keep React Hook Form.
 - Keep Vercel KV for now, but change data model for leads.
-- Pin versions in `package.json`; avoid `latest`.
-- Replace `next lint` before Next.js 16 upgrade.
+- Pin core framework versions in `package.json`; avoid `latest` for Next/React/React DOM and React types.
+- Use ESLint CLI (`eslint .`), not removed `next lint`.
 
-Next 16 / MCP decision:
+Next 16 / MCP status:
 
-- Do not mix Next 16 upgrade with `P0-01 Canonical / sitemap / no-slash URL policy`.
-- Add dedicated stage `P0-01.5 Next 16 / MCP readiness` immediately after P0-01.
-- Do P0-01.5 before P0-02/P0-03 and before large frontend/mobile/CRO/design work.
-- Main reason: Next 16+ enables runtime Next DevTools MCP (`/_next/mcp`) for route/error/metadata diagnostics.
-- Required checks: Node.js `20.9+` locally and on Vercel, official codemod, ESLint CLI instead of `next lint`, async Request APIs, `next/image`, Turbopack dev/build, canonical/sitemap regression.
+- P0-01.5 is done locally on branch `codex/p0-next16-mcp-readiness`.
+- Upgrade target reached locally: Next.js `16.2.9`, React `19.2.7`, React DOM `19.2.7`.
+- Runtime Next DevTools MCP is available through `nextjs_index` / `nextjs_call` on a running dev server and exposes project metadata, routes and error diagnostics.
+- `npm run lint` uses ESLint CLI and ignores `.cursor/**`; current app lint passes with one React Compiler warning from `react-hook-form` `watch()`.
+- `npm run build` passes with Turbopack.
+
+Future check protocol after `npm run dev`:
+
+1. `nextjs_index` - discover the running Next.js server and available runtime tools.
+2. `nextjs_call get_errors` - check config/build/runtime errors before browser smoke.
+3. `nextjs_call get_routes` - confirm current App Router route map.
+4. Browser/Playwright page smoke - open homepage, service, city, blog, commercial pages and a lead form.
+5. `nextjs_call get_errors` after pages are opened - catch browser/runtime/hydration errors.
+6. `curl` / status codes - verify sitemap, canonical, robots, redirects and no-slash policy.
 
 ## Сильные стороны
 
@@ -256,7 +264,7 @@ Next 16 / MCP decision:
 
 ## Важные риски
 
-- Главный SEO-риск: slash/no-slash конфликт между sitemap/canonical и production.
+- Главный SEO-риск P0-01 закрыт локально: sitemap/canonical/OG/JSON-LD/internal links нормализованы на no-slash; дальше нужен preview/production regression после merge.
 - Главный duplicate-риск: `masterzabor-site.vercel.app` отдаёт production 200.
 - Главный lead-риск: неатомарная запись заявок в KV.
 - Главный security-риск: optional secrets для cron/webhook.
