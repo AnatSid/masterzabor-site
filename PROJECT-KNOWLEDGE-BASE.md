@@ -265,7 +265,7 @@ Future check protocol after `npm run dev`:
 ## Важные риски
 
 - Главный SEO-риск P0-01 закрыт локально: sitemap/canonical/OG/JSON-LD/internal links нормализованы на no-slash; дальше нужен preview/production regression после merge.
-- Главный duplicate-риск: `masterzabor-site.vercel.app` отдаёт production 200.
+- Главный duplicate-риск P0-02 снижен кодом: `next.config.ts` redirects `masterzabor-site.vercel.app` to `https://www.masterzabor.by` locally; preview/production verification still required after deploy.
 - Главный lead-риск: неатомарная запись заявок в KV.
 - Главный security-риск: optional secrets для cron/webhook.
 - Главный CRO-риск: placeholder-изображения вместо реальных работ.
@@ -309,7 +309,7 @@ Future check protocol after `npm run dev`:
 - Next.js App Router.
 - Vercel.
 - `www.masterzabor.by` as canonical/runtime host.
-- No custom host redirects in `next.config.ts`.
+- Host redirect in `next.config.ts` is allowed only for closing the `masterzabor-site.vercel.app` duplicate surface; do not change canonical `www` strategy without a domain audit.
 - `CityPage` and `ServicePage` templates.
 - `SiteContainer`.
 - Telegram and analytics reporting.

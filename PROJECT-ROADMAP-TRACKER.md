@@ -100,7 +100,7 @@ Production/preview:
 | S01 Tracker | done | Создан этот файл. |
 | P0-01 Canonical / sitemap / no-slash URL policy | done | Кодовые правки, локальная проверка и пользовательское подтверждение выполнены; commit/push разрешены. |
 | P0-01.5 Next 16 / MCP readiness | done | Next 16.2.9 upgrade завершён; `npm run dev`, `npm run lint`, `npm run build` и MCP checks прошли. |
-| P0-02 Close duplicate Vercel URL | not_started | `masterzabor-site.vercel.app` отдаёт 200. |
+| P0-02 Close duplicate Vercel URL | in_progress | Code-level host redirect added and checked locally; preview/production verification remains. |
 | P0-03 Lead reliability + production secrets | not_started | KV atomic write, Telegram fallback, fail-closed secrets. |
 | P0-04 Build/lint/tooling diagnosis | not_started | Ранее завис `next build`; `next lint` deprecated. |
 | P1-01 Conversion analytics events | not_started | Calls, messengers, forms, quiz, errors. |
@@ -187,14 +187,15 @@ Done criteria:
 Варианты:
 
 - Vercel dashboard domain/project setting;
-- middleware/headers only if безопасно и без host loop;
-- noindex/redirect для non-canonical host.
+- `next.config.ts` host-based redirect if safe and without host loop;
+- Proxy/headers only if config redirect is insufficient;
+- noindex as fallback for non-canonical host.
 
 Done criteria:
 
 - `www.masterzabor.by` работает без redirect loop;
 - apex продолжает `307 -> www`;
-- Vercel deployment URL либо редиректит, либо noindex;
+- Vercel deployment URL redirects to `https://www.masterzabor.by` or returns noindex;
 - Telegram webhook на `www` не затронут.
 
 ### P0-03 Lead Reliability + Production Secrets
@@ -388,3 +389,9 @@ Checks:
 - P0-01.5: после resume dev server проверен на `http://localhost:3000`; Next MCP обнаружил 6 tools, `get_errors` чистый, browser console errors/warnings = 0.
 - P0-01.5: homepage, service, city, blog, blog article, prices и `/sitemap.xml` отдают 200; slash-варианты service/city/blog/prices отдают 308 на no-slash.
 - P0-01.5: sitemap содержит 55 URL, terminal slash URL = 0, все 55 sitemap URL локально отдают 200 без redirect.
+- P0-02: started on branch `codex/p0-close-duplicate-vercel-url`.
+- P0-02: added host-based redirect in `next.config.ts` for `masterzabor-site.vercel.app` to `https://www.masterzabor.by`, excluding `/api/*` so webhook/API routes are not redirected.
+- P0-02 local checks: `npm run lint` passes with the known React Hook Form warning; `npm run build` passes on Next.js 16.2.9 Turbopack.
+- P0-02 local checks: dev server and built `next start -p 3002` both return `308` from `Host: masterzabor-site.vercel.app` to `https://www.masterzabor.by/`, `/gomel?utm=test`, `/sitemap.xml`, and `/robots.txt`; `/api/telegram-webhook` is not redirected.
+- P0-02 note: slash duplicate URLs such as `/gomel/` first hit Next's no-slash `308` to `/gomel`, then the duplicate host redirect; no duplicate URL returns indexable 200.
+- P0-02 remaining: verify preview/production `https://masterzabor-site.vercel.app` after deploy/merge.
