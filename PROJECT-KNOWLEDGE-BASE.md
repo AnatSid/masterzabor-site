@@ -251,7 +251,8 @@ Future check protocol after `npm run dev`:
 
 ## Delivery Workflow Memory
 
-- Work on every stage in a separate `codex/<stage-name>` branch.
+- Work on every stage in a separate `codex/<stage-id>-<meaning>` branch; put the stage number first, then a short readable task meaning.
+- Examples: `codex/P0-03-lead-reliability-secrets`, `codex/P1-01-conversion-analytics`, `codex/P1-02-header-mobile-cro`.
 - Commit and push the stage branch first; this creates a Vercel Preview deployment only.
 - Preview deployments validate branch work, but do not update `main` or the live production site.
 - After local checks, Preview checks and explicit user approval, merge/push the branch into `main`.
@@ -274,10 +275,10 @@ Future check protocol after `npm run dev`:
 
 ## Важные риски
 
-- Главный SEO-риск P0-01 закрыт локально: sitemap/canonical/OG/JSON-LD/internal links нормализованы на no-slash; дальше нужен preview/production regression после merge.
-- Главный duplicate-риск P0-02 снижен кодом: `next.config.ts` redirects `masterzabor-site.vercel.app` to `https://www.masterzabor.by` locally; preview/production verification still required after deploy.
-- Главный lead-риск P0-03 снижен локально: новые заявки пишутся атомарно, имеют `leadId` и delivery status; legacy data remains readable.
-- Главный security-риск P0-03 снижен локально: cron/stats/webhook secrets fail-closed in Vercel Production; production env values still need dashboard verification.
+- Главный SEO-риск P0-01 закрыт: sitemap/canonical/OG/JSON-LD/internal links нормализованы на no-slash и проверены после merge.
+- Главный duplicate-риск P0-02 закрыт кодом: `next.config.ts` redirects `masterzabor-site.vercel.app` to `https://www.masterzabor.by`; production `308` проверен.
+- Главный lead-риск P0-03 снижен: новые заявки пишутся атомарно, имеют `leadId` и delivery status; legacy data remains readable.
+- Главный security-риск P0-03 снижен: cron/stats/webhook secrets fail-closed in Vercel Production; production stats/cron without token return `401`.
 - Главный CRO-риск: placeholder-изображения вместо реальных работ.
 - Главный scale-риск: city pages могут стать doorway/thin pages при расширении без уникального контента.
 

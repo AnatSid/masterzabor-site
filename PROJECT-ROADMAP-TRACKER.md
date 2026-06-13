@@ -49,7 +49,7 @@ Canonical host: `https://www.masterzabor.by`
 
 ## Рабочий цикл этапа
 
-1. Создать ветку `codex/<stage-name>`.
+1. Создать ветку `codex/<stage-id>-<meaning>`: номер этапа первым, затем короткий смысл.
 2. Сделать только изменения выбранного этапа.
 3. Обновить `PROJECT-ROADMAP-TRACKER.md`.
 4. При необходимости обновить `PROJECT-KNOWLEDGE-BASE.md`.
@@ -68,6 +68,7 @@ Canonical host: `https://www.masterzabor.by`
 Важно:
 
 - `git push origin codex/<stage-name>` создаёт Preview и не меняет `main`.
+- Для новых веток использовать stage-first naming: например `codex/P0-03-lead-reliability-secrets`, `codex/P1-01-conversion-analytics`.
 - Только `git push origin main` или merge PR в `main` запускает Production deployment.
 - Не считать этап завершённым только по Preview.
 - Если в рабочем дереве есть чужие изменения (`.gitignore`, `.cursor/`, etc.), не трогать их и не включать в stage.
@@ -113,8 +114,8 @@ Production/preview:
 | S01 Tracker | done | Создан этот файл. |
 | P0-01 Canonical / sitemap / no-slash URL policy | done | Кодовые правки, локальная проверка и пользовательское подтверждение выполнены; commit/push разрешены. |
 | P0-01.5 Next 16 / MCP readiness | done | Next 16.2.9 upgrade завершён; `npm run dev`, `npm run lint`, `npm run build` и MCP checks прошли. |
-| P0-02 Close duplicate Vercel URL | in_progress | Code-level host redirect added and checked locally; preview/production verification remains. |
-| P0-03 Lead reliability + production secrets | in_progress | Atomic KV list storage, Telegram delivery status and production fail-closed secrets implemented locally; checks pending. |
+| P0-02 Close duplicate Vercel URL | done | `masterzabor-site.vercel.app` redirects to canonical `www.masterzabor.by`; local, preview/main and production checks passed. |
+| P0-03 Lead reliability + production secrets | done | Atomic KV list storage, Telegram delivery status and production fail-closed secrets implemented; local checks, main merge and production smoke passed. |
 | P0-04 Build/lint/tooling diagnosis | not_started | Ранее завис `next build`; `next lint` deprecated. |
 | P1-01 Conversion analytics events | not_started | Calls, messengers, forms, quiz, errors. |
 | P1-02 Header/mobile CRO quick wins | not_started | `Цены` в header, mobile phone/menu refinements. |
@@ -414,3 +415,4 @@ Checks:
 - P0-03: new leads are written to `leads:v2:{date}` with atomic Redis `rpush`; legacy `leads:{date}` arrays remain readable for reports.
 - P0-03: lead API saves first, returns success with `leadId` and `deliveryStatus`; Telegram failure marks `telegram_failed` instead of losing the lead or returning 502.
 - P0-03: `CRON_SECRET`, `STATS_API_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` and `TELEGRAM_CHAT_ID` now fail-closed in Vercel Production.
+- P0-03 production checks after merge `a2d585a`: homepage `200`, `/api/stats?period=today` without token `401`, `/api/cron/daily-report` without token `401`, `masterzabor-site.vercel.app/zabory-iz-profnastila` `308` to canonical `www`, Browser smoke on homepage has no console errors.
