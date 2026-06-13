@@ -1,25 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTrafficReportText } from "@/lib/analytics/reporting";
+import { validateBearerSecret } from "@/lib/request-auth";
 import { formatTrafficReportTitle } from "@/lib/telegram-period";
 import { sendTelegramText } from "@/lib/telegram";
 
 export const runtime = "nodejs";
 
-function getBearerToken(request: NextRequest) {
-  const header = request.headers.get("authorization");
-  if (!header?.startsWith("Bearer ")) {
-    return "";
-  }
-  return header.slice("Bearer ".length).trim();
-}
-
 export async function GET(request: NextRequest) {
-  const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret) {
-    const requestToken = getBearerToken(request);
-    if (requestToken !== cronSecret) {
-      return NextResponse.json({ error: "Доступ запрещён" }, { status: 401 });
-    }
+  const authError = validateBearerSecret(request, "CRON_SECRET");
+  if (authError) {
+    return authError;
   }
 
   let reportText = "";

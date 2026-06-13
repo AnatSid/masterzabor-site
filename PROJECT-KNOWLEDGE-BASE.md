@@ -71,10 +71,9 @@ Production: https://www.masterzabor.by
 
 ### Исторически найдено, но ещё актуально
 
-- `CRON_SECRET` должен быть обязательным в production, но код fail-open при пустом env.
-- `TELEGRAM_WEBHOOK_SECRET` и `TELEGRAM_CHAT_ID` должны быть обязательными в production.
+- P0-03 makes `CRON_SECRET`, `TELEGRAM_WEBHOOK_SECRET` and `TELEGRAM_CHAT_ID` fail-closed in Vercel Production; dashboard env values still need verification.
 - In-memory rate limit слаб для serverless.
-- KV storage для leads неатомарен.
+- P0-03 moves new leads to atomic Redis list storage (`leads:v2:{date}` via `rpush`) while keeping legacy `leads:{date}` arrays readable for reports.
 - `SearchAction` в JSON-LD есть без реального поиска.
 - Header не содержит явный пункт `Цены` в основной навигации.
 - Нужны реальные фото вместо placeholder-графики.
@@ -277,8 +276,8 @@ Future check protocol after `npm run dev`:
 
 - Главный SEO-риск P0-01 закрыт локально: sitemap/canonical/OG/JSON-LD/internal links нормализованы на no-slash; дальше нужен preview/production regression после merge.
 - Главный duplicate-риск P0-02 снижен кодом: `next.config.ts` redirects `masterzabor-site.vercel.app` to `https://www.masterzabor.by` locally; preview/production verification still required after deploy.
-- Главный lead-риск: неатомарная запись заявок в KV.
-- Главный security-риск: optional secrets для cron/webhook.
+- Главный lead-риск P0-03 снижен локально: новые заявки пишутся атомарно, имеют `leadId` и delivery status; legacy data remains readable.
+- Главный security-риск P0-03 снижен локально: cron/stats/webhook secrets fail-closed in Vercel Production; production env values still need dashboard verification.
 - Главный CRO-риск: placeholder-изображения вместо реальных работ.
 - Главный scale-риск: city pages могут стать doorway/thin pages при расширении без уникального контента.
 
@@ -394,9 +393,9 @@ Add or formalize:
 
 1. Validate request.
 2. Assign `leadId`.
-3. Atomically persist lead.
+3. Atomically persist lead to `leads:v2:{date}` before Telegram delivery.
 4. Send Telegram.
-5. If Telegram fails, keep lead as `pending_delivery`.
+5. If Telegram fails, keep lead and mark status `telegram_failed`.
 6. Retry/report delivery failures.
 7. Return success once lead is safely stored.
 

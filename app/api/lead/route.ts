@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { appendLeadToStorage } from "@/lib/leads";
+import { appendLeadToStorage, updateLeadDeliveryStatus } from "@/lib/leads";
 import { LeadData, sendToTelegram } from "@/lib/telegram";
 import { isValidBelarusPhone, normalizeBelarusPhone } from "@/lib/phone";
 
@@ -94,8 +94,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
+  let storedLead: Awaited<ReturnType<typeof appendLeadToStorage>>;
+
   try {
-    await appendLeadToStorage(validation.lead);
+    storedLead = await appendLeadToStorage(validation.lead);
   } catch (error) {
     console.error("Failed to save lead to KV", error);
     return NextResponse.json(
@@ -107,11 +109,32 @@ export async function POST(request: NextRequest) {
   const isSent = await sendToTelegram(validation.lead);
 
   if (!isSent) {
-    return NextResponse.json(
-      { error: "Не удалось отправить заявку" },
-      { status: 502 },
-    );
+    await updateLeadDeliveryStatus({
+      dateKey: storedLead.dateKey,
+      id: storedLead.record.id,
+      status: "telegram_failed",
+    }).catch((error) => {
+      console.error("Failed to mark lead Telegram failure", error);
+    });
+
+    return NextResponse.json({
+      success: true,
+      leadId: storedLead.record.id,
+      deliveryStatus: "telegram_failed",
+    });
   }
 
-  return NextResponse.json({ success: true });
+  await updateLeadDeliveryStatus({
+    dateKey: storedLead.dateKey,
+    id: storedLead.record.id,
+    status: "telegram_sent",
+  }).catch((error) => {
+    console.error("Failed to mark lead Telegram success", error);
+  });
+
+  return NextResponse.json({
+    success: true,
+    leadId: storedLead.record.id,
+    deliveryStatus: "telegram_sent",
+  });
 }

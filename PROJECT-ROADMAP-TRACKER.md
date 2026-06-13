@@ -114,7 +114,7 @@ Production/preview:
 | P0-01 Canonical / sitemap / no-slash URL policy | done | Кодовые правки, локальная проверка и пользовательское подтверждение выполнены; commit/push разрешены. |
 | P0-01.5 Next 16 / MCP readiness | done | Next 16.2.9 upgrade завершён; `npm run dev`, `npm run lint`, `npm run build` и MCP checks прошли. |
 | P0-02 Close duplicate Vercel URL | in_progress | Code-level host redirect added and checked locally; preview/production verification remains. |
-| P0-03 Lead reliability + production secrets | not_started | KV atomic write, Telegram fallback, fail-closed secrets. |
+| P0-03 Lead reliability + production secrets | in_progress | Atomic KV list storage, Telegram delivery status and production fail-closed secrets implemented locally; checks pending. |
 | P0-04 Build/lint/tooling diagnosis | not_started | Ранее завис `next build`; `next lint` deprecated. |
 | P1-01 Conversion analytics events | not_started | Calls, messengers, forms, quiz, errors. |
 | P1-02 Header/mobile CRO quick wins | not_started | `Цены` в header, mobile phone/menu refinements. |
@@ -226,6 +226,7 @@ Done criteria:
 - `app/api/cron/daily-report/route.ts`
 - `app/api/cron/analytics-report/route.ts`
 - `app/api/telegram-webhook/route.ts`
+- `lib/request-auth.ts`
 - `.env.example`
 - `docs/ANALYTICS.md`
 
@@ -408,3 +409,8 @@ Checks:
 - P0-02 local checks: dev server and built `next start -p 3002` both return `308` from `Host: masterzabor-site.vercel.app` to `https://www.masterzabor.by/`, `/gomel?utm=test`, `/sitemap.xml`, and `/robots.txt`; `/api/telegram-webhook` is not redirected.
 - P0-02 note: slash duplicate URLs such as `/gomel/` first hit Next's no-slash `308` to `/gomel`, then the duplicate host redirect; no duplicate URL returns indexable 200.
 - P0-02 remaining: verify preview/production `https://masterzabor-site.vercel.app` after deploy/merge.
+- Workflow update: documented branch -> Preview -> approval -> merge to `main` -> Production verification process; `.cursor/` added to `.gitignore`.
+- P0-03 Lead reliability + production secrets started on branch `codex/p0-lead-reliability-secrets`.
+- P0-03: new leads are written to `leads:v2:{date}` with atomic Redis `rpush`; legacy `leads:{date}` arrays remain readable for reports.
+- P0-03: lead API saves first, returns success with `leadId` and `deliveryStatus`; Telegram failure marks `telegram_failed` instead of losing the lead or returning 502.
+- P0-03: `CRON_SECRET`, `STATS_API_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` and `TELEGRAM_CHAT_ID` now fail-closed in Vercel Production.

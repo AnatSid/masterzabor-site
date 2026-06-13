@@ -6,6 +6,7 @@ import {
   resolveStatsPeriod,
   resolveTrafficPeriod,
 } from "@/lib/telegram-bot-commands";
+import { isVercelProduction } from "@/lib/request-auth";
 import { formatStatsPeriodLabel } from "@/lib/telegram-period";
 import { sendTelegramTextToChat } from "@/lib/telegram";
 
@@ -43,6 +44,11 @@ function formatTopSource(bySource: Record<string, number>) {
 
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (!webhookSecret && isVercelProduction()) {
+    console.error("TELEGRAM_WEBHOOK_SECRET is not configured");
+    return NextResponse.json({ ok: true });
+  }
+
   if (webhookSecret) {
     const requestSecret = request.headers.get("x-telegram-bot-api-secret-token");
     if (requestSecret !== webhookSecret) {
@@ -64,6 +70,11 @@ export async function POST(request: NextRequest) {
   }
 
   const allowedChatId = process.env.TELEGRAM_CHAT_ID;
+  if (!allowedChatId && isVercelProduction()) {
+    console.error("TELEGRAM_CHAT_ID is not configured");
+    return NextResponse.json({ ok: true });
+  }
+
   if (allowedChatId && String(chatId) !== allowedChatId) {
     await sendTelegramTextToChat(
       String(chatId),

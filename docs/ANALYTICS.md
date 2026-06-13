@@ -131,14 +131,14 @@ Service account (`GOOGLE_CLIENT_EMAIL`, `GOOGLE_PRIVATE_KEY`) **deprecated** —
 - `/api/cron/daily-report` — заявки (KV)
 - `/api/cron/analytics-report` — трафик за today
 
-Оба защищены `Authorization: Bearer CRON_SECRET` (если env задан).
+Оба защищены `Authorization: Bearer CRON_SECRET`.
 
 ### `CRON_SECRET` (Vercel)
 
 - **Endpoints:** `GET /api/cron/daily-report`, `GET /api/cron/analytics-report`
-- **Код:** проверка только если `process.env.CRON_SECRET` не пустой; иначе endpoint **открыт**
+- **Код:** в Vercel Production endpoint fail-closed, если `CRON_SECRET` не задан; вне Production пустой env допускается для local/dev smoke.
 - **Vercel Cron:** при наличии `CRON_SECRET` в env проекта Vercel **сам** добавляет заголовок `Authorization: Bearer …` на cron-запросы
-- **Production:** env **обязателен** (без него любой может вызвать cron URL)
+- **Production:** env **обязателен** (без него cron URL не выполняется)
 
 ### `STATS_API_TOKEN`
 
