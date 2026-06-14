@@ -107,7 +107,7 @@ export default function RootLayout({
         ) : null}
       </head>
       <body
-        className={`${inter.className} min-h-screen bg-white pb-20 text-slate-900 antialiased md:pb-0`}
+        className={`${inter.className} min-h-screen bg-white pb-[calc(5rem+env(safe-area-inset-bottom))] text-slate-900 antialiased md:pb-0`}
       >
         <Header />
         {children}

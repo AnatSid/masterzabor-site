@@ -75,7 +75,7 @@ Production: https://www.masterzabor.by
 - In-memory rate limit слаб для serverless.
 - P0-03 moves new leads to atomic Redis list storage (`leads:v2:{date}` via `rpush`) while keeping legacy `leads:{date}` arrays readable for reports.
 - `SearchAction` в JSON-LD есть без реального поиска.
-- Header не содержит явный пункт `Цены` в основной навигации.
+- Header intentionally does not add a separate `Цены` item for now: pricing is variable by city, length, height and fence type, while service pages already show `от ... BYN/м.п.` ориентиры.
 - Нужны реальные фото вместо placeholder-графики.
 - P1-01 adds lightweight conversion events for contact clicks and minimal quiz funnel; submitted forms remain covered by lead stats.
 
@@ -191,7 +191,7 @@ Robots coverage: `/api/` is disallowed; public routes are allowed.
 
 Usage and risks:
 
-- `Header`: global navigation, phone and messengers. Missing `Цены` in main nav.
+- `Header`: global navigation, phone and messengers. Do not add `Цены` as a quick header item without a separate pricing strategy.
 - `Footer`: has full nav including prices/blog/reviews, better coverage than header.
 - `FloatingButtons`: mobile conversion layer for calls and messengers.
 - `SiteContainer`: good shared layout primitive; should continue expanding to all sections.
@@ -286,9 +286,10 @@ Future check protocol after `npm run dev`:
 
 ## Frontend / Mobile / CRO Notes
 
-- Header глобальный, но его nav беднее footer: добавить `Цены`, возможно `Отзывы` и `Блог`.
-- Mobile bottom CTA уже есть и body имеет `pb-20`, чтобы не перекрывать контент.
-- Мобильный phone+burger может быть тесным на малых ширинах.
+- Header глобальный; `Цены` не добавлять в быстрый nav без отдельной pricing strategy, потому что цена зависит от параметров объекта.
+- Mobile bottom CTA уже есть; body/bottom CTA должны учитывать `safe-area-inset-bottom`, чтобы не перекрывать контент на iPhone.
+- Мобильный phone+burger должен помещаться на 320-430 px без горизонтального overflow; номер телефона должен оставаться кликабельным и не переноситься абы как.
+- Mobile burger menu: компактный правый drawer, открывается только по нажатию, не рендерит offscreen-панель в закрытом состоянии, не сдвигает страницу и не оставляет пустой full-screen overlay. Внутри меню телефон отдельной full-width строкой, мессенджеры строкой ниже.
 - `QuizForm` основной канал заявок; добавить "Не знаю длину" и analytics по шагам.
 - `LeadForm` остаётся хорошим быстрым fallback.
 - Portfolio/reviews требуют реальных доказательств: фото, город, материал, срок, диапазон цены, внешний отзыв.
@@ -438,7 +439,7 @@ Important:
 - Real portfolio/project photos.
 - Project content model.
 - Contact click and quiz funnel events.
-- Header `Цены`.
+- Mobile layout/CRO cleanup: no page-level horizontal overflow, stable burger menu, safe-area-aware bottom CTA.
 - Quiz "Не знаю длину".
 - Product JSON-LD service URLs.
 - Pin dependencies and replace `next lint`.

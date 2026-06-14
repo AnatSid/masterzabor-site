@@ -119,7 +119,7 @@ Production/preview:
 | P0-04 Build/lint/tooling diagnosis | done | Superseded by P0-01.5 and rechecked: `npm run lint`, `npm run build`, Next MCP, Browser smoke and curl status checks pass. |
 | P1-01 Contact click + quiz funnel analytics | done | Contact clicks and minimal quiz funnel implemented; branch, main merge and production smoke passed. |
 | P1-01.1 Telegram analytics report formatting | done | Follow-up: `/report` and `/stats_*` split into leads, contact clicks and quiz funnel sections; local simulation, lint/build, MCP, Browser and curl checks passed. |
-| P1-02 Header/mobile CRO quick wins | not_started | `Цены` в header, mobile phone/menu refinements. |
+| P1-02 Mobile layout + CRO quick wins | done | Mobile overflow/menu/CTA cleanup completed; `Цены` intentionally not added to header. Local lint/build/MCP/curl/mobile CDP checks passed. |
 | P1-03 Real portfolio photos + project model foundation | not_started | Начать замену placeholder visuals. |
 | P1-04 JSON-LD cleanup | not_started | SearchAction, Product Offer URLs, breadcrumbs URL policy. |
 | P2-01 Blog/content architecture | not_started | MDX/CMS direction for 500+ articles. |
@@ -300,24 +300,29 @@ Follow-up P1-01.1:
 - `/stats_today`, `/stats_week`, `/stats_month` and legacy `/stats ...` include contact click and quiz funnel blocks for the requested period;
 - Daily `/report` year labels omit the `г.` suffix after years.
 
-### P1-02 Header / Mobile CRO Quick Wins
+### P1-02 Mobile Layout / CRO Quick Wins
 
 Цель:
 
-- улучшить быстрые пути к заявке.
+- улучшить мобильную читаемость и быстрые пути к заявке без отдельного пункта `Цены` в header.
 
 Tasks:
 
-- добавить `Цены` в header;
-- проверить mobile phone layout;
-- добавить важные links в mobile menu;
+- не добавлять `Цены` в header: цены зависят от города, длины, высоты и типа забора; ориентиры уже есть на service pages;
+- убрать горизонтальный page-level overflow/right gutter на mobile;
+- проверить mobile phone layout, burger и bottom CTA;
+- mobile menu должно появляться только после нажатия и не расширять viewport вправо;
+- добавить safe-area для iPhone bottom CTA/menu;
+- сделать широкие price tables scrollable внутри своего блока;
 - не ломать gates dropdown.
 
 Done criteria:
 
 - desktop/mobile nav readable;
 - call/messenger CTAs visible;
-- no overlap on narrow mobile.
+- no overlap on narrow mobile;
+- homepage/service/prices have document-level `overflowX = 0` on 320/360/375/390/430 px;
+- mobile menu opens/closes by tap, does not shift the page, avoids unused full-screen overlay space and stays inside viewport.
 
 ### P1-03 Real Portfolio Photos + Project Model Foundation
 
@@ -447,3 +452,7 @@ Checks:
 - P1-01.1: `/stats_today`, `/stats_week`, `/stats_month` and legacy `/stats ...` now include contact click and quiz funnel blocks for the selected period.
 - P1-01.1: daily Telegram `/report` date/year labels omit the `г.` suffix after years; traffic titles are unchanged.
 - P1-01.1 local checks: simulated 15 bot command texts; `npm run lint` passes with known `QuizForm` warning; `npm run build` passes; Next MCP `get_routes` works and `get_errors` is clean after Browser smoke; curl checks returned `/api/stats` `401`, invalid `/api/events` `400`, wrong-secret webhook `200`, `/sitemap.xml` `200`.
+- P1-02 started on branch `codex/P1-02-mobile-layout-cro`; scope adjusted by user decision: skip adding `Цены` to header and focus on mobile overflow/menu/CTA.
+- P1-02: added global page-level X-overflow guard, compact mobile call CTA, conditional mobile menu rendering, compact right-side drawer, safe-area-aware bottom CTA and horizontal scroll inside price tables.
+- P1-02: mobile burger contact block now shows the clickable phone number as a full-width single-line `tel:` CTA, with Telegram/WhatsApp/Viber icons on the next row.
+- P1-02 local checks: `npm run lint` passes with known `QuizForm` warning; `npm run build` passes; Next MCP `get_routes` works and `get_errors` is clean; curl checks returned homepage/service/prices `200`; CDP mobile audit on 320/360/375/390/430 px reports document-level `overflowX = 0` for homepage/service/prices and opened menu; opened burger phone CTA stays `nowrap`, uses `tel:+375333135072`, and Telegram/WhatsApp/Viber stay on the next row.

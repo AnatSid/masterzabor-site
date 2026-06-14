@@ -76,21 +76,21 @@ const messengers = [
 
 export function FloatingButtons() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-slate-200 bg-white p-3 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-slate-200 bg-white px-3 pt-3 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] md:hidden [padding-bottom:calc(0.75rem+env(safe-area-inset-bottom))]">
       <TrackedContactLink
         channel="click_call"
-        className="flex items-center justify-center rounded-xl bg-[#1B5E20] px-4 py-3 text-sm font-bold text-white"
+        className="flex min-w-0 items-center justify-center rounded-xl bg-[#1B5E20] px-3 py-3 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
         eventLocation="floating_mobile"
         href={`tel:${PHONE}`}
       >
         📞 Позвонить
       </TrackedContactLink>
-      <div className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-2">
+      <div className="flex min-w-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-2">
         {messengers.map((item) => (
           <TrackedContactLink
             aria-label={item.label}
             channel={item.channel}
-            className="flex size-10 items-center justify-center rounded-full transition-transform duration-200 hover:scale-110"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full transition-transform duration-200 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
             eventLocation="floating_mobile"
             href={item.href}
             key={item.href}

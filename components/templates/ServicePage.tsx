@@ -238,7 +238,7 @@ export function ServicePage({ service }: ServicePageProps) {
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Таблица цен
           </h2>
-          <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <div className="mt-8 overflow-x-auto rounded-2xl border border-slate-200 bg-white [-webkit-overflow-scrolling:touch]">
             <table className="w-full min-w-[680px] text-left">
               <thead className="bg-slate-100 text-sm uppercase tracking-wide text-slate-600">
                 <tr>

@@ -108,14 +108,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
   const closeMobileMenu = () => {
     setIsOpen(false);
     setIsGateMenuOpen(false);
@@ -136,9 +128,9 @@ export function Header() {
         hasShadow ? "shadow-md" : "shadow-none"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:gap-4 lg:px-8">
         <Link
-          className="text-2xl font-bold tracking-tight text-[#1B5E20]"
+          className="min-w-0 flex-1 truncate text-xl font-bold tracking-tight text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-4 sm:text-2xl lg:flex-none"
           href="/"
           onClick={closeMobileMenu}
         >
@@ -216,10 +208,10 @@ export function Header() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 lg:hidden">
+        <div className="flex shrink-0 items-center gap-2 lg:hidden">
           <TrackedContactLink
             channel="click_call"
-            className="font-semibold text-[#1B5E20]"
+            className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg border border-green-100 px-2 text-xs font-semibold text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 min-[360px]:px-3 min-[360px]:text-sm"
             eventLocation="header_mobile"
             href={`tel:${PHONE}`}
           >
@@ -228,7 +220,7 @@ export function Header() {
           <button
             aria-expanded={isOpen}
             aria-label={isOpen ? "Закрыть меню" : "Открыть меню"}
-            className="inline-flex size-11 items-center justify-center rounded-lg border border-slate-300 text-slate-900"
+            className="inline-flex size-11 shrink-0 items-center justify-center rounded-lg border border-slate-300 text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
             onClick={toggleMobileMenu}
             type="button"
           >
@@ -237,102 +229,92 @@ export function Header() {
         </div>
       </div>
 
-      <div
-        className={`fixed inset-0 top-[69px] z-30 bg-slate-950/40 transition lg:hidden ${
-          isOpen
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0"
-        }`}
-        onClick={closeMobileMenu}
-      />
-      <aside
-        className={`fixed right-0 top-[69px] z-40 h-[calc(100dvh-69px)] w-80 max-w-[85vw] bg-white p-6 shadow-2xl transition-transform lg:hidden ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <nav className="flex flex-col gap-1">
-          {navigation.slice(0, 3).map((item) => (
-            <Link
-              className="rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20]"
-              href={item.href}
-              key={item.href}
-              onClick={closeMobileMenu}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <div className="rounded-lg">
-            <button
-              aria-controls="mobile-gates-menu"
-              aria-expanded={isGateMenuOpen}
-              className="flex w-full items-center justify-between rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20]"
-              onClick={() => setIsGateMenuOpen((value) => !value)}
-              type="button"
-            >
-              <span>Ворота</span>
-              <span className="text-xs">{isGateMenuOpen ? "▴" : "▾"}</span>
-            </button>
-            <div
-              className={`overflow-hidden transition-all ${
-                isGateMenuOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0"
-              }`}
-              id="mobile-gates-menu"
-            >
-              <div className="ml-3 flex flex-col border-l border-slate-200 pl-3">
-                {gateNavigation.map((item) => (
-                  <Link
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-[#1B5E20]"
-                    href={item.href}
-                    key={item.href}
-                    onClick={closeMobileMenu}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-          {navigation.slice(3).map((item) => (
-            <Link
-              className="rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20]"
-              href={item.href}
-              key={item.href}
-              onClick={closeMobileMenu}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="mt-8 border-t border-slate-200 pt-6">
-          <TrackedContactLink
-            channel="click_call"
-            className="block text-lg font-bold text-[#1B5E20]"
-            eventLocation="header_mobile_menu"
-            href={`tel:${PHONE}`}
-          >
-            {PHONE_DISPLAY}
-          </TrackedContactLink>
-          <div className="mt-4 flex gap-4">
-            {messengers.map((item) => (
-              <TrackedContactLink
-                aria-label={item.label}
-                channel={item.channel}
-                className="flex flex-col items-center gap-1 transition-transform duration-200 hover:scale-105"
-                eventLocation="header_mobile_menu"
+      {isOpen ? (
+        <aside className="fixed right-3 top-[76px] z-40 w-[min(18rem,calc(100vw-1.5rem))] max-h-[calc(100dvh-88px)] overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl lg:hidden">
+          <nav className="grid gap-1">
+            {navigation.slice(0, 3).map((item) => (
+              <Link
+                className="rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
                 href={item.href}
                 key={item.href}
-                rel="noopener noreferrer"
-                style={{ color: item.color }}
-                target={item.href.startsWith("http") ? "_blank" : undefined}
+                onClick={closeMobileMenu}
               >
-                <item.icon />
-                <span className="text-[10px] leading-none">{item.label}</span>
-              </TrackedContactLink>
+                {item.label}
+              </Link>
             ))}
+            <div className="rounded-lg">
+              <button
+                aria-controls="mobile-gates-menu"
+                aria-expanded={isGateMenuOpen}
+                className="flex w-full items-center justify-between rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
+                onClick={() => setIsGateMenuOpen((value) => !value)}
+                type="button"
+              >
+                <span>Ворота</span>
+                <span className="text-xs">{isGateMenuOpen ? "▴" : "▾"}</span>
+              </button>
+              <div
+                className={`overflow-hidden transition-[max-height,opacity] duration-200 ${
+                  isGateMenuOpen ? "max-h-56 opacity-100" : "max-h-0 opacity-0"
+                }`}
+                id="mobile-gates-menu"
+              >
+                <div className="ml-3 flex flex-col border-l border-slate-200 pl-3">
+                  {gateNavigation.map((item) => (
+                    <Link
+                      className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
+                      href={item.href}
+                      key={item.href}
+                      onClick={closeMobileMenu}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+            {navigation.slice(3).map((item) => (
+              <Link
+                className="rounded-lg px-3 py-3 font-medium text-slate-800 transition hover:bg-slate-100 hover:text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
+                href={item.href}
+                key={item.href}
+                onClick={closeMobileMenu}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="mt-4 border-t border-slate-200 pt-4">
+            <TrackedContactLink
+              channel="click_call"
+              className="flex min-h-11 w-full items-center justify-center whitespace-nowrap rounded-lg bg-green-50 px-3 text-sm font-bold text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
+              eventLocation="header_mobile_menu"
+              href={`tel:${PHONE}`}
+            >
+              {PHONE_DISPLAY}
+            </TrackedContactLink>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {messengers.map((item) => (
+                <TrackedContactLink
+                  aria-label={item.label}
+                  channel={item.channel}
+                  className="flex min-h-11 flex-col items-center justify-center gap-1 rounded-lg border border-slate-200 transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
+                  eventLocation="header_mobile_menu"
+                  href={item.href}
+                  key={item.href}
+                  rel="noopener noreferrer"
+                  style={{ color: item.color }}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                >
+                  <item.icon />
+                  <span className="text-[10px] leading-none">{item.label}</span>
+                </TrackedContactLink>
+              ))}
+            </div>
           </div>
-        </div>
-      </aside>
+        </aside>
+      ) : null}
     </header>
   );
 }
