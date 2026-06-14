@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import {
   PHONE,
@@ -75,17 +79,46 @@ const messengers = [
 ] as const;
 
 export function FloatingButtons() {
+  const pathname = usePathname();
+  const [hasScrolledPastHero, setHasScrolledPastHero] = useState(false);
+  const delayOnHomepage = pathname === "/";
+  const isVisible = !delayOnHomepage || hasScrolledPastHero;
+
+  useEffect(() => {
+    if (!delayOnHomepage) {
+      return;
+    }
+
+    const updateVisibility = () => {
+      setHasScrolledPastHero(window.scrollY > 560);
+    };
+
+    const frame = window.requestAnimationFrame(updateVisibility);
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateVisibility);
+    };
+  }, [delayOnHomepage]);
+
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-slate-200 bg-white px-3 pt-3 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] md:hidden [padding-bottom:calc(0.75rem+env(safe-area-inset-bottom))]">
+    <div
+      className={`fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-slate-200 bg-white px-3 pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] transition duration-200 md:hidden [padding-bottom:calc(0.5rem+env(safe-area-inset-bottom))] ${
+        isVisible
+          ? "translate-y-0 opacity-100"
+          : "pointer-events-none translate-y-full opacity-0"
+      }`}
+    >
       <TrackedContactLink
         channel="click_call"
-        className="flex min-w-0 items-center justify-center rounded-xl bg-[#1B5E20] px-3 py-3 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
+        className="flex min-h-11 min-w-0 items-center justify-center rounded-xl bg-[#1B5E20] px-3 py-2 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
         eventLocation="floating_mobile"
         href={`tel:${PHONE}`}
       >
         📞 Позвонить
       </TrackedContactLink>
-      <div className="flex min-w-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-2">
+      <div className="flex min-h-11 min-w-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-1.5">
         {messengers.map((item) => (
           <TrackedContactLink
             aria-label={item.label}

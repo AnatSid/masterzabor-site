@@ -181,33 +181,33 @@ export default function Home() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/40" />
 
-        <div className="relative mx-auto grid max-w-[1350px] gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[1.35fr_0.65fr] lg:items-start lg:gap-12 lg:px-8 lg:py-28">
+        <div className="relative mx-auto grid max-w-[1350px] gap-5 px-4 pb-6 pt-10 sm:px-6 sm:py-20 lg:grid-cols-[1.35fr_0.65fr] lg:items-start lg:gap-12 lg:px-8 lg:py-28">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-amber-300">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-300 sm:text-sm sm:tracking-[0.25em]">
               {COMPANY_NAME}
             </p>
-            <h1 className="mt-5 max-w-3xl text-balance text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
+            <h1 className="mt-4 max-w-3xl text-balance text-[1.875rem] font-bold leading-[1.12] tracking-tight sm:mt-5 sm:text-6xl sm:leading-tight">
               Установка заборов
               <br />
               <span className="sm:whitespace-nowrap">
                 по всей Беларуси под ключ
               </span>
             </h1>
-            <ul className="mt-6 max-w-2xl space-y-2 text-lg leading-snug text-slate-200 sm:text-xl">
+            <ul className="mt-3 max-w-2xl space-y-1.5 text-[13px] leading-snug text-slate-200 sm:mt-6 sm:space-y-2 sm:text-xl">
               <li>Профнастил • Евроштакетник • Сетка-рабица</li>
               <li>Цены от 30 BYN/м.п.</li>
               <li>Рассрочка и оплата частями до 60 месяцев</li>
             </ul>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-4 grid gap-2 sm:mt-8 sm:flex sm:flex-row sm:gap-4">
               <a
-                className="inline-flex justify-center rounded-xl bg-[#F59E0B] px-6 py-3 font-bold text-white transition hover:bg-amber-600"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#F59E0B] px-3 py-2 text-xs font-bold leading-tight text-white transition hover:bg-amber-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:px-6 sm:py-3 sm:text-base"
                 href="#quiz"
               >
                 Рассчитать стоимость
               </a>
               <TrackedContactLink
                 channel="click_call"
-                className="inline-flex justify-center rounded-xl bg-white px-6 py-3 font-bold text-[#1B5E20] transition hover:bg-slate-100"
+                className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-xl bg-white px-3 py-2 text-xs font-bold leading-tight text-[#1B5E20] transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:px-6 sm:py-3 sm:text-base"
                 eventLocation="homepage_hero"
                 href={`tel:${PHONE}`}
                 source="home-hero"
@@ -217,59 +217,59 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur lg:flex lg:self-stretch lg:p-6">
+          <div className="rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur sm:rounded-3xl sm:p-5 lg:flex lg:self-stretch lg:p-6">
             <div className="flex flex-col lg:w-full lg:justify-between">
               <div>
-                <p className="text-2xl font-bold">Бесплатный расчёт сегодня</p>
-                <p className="mt-3 text-pretty leading-snug text-slate-200">
+                <p className="text-lg font-bold leading-tight sm:text-2xl">Бесплатный расчёт сегодня</p>
+                <p className="mt-2 hidden text-pretty text-sm leading-snug text-slate-200 sm:mt-3 sm:block sm:text-base">
                   Рассчитаем стоимость, подберём материалы и покажем варианты
                   заборов под ваш&nbsp;участок.
                 </p>
               </div>
-              <div className="mt-5 grid grid-cols-2 gap-3 text-sm lg:mt-6">
-              <span className="rounded-2xl bg-white/10 px-4 py-3">Гарантия 20 лет</span>
-              <span className="rounded-2xl bg-white/10 px-4 py-3">Договор и смета</span>
-              <span className="rounded-2xl bg-white/10 px-4 py-3">Свои бригады</span>
-              <span className="rounded-2xl bg-white/10 px-4 py-3">Работаем по РБ</span>
-              <span className="rounded-2xl bg-white/10 px-4 py-3">Рассрочка и оплата частями</span>
-              <span className="rounded-2xl bg-white/10 px-4 py-3">Быстрый расчёт по телефону</span>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] leading-tight sm:mt-5 sm:gap-3 sm:text-sm lg:mt-6">
+              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Гарантия 20 лет</span>
+              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Договор и смета</span>
+              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Свои бригады</span>
+              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Работаем по РБ</span>
+              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Рассрочка и оплата частями</span>
+              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Быстрый расчёт по телефону</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-[#F5F5F5] py-12">
-        <div className="mx-auto grid max-w-7xl gap-4 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+      <section className="bg-[#F5F5F5] py-5 sm:py-12">
+        <div className="mx-auto grid max-w-7xl grid-cols-4 gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
           {trustItems.map((item) => (
             <article
-              className="flex h-full flex-col rounded-2xl bg-white p-6 shadow-sm"
+              className="flex h-full flex-col rounded-lg bg-white p-2 shadow-sm sm:rounded-2xl sm:p-6"
               key={item.title}
             >
-              <div className="text-3xl" aria-hidden="true">
+              <div className="text-lg leading-none sm:text-3xl" aria-hidden="true">
                 {item.icon}
               </div>
-              <h2 className="mt-4 text-lg font-bold leading-tight text-slate-950">
+              <h2 className="mt-1.5 text-[11px] font-bold leading-tight text-slate-950 sm:mt-4 sm:text-lg">
                 {item.title}
               </h2>
-              <p className="mt-2 text-sm text-slate-500">{item.text}</p>
+              <p className="mt-1.5 hidden text-xs leading-snug text-slate-500 sm:mt-2 sm:block sm:text-sm">{item.text}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="py-16">
+      <section className="py-6 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className={sectionIntroClassName}>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+            <h2 className="text-xl font-bold tracking-tight text-slate-950 sm:text-4xl">
               Типы заборов
             </h2>
-            <p className={sectionSubtitleClassName}>
+            <p className={`${sectionSubtitleClassName} hidden sm:block`}>
               Подбираем ограждение под бюджет, стиль участка и требования
               к&nbsp;приватности.
             </p>
           </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <div className="mt-2 grid gap-3 sm:mt-10 sm:gap-6 md:grid-cols-3">
             {fenceServices.map((service) => (
               <ProductCard
                 description={service.description}

@@ -290,6 +290,8 @@ Future check protocol after `npm run dev`:
 - Mobile bottom CTA уже есть; body/bottom CTA должны учитывать `safe-area-inset-bottom`, чтобы не перекрывать контент на iPhone.
 - Мобильный phone+burger должен помещаться на 320-430 px без горизонтального overflow; номер телефона должен оставаться кликабельным и не переноситься абы как.
 - Mobile burger menu: компактный правый drawer, открывается только по нажатию, не рендерит offscreen-панель в закрытом состоянии, не сдвигает страницу и не оставляет пустой full-screen overlay. Внутри меню телефон отдельной full-width строкой, мессенджеры строкой ниже.
+- Homepage mobile density: do not emulate Pixel by forcing a desktop/zoomed-out viewport. Pixel can look denser when Chrome uses a wider effective viewport; iPhone/Safari exposes the real mobile layout. Correct approach is true responsive CSS: compact hero spacing/type, concise trust facts, a normal vertical service list, and delayed homepage floating CTA until scroll.
+- Floating CTA behavior: on homepage it should not cover the first viewport because header phone and hero CTAs are already visible; on deeper pages it can stay visible immediately as a conversion shortcut.
 - `QuizForm` основной канал заявок; добавить "Не знаю длину" и analytics по шагам.
 - `LeadForm` остаётся хорошим быстрым fallback.
 - Portfolio/reviews требуют реальных доказательств: фото, город, материал, срок, диапазон цены, внешний отзыв.

@@ -120,6 +120,7 @@ Production/preview:
 | P1-01 Contact click + quiz funnel analytics | done | Contact clicks and minimal quiz funnel implemented; branch, main merge and production smoke passed. |
 | P1-01.1 Telegram analytics report formatting | done | Follow-up: `/report` and `/stats_*` split into leads, contact clicks and quiz funnel sections; local simulation, lint/build, MCP, Browser and curl checks passed. |
 | P1-02 Mobile layout + CRO quick wins | done | Mobile overflow/menu/CTA cleanup completed; `Цены` intentionally not added to header. Local lint/build/MCP/curl/mobile CDP checks passed. |
+| P1-02.1 Homepage mobile first-screen density | done | True mobile viewport kept; homepage first screen is denser, hero phone CTA stays single-line, product cards stack vertically, homepage floating CTA appears after scroll. |
 | P1-03 Real portfolio photos + project model foundation | not_started | Начать замену placeholder visuals. |
 | P1-04 JSON-LD cleanup | not_started | SearchAction, Product Offer URLs, breadcrumbs URL policy. |
 | P2-01 Blog/content architecture | not_started | MDX/CMS direction for 500+ articles. |
@@ -324,6 +325,39 @@ Done criteria:
 - homepage/service/prices have document-level `overflowX = 0` on 320/360/375/390/430 px;
 - mobile menu opens/closes by tap, does not shift the page, avoids unused full-screen overlay space and stays inside viewport.
 
+### P1-02.1 Homepage Mobile First-Screen Density
+
+Context:
+
+- user compared production on Google Pixel 7 and iPhone 17 Pro;
+- Pixel looked like a zoomed-out / desktop-ish viewport, which made more content fit but is not a safe target to force;
+- iPhone showed the true mobile viewport, but the hero was too tall and the floating CTA covered the next content.
+
+Decision:
+
+- keep standards-compliant mobile viewport and pinch-zoom accessibility;
+- do not force desktop viewport or `user-scalable=no`;
+- make the homepage mobile layout intentionally denser using responsive CSS;
+- delay floating bottom CTA on the homepage until the user scrolls, because header phone and hero CTAs are already visible above the fold.
+
+Tasks:
+
+- compact homepage hero spacing and mobile type scale;
+- compact the hero estimate card on mobile;
+- convert mobile trust facts to a one-row 4-card proof strip;
+- show homepage fence product cards as a normal vertical mobile list, not a horizontal scroller;
+- keep product card desktop/tablet layout unchanged enough for existing pages;
+- verify no page-level horizontal overflow.
+
+Done criteria:
+
+- homepage at 390 px shows hero, trust facts and `Типы заборов` without relying on desktop zoom;
+- hero phone CTA remains a single-line clickable phone button;
+- product cards stack vertically with no page-level horizontal scroll;
+- floating CTA is hidden at page top on homepage and appears after scroll;
+- internal pages keep immediate floating CTA behavior;
+- lint/build/MCP/curl/mobile CDP checks pass.
+
 ### P1-03 Real Portfolio Photos + Project Model Foundation
 
 Цель:
@@ -456,3 +490,6 @@ Checks:
 - P1-02: added global page-level X-overflow guard, compact mobile call CTA, conditional mobile menu rendering, compact right-side drawer, safe-area-aware bottom CTA and horizontal scroll inside price tables.
 - P1-02: mobile burger contact block now shows the clickable phone number as a full-width single-line `tel:` CTA, with Telegram/WhatsApp/Viber icons on the next row.
 - P1-02 local checks: `npm run lint` passes with known `QuizForm` warning; `npm run build` passes; Next MCP `get_routes` works and `get_errors` is clean; curl checks returned homepage/service/prices `200`; CDP mobile audit on 320/360/375/390/430 px reports document-level `overflowX = 0` for homepage/service/prices and opened menu; opened burger phone CTA stays `nowrap`, uses `tel:+375333135072`, and Telegram/WhatsApp/Viber stay on the next row.
+- P1-02.1 started on branch `codex/P1-02-1-home-mobile-density`; reason: production Pixel looked acceptable because it behaved like a wider/zoomed-out viewport, while iPhone showed the real mobile viewport and exposed first-screen density issues.
+- P1-02.1 implemented local changes: homepage hero/trust/types blocks are denser on mobile; hero phone CTA is single-line; mobile product cards use a normal vertical list; homepage floating CTA is hidden at the top and appears after scroll, while non-home pages keep immediate floating CTA.
+- P1-02.1 local checks: `npm run lint` passes with known `QuizForm` warning; `npm run build` passes; Next MCP `get_errors` is clean; CDP 390 px reports homepage `overflowX = 0`, hero height 574 px after single-line CTA restore, trust height 121 px, `Типы` section starts at 764 px; hero phone CTA is `nowrap`; product cards stack vertically; floating CTA is hidden at top and visible after scroll.
