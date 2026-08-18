@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import {
@@ -41,8 +42,23 @@ export function Footer() {
     <footer className="bg-slate-950 text-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <section>
-          <Link className="text-2xl font-bold text-white" href="/">
-            {COMPANY_NAME}
+          <Link className="flex items-center gap-3 text-white" href="/">
+            <Image
+              alt=""
+              aria-hidden="true"
+              className="size-12 shrink-0 rounded-xl shadow-lg"
+              height={48}
+              src="/brand/masterzabor-mark-48.png"
+              width={48}
+            />
+            <span>
+              <span className="block text-2xl font-bold leading-tight">
+                {COMPANY_NAME}
+              </span>
+              <span className="block text-xs font-semibold text-slate-300">
+                заборы под ключ
+              </span>
+            </span>
           </Link>
           <p className="mt-4 text-sm leading-6 text-slate-300">
             Установка заборов в Беларуси с 2015 года. Работаем с частными

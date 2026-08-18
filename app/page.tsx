@@ -7,7 +7,6 @@ import { QuizForm } from "@/components/forms/QuizForm";
 import { cities } from "@/content/cities";
 import { services } from "@/content/services";
 import {
-  COMPANY_NAME,
   PHONE,
   PHONE_DISPLAY,
   TRUST_FACTS,
@@ -24,26 +23,46 @@ export const metadata = generatePageMetadata({
 const fenceServices = services.slice(0, 3);
 const gateServices = services.slice(3);
 
-const trustItems = [
+const benefitItems = [
   {
-    icon: "🏗",
+    icon: "experience" as const,
     title: `С ${TRUST_FACTS.sinceYear} года`,
-    text: `${TRUST_FACTS.completedFences} заборов`,
+    text: `${TRUST_FACTS.completedFences} заборов — опыт частных участков, дач и въездных групп`,
   },
   {
-    icon: "🛡",
-    title: `Гарантия до ${TRUST_FACTS.warrantyYears} лет`,
-    text: "на материалы и монтаж",
-  },
-  {
-    icon: "💳",
+    icon: "installment" as const,
     title: "Рассрочка и оплата частями",
     text: "подберём комфортный платёж — работаем с 8 банками",
   },
   {
-    icon: "🚚",
+    icon: "delivery" as const,
     title: "Бесплатная доставка",
-    text: "Организуем доставку и монтаж под ключ",
+    text: "организуем доставку и монтаж под ключ",
+  },
+  {
+    icon: "phone" as const,
+    title: "Быстрый расчёт по телефону",
+    text: "назовите длину и тип забора — подскажем ориентир по цене",
+  },
+  {
+    icon: "crew" as const,
+    title: "Свои бригады",
+    text: "работаем постоянными монтажниками, без случайных подрядчиков",
+  },
+  {
+    icon: "contract" as const,
+    title: "Договор и смета",
+    text: "фиксируем объём работ, материалы, сроки и итоговую стоимость",
+  },
+  {
+    icon: "selection" as const,
+    title: "Подбор под участок",
+    text: "сравним материалы, высоту и цвет под бюджет, дом и грунт",
+  },
+  {
+    icon: "warranty" as const,
+    title: "Гарантия на материалы и монтаж",
+    text: "срок зависит от материала и условий эксплуатации — всё прописываем в договоре",
   },
 ] as const;
 
@@ -159,6 +178,39 @@ function placeholderImage(title: string, index: number) {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
+type BrandIconName = (typeof benefitItems)[number]["icon"];
+
+const benefitIconSrc: Record<BrandIconName, string> = {
+  contract: "/icons/benefits/contract.svg",
+  crew: "/icons/benefits/crew.svg",
+  delivery: "/icons/benefits/delivery.svg",
+  experience: "/icons/benefits/experience.svg",
+  installment: "/icons/benefits/installment.svg",
+  phone: "/icons/benefits/phone.svg",
+  selection: "/icons/benefits/selection.svg",
+  warranty: "/icons/benefits/warranty.svg",
+};
+
+function BrandLineIcon({
+  className = "h-8 w-8 text-[#0A5633]",
+  name,
+}: {
+  className?: string;
+  name: BrandIconName;
+}) {
+  return (
+    <Image
+      alt=""
+      aria-hidden="true"
+      className={`${className} object-contain`}
+      height={40}
+      src={benefitIconSrc[name]}
+      unoptimized
+      width={40}
+    />
+  );
+}
+
 export default function Home() {
   return (
     <main className="bg-white text-slate-900">
@@ -169,45 +221,49 @@ export default function Home() {
         }}
       />
 
-      <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 opacity-30">
+      <section className="relative overflow-hidden bg-[#F6F8F5]">
+        <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block">
           <Image
             alt="Забор из профнастила на участке в Беларуси"
-            className="object-cover"
+            className="object-cover object-center"
             fill
-            priority
-            src={placeholderImage("МастерЗабор", 0)}
+            preload
+            sizes="58vw"
+            src="/images/hero/homepage-fence-with-logo.jpeg"
           />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#F6F8F5_0%,rgba(246,248,245,0.78)_14%,rgba(246,248,245,0.18)_34%,rgba(246,248,245,0)_56%)]" />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/40" />
 
-        <div className="relative mx-auto grid max-w-[1350px] gap-5 px-4 pb-6 pt-10 sm:px-6 sm:py-20 lg:grid-cols-[1.35fr_0.65fr] lg:items-start lg:gap-12 lg:px-8 lg:py-28">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-300 sm:text-sm sm:tracking-[0.25em]">
-              {COMPANY_NAME}
-            </p>
-            <h1 className="mt-4 max-w-3xl text-balance text-[1.875rem] font-bold leading-[1.12] tracking-tight sm:mt-5 sm:text-6xl sm:leading-tight">
-              Установка заборов
-              <br />
-              <span className="sm:whitespace-nowrap">
-                по всей Беларуси под ключ
-              </span>
+        <div className="relative mx-auto max-w-7xl px-4 pb-4 pt-6 sm:px-6 sm:pb-10 sm:pt-16 lg:px-8 lg:pb-8 lg:pt-20">
+          <div className="max-w-2xl lg:max-w-[48%]">
+            <h1 className="text-balance text-[1.9rem] font-extrabold leading-[1.08] tracking-tight text-[#202020] sm:text-6xl lg:text-[3.25rem]">
+              Установка заборов в Беларуси{" "}
+              <span className="text-[#0A5633]">под ключ</span>
             </h1>
-            <ul className="mt-3 max-w-2xl space-y-1.5 text-[13px] leading-snug text-slate-200 sm:mt-6 sm:space-y-2 sm:text-xl">
-              <li>Профнастил • Евроштакетник • Сетка-рабица</li>
-              <li>Цены от 30 BYN/м.п.</li>
-              <li>Рассрочка и оплата частями до 60 месяцев</li>
+            <ul className="mt-3 max-w-xl space-y-1.5 text-[13px] font-semibold leading-snug text-slate-700 sm:mt-6 sm:space-y-2 sm:text-lg">
+              <li className="flex gap-2">
+                <span className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-[#0A5633] text-xs text-white">✓</span>
+                <span>Профнастил • Евроштакетник • Сетка-рабица</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-[#0A5633] text-xs text-white">✓</span>
+                <span>Цены от 30 BYN/м.п.</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-[#0A5633] text-xs text-white">✓</span>
+                <span>Рассрочка и оплата частями до 60 месяцев</span>
+              </li>
             </ul>
             <div className="mt-4 grid gap-2 sm:mt-8 sm:flex sm:flex-row sm:gap-4">
               <a
-                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#F59E0B] px-3 py-2 text-xs font-bold leading-tight text-white transition hover:bg-amber-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:px-6 sm:py-3 sm:text-base"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#0A5633] px-4 py-2 text-xs font-bold leading-tight text-white shadow-lg shadow-green-950/10 transition hover:bg-[#06321F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2 sm:px-6 sm:py-3 sm:text-base"
                 href="#quiz"
               >
                 Рассчитать стоимость
               </a>
               <TrackedContactLink
                 channel="click_call"
-                className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-xl bg-white px-3 py-2 text-xs font-bold leading-tight text-[#1B5E20] transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:px-6 sm:py-3 sm:text-base"
+                className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg border border-[#b9d7c6] bg-white px-4 py-2 text-xs font-bold leading-tight text-[#0A5633] transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2 sm:px-6 sm:py-3 sm:text-base"
                 eventLocation="homepage_hero"
                 href={`tel:${PHONE}`}
                 source="home-hero"
@@ -217,44 +273,35 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/10 p-3 backdrop-blur sm:rounded-3xl sm:p-5 lg:flex lg:self-stretch lg:p-6">
-            <div className="flex flex-col lg:w-full lg:justify-between">
-              <div>
-                <p className="text-lg font-bold leading-tight sm:text-2xl">Бесплатный расчёт сегодня</p>
-                <p className="mt-2 hidden text-pretty text-sm leading-snug text-slate-200 sm:mt-3 sm:block sm:text-base">
-                  Рассчитаем стоимость, подберём материалы и покажем варианты
-                  заборов под ваш&nbsp;участок.
-                </p>
-              </div>
-              <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] leading-tight sm:mt-5 sm:gap-3 sm:text-sm lg:mt-6">
-              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Гарантия 20 лет</span>
-              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Договор и смета</span>
-              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Свои бригады</span>
-              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Работаем по РБ</span>
-              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Рассрочка и оплата частями</span>
-              <span className="rounded-xl bg-white/10 px-2.5 py-1.5 sm:rounded-2xl sm:px-4 sm:py-3">Быстрый расчёт по телефону</span>
-              </div>
+          <div className="mt-5 rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-xl shadow-green-950/10 backdrop-blur sm:p-5 lg:hidden">
+            <p className="text-lg font-bold leading-tight text-[#06321F]">Бесплатный расчёт сегодня</p>
+            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-semibold leading-tight text-slate-700 sm:text-sm">
+              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Гарантия на работы</span>
+              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Договор и смета</span>
+              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Свои бригады</span>
+              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Расчёт по телефону</span>
             </div>
           </div>
+
         </div>
       </section>
 
       <section className="bg-[#F5F5F5] py-5 sm:py-12">
-        <div className="mx-auto grid max-w-7xl grid-cols-4 gap-2 px-4 sm:gap-4 sm:px-6 lg:px-8">
-          {trustItems.map((item) => (
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+          {benefitItems.map((item) => (
             <article
-              className="flex h-full flex-col rounded-lg bg-white p-2 shadow-sm sm:rounded-2xl sm:p-6"
+              className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/70 sm:rounded-2xl sm:p-6"
               key={item.title}
             >
-              <div className="text-lg leading-none sm:text-3xl" aria-hidden="true">
-                {item.icon}
-              </div>
-              <h2 className="mt-1.5 text-[11px] font-bold leading-tight text-slate-950 sm:mt-4 sm:text-lg">
+              <BrandLineIcon className="h-8 w-8 text-[#0A5633] sm:h-10 sm:w-10" name={item.icon} />
+              <h2 className="mt-3 text-[15px] font-bold leading-tight text-slate-950 sm:mt-5 sm:text-lg">
                 {item.title}
               </h2>
-              <p className="mt-1.5 hidden text-xs leading-snug text-slate-500 sm:mt-2 sm:block sm:text-sm">{item.text}</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.text}</p>
             </article>
           ))}
+          </div>
         </div>
       </section>
 
@@ -274,6 +321,7 @@ export default function Home() {
               <ProductCard
                 description={service.description}
                 href={`/${service.slug}`}
+                imageSrc={service.imageSrc}
                 key={service.slug}
                 priceFrom={service.priceFrom}
                 priceUnit={service.priceUnit}
@@ -302,6 +350,7 @@ export default function Home() {
               <ProductCard
                 description={service.description}
                 href={`/${service.slug}`}
+                imageSrc={service.imageSrc}
                 key={service.slug}
                 priceFrom={service.priceFrom}
                 priceUnit={service.priceUnit}

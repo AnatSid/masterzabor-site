@@ -6,6 +6,7 @@ export type Service = {
   keywords?: string[];
   priceFrom: number;
   priceUnit: string;
+  imageSrc: string;
   description: string;
   heroSubtitle?: {
     lead: string;
@@ -27,6 +28,7 @@ export const services: Service[] = [
       "Заборы из профнастила в Гомеле и Беларуси от 70 BYN/м.п. Монтаж под ключ, расчёт стоимости, доставка, гарантия до 20 лет.",
     priceFrom: 70,
     priceUnit: "BYN/м.п.",
+    imageSrc: "/images/services/zabory-iz-profnastila/hero.jpeg",
     description:
       "Практичный сплошной забор из профнастила для участка, дома или производства. Подбираем толщину металла, цвет, высоту и комплектуем объект воротами и калиткой.",
     features: [
@@ -63,6 +65,7 @@ export const services: Service[] = [
     ],
     priceFrom: 85,
     priceUnit: "BYN/м.п.",
+    imageSrc: "/images/services/zabory-iz-evroshtaketnika/hero.jpeg",
     description:
       "Евроштакетник (металлоштакетник или металлический штакетник) — популярный выбор для фасадных заборов частных домов: конструкция выглядит аккуратно, пропускает воздух и сохраняет современный вид участка. Доступна односторонняя и шахматная зашивка.",
     features: [
@@ -97,6 +100,7 @@ export const services: Service[] = [
       "Монтаж заборов из сетки-рабицы в Гомеле и Беларуси от 30 BYN/м.п. Для дачи, сада и временного ограждения.",
     priceFrom: 30,
     priceUnit: "BYN/м.п.",
+    imageSrc: "/images/services/zabory-iz-setki-rabitsy/hero.jpeg",
     description:
       "Бюджетное решение для дачи, сада, огорода и технических зон. Сетка-рабица быстро ставится, не затеняет участок и подходит для больших периметров.",
     heroSubtitle: {
@@ -131,6 +135,7 @@ export const services: Service[] = [
       "Распашные ворота в Гомеле и Беларуси от 1200 BYN. Каркас, заполнение профнастилом или штакетником, установка под ключ.",
     priceFrom: 1200,
     priceUnit: "BYN",
+    imageSrc: "/images/services/vorota-raspashnye/hero.jpeg",
     description:
       "Классические распашные ворота для частного дома, дачи или производственной территории. Изготавливаем под размер проёма и стиль забора.",
     features: [
@@ -160,6 +165,7 @@ export const services: Service[] = [
       "Откатные ворота в Гомеле и Беларуси от 3000 BYN. Удобный въезд, прочная фурнитура, подготовка под автоматику.",
     priceFrom: 3000,
     priceUnit: "BYN",
+    imageSrc: "/images/services/vorota-otkatnye/hero.jpeg",
     description:
       "Откатные ворота экономят место перед въездом и удобны зимой. Рассчитываем проём, фундамент, фурнитуру и заполнение под конкретный участок.",
     features: [
@@ -189,6 +195,7 @@ export const services: Service[] = [
       "Калитки для забора в Гомеле и Беларуси от 1000 BYN. Изготовление под размер, замок, петли, монтаж под ключ.",
     priceFrom: 1000,
     priceUnit: "BYN",
+    imageSrc: "/images/services/kalitki/hero.jpeg",
     description:
       "Изготавливаем калитки в едином стиле с забором и воротами. Подбираем ширину, заполнение, замок, петли и сторону открывания.",
     features: [

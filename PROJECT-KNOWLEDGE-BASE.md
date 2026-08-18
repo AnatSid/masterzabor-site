@@ -291,6 +291,14 @@ Future check protocol after `npm run dev`:
 - Мобильный phone+burger должен помещаться на 320-430 px без горизонтального overflow; номер телефона должен оставаться кликабельным и не переноситься абы как.
 - Mobile burger menu: компактный правый drawer, открывается только по нажатию, не рендерит offscreen-панель в закрытом состоянии, не сдвигает страницу и не оставляет пустой full-screen overlay. Внутри меню телефон отдельной full-width строкой, мессенджеры строкой ниже.
 - Homepage mobile density: do not emulate Pixel by forcing a desktop/zoomed-out viewport. Pixel can look denser when Chrome uses a wider effective viewport; iPhone/Safari exposes the real mobile layout. Correct approach is true responsive CSS: compact hero spacing/type, concise trust facts, a normal vertical service list, and delayed homepage floating CTA until scroll.
+- Brand visual direction after P1-02.2: use the green/white fence+M mark from `C:\DiscD\проекты сайта\Фото типов забора\Иконки-Логотип.png` as the source of truth for brand icon/favicon/app icons. Do not return to generic circle/photo logos or plain letter marks.
+- Brand assets live in `public/brand/`; public favicon/app icon compatibility paths still exist at the root (`favicon.ico`, `icon-192.png`, `apple-touch-icon.png`, etc.).
+- Homepage visual system should stay in the green fence reference direction: dark green + white + light neutral sections, restrained lime accents, line icons, subtle fence/mark patterns, real fence photos when available.
+- Homepage proof/benefit system after P1-02.2: duplicate top dark-green stats strip was removed; use 8 equal practical ordering benefit cards (`С 2015 года`, рассрочка, доставка, быстрый расчёт, свои бригады, договор/смета, подбор под участок, гарантия на материалы и монтаж). User visually approved the final benefit icon design for production.
+- Benefit icon assets after P1-02.2: production files live in `public/icons/benefits/` as `experience.svg`, `installment.svg`, `delivery.svg`, `phone.svg`, `crew.svg`, `contract.svg`, `selection.svg`, `warranty.svg`. `BrandLineIcon` loads these files and keeps the existing visual size: `32x32` on mobile and `40x40` on `sm+`. The current files are intentional temporary SVG wrappers with embedded raster graphics to preserve the approved look; future true-vector SVG migration is cleanup, not a blocker. Original design/master files stay under `_design-assets/`.
+- Product/service thumbnails on homepage use optimized JPEGs under `public/images/services/<slug>/hero.jpeg` and are wired through `content/services.ts` as `imageSrc`.
+- Homepage hero image source after P1-02.2: `C:\DiscD\проекты сайта\Фото типов забора\Исходник с логотипом.png`, optimized into `public/images/hero/homepage-fence-with-logo.jpeg`; keep it as visual-only background while the hero H1/text stays real HTML for SEO and accessibility.
+- P1-03 should build a proper portfolio/project model on top of this, not replace these service thumbnails with ad hoc placeholder SVGs.
 - Floating CTA behavior: on homepage it should not cover the first viewport because header phone and hero CTAs are already visible; on deeper pages it can stay visible immediately as a conversion shortcut.
 - `QuizForm` основной канал заявок; добавить "Не знаю длину" и analytics по шагам.
 - `LeadForm` остаётся хорошим быстрым fallback.
@@ -304,6 +312,7 @@ Future check protocol after `npm run dev`:
 - GA/Yandex scripts подключены `afterInteractive`.
 - `Image` используется, но `fill` images требуют `sizes`.
 - После добавления реальных фото проверить LCP.
+- Large source PNG photos should be converted/optimized before committing to `public/`; P1-02.2 converted service thumbnails to ~170-340 KB JPEGs instead of committing multi-megabyte PNG copies.
 - `next build` завис во время аудита и был остановлен; нужна отдельная диагностика.
 - `next lint` deprecated; перед Next 16 заменить на ESLint CLI.
 - Yandex Webvisor может ухудшить INP/TTI, проверять в Lighthouse/CrUX после запуска трафика.

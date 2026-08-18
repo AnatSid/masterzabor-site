@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>P1-02.4 Final Benefits Icons Preview</title>
+    <style>
+      :root {
+        --green: #0a5633;
+        --line: #dfe7e2;
+        --muted: #55606d;
+        --bg: #f7f9f8;
+        --text: #07140f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        width: min(1180px, calc(100vw - 40px));
+        margin: 0 auto;
+        padding: 32px 0 48px;
+      }
+
+      header {
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--green);
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .note {
+        margin: 8px auto 0;
+        max-width: 780px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      section {
+        overflow: hidden;
+        margin-top: 24px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h2 {
+        margin: 0;
+        color: var(--green);
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .section-title span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .icon-card,
+      .benefit-card {
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .icon-card:nth-child(4n),
+      .benefit-card:nth-child(4n) {
+        border-right: 0;
+      }
+
+      .icon-card {
+        min-height: 210px;
+        padding: 28px 20px;
+        text-align: center;
+      }
+
+      .preview-icon-large {
+        display: block;
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 16px;
+        object-fit: contain;
+      }
+
+      .preview-icon-real {
+        display: block;
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 14px;
+        object-fit: contain;
+      }
+
+      h3 {
+        margin: 0;
+        color: var(--green);
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      .file-name {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .block-mock {
+        background: #f5f5f5;
+        padding: 20px;
+      }
+
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+
+      .benefit-card {
+        min-height: 180px;
+        border: 1px solid #d8e2dc;
+        border-radius: 12px;
+        background: #fff;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+      }
+
+      .benefit-card img {
+        display: block;
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+      }
+
+      .benefit-card h3 {
+        margin-top: 18px;
+        color: #020817;
+        font-size: 18px;
+      }
+
+      .benefit-card p {
+        margin: 8px 0 0;
+        color: #475569;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      @media (max-width: 920px) {
+        .grid,
+        .benefits-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .icon-card:nth-child(2n),
+        .benefit-card:nth-child(2n) {
+          border-right: 0;
+        }
+      }
+
+      @media (max-width: 560px) {
+        main {
+          width: min(100% - 24px, 520px);
+        }
+
+        .section-title {
+          display: block;
+        }
+
+        .section-title span {
+          display: block;
+          margin-top: 6px;
+        }
+
+        .grid,
+        .benefits-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .icon-card,
+        .benefit-card {
+          border-right: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Final Benefits Icons Preview</h1>
+        <p class="note">
+          Используются готовые утверждённые SVG из
+          <code>_design-assets/benefits-icons-final/</code>. Геометрия файлов не
+          менялась. Production-код не подключён и не изменён.
+        </p>
+      </header>
+
+      <section>
+        <div class="section-title">
+          <h2>Final SVG Set</h2>
+          <span>96×96 для просмотра + 40×40 как в карточке</span>
+        </div>
+        <div class="grid">
+          <article class="icon-card">
+            <img class="preview-icon-large" src="../../_design-assets/benefits-icons-final/experience.svg" alt="experience" />
+            <img class="preview-icon-real" src="../../_design-assets/benefits-icons-final/experience.svg" alt="" />
+            <h3>С 2015 года</h3>
+            <div class="file-name">experience.svg</div>
+          </article>
+          <article class="icon-card">
+            <img class="preview-icon-large" src="../../_design-assets/benefits-icons-final/installment.svg" alt="installment" />
+            <img class="preview-icon-real" src="../../_design-assets/benefits-icons-final/installment.svg" alt="" />
+            <h3>Рассрочка и оплата частями</h3>
+            <div class="file-name">installment.svg</div>
+          </article>
+          <article class="icon-card">
+            <img class="preview-icon-large" src="../../_design-assets/benefits-icons-final/delivery.svg" alt="delivery" />
+            <img class="preview-icon-real" src="../../_design-assets/benefits-icons-final/delivery.svg" alt="" />
+            <h3>Бесплатная доставка</h3>
+            <div class="file-name">delivery.svg</div>
+          </article>
+          <article class="icon-card">
+            <img class="preview-icon-large" src="../../_design-assets/benefits-icons-final/phone.svg" alt="phone" />
+            <img class="preview-icon-real" src="../../_design-assets/benefits-icons-final/phone.svg" alt="" />
+            <h3>Быстрый расчёт по телефону</h3>
+            <div class="file-name">phone.svg</div>
+          </article>
+          <article class="icon-card">
+            <img class="preview-icon-large" src="../../_design-assets/benefits-icons-final/crew.svg" alt="crew" />
+            <img class="preview-icon-real" src="../../_design-assets/benefits-icons-final/crew.svg" alt="" />
+            <h3>Свои бригады</h3>
+            <div class="file-name">crew.svg</div>
+          </article>
+          <article class="icon-card">
+            <img class="preview-icon-large" src="../../_design-assets/benefits-icons-final/contract.svg" alt="contract" />
+            <img class="preview-icon-real" src="../../_design-assets/benefits-icons-final/contract.svg" alt="" />
+            <h3>Договор и смета</h3>
+            <div class="file-name">contract.svg</div>
+          </article>
+          <article class="icon-card">
+            <img class="preview-icon-large" src="../../_design-assets/benefits-icons-final/selection.svg" alt="selection" />
+            <img class="preview-icon-real" src="../../_design-assets/benefits-icons-final/selection.svg" alt="" />
+            <h3>Подбор под участок</h3>
+            <div class="file-name">selection.svg</div>
+          </article>
+          <article class="icon-card">
+            <img class="preview-icon-large" src="../../_design-assets/benefits-icons-final/warranty.svg" alt="warranty" />
+            <img class="preview-icon-real" src="../../_design-assets/benefits-icons-final/warranty.svg" alt="" />
+            <h3>Гарантия на материалы и монтаж</h3>
+            <div class="file-name">warranty.svg</div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">
+          <h2>Current Benefits Block Scale Mock</h2>
+          <span>примерно текущий размер карточек и иконок 40×40</span>
+        </div>
+        <div class="block-mock">
+          <div class="benefits-grid">
+            <article class="benefit-card">
+              <img src="../../_design-assets/benefits-icons-final/experience.svg" alt="" />
+              <h3>С 2015 года</h3>
+              <p>10 000+ заборов — опыт частных участков, дач и въездных групп</p>
+            </article>
+            <article class="benefit-card">
+              <img src="../../_design-assets/benefits-icons-final/installment.svg" alt="" />
+              <h3>Рассрочка и оплата частями</h3>
+              <p>подберём комфортный платёж — работаем с 8 банками</p>
+            </article>
+            <article class="benefit-card">
+              <img src="../../_design-assets/benefits-icons-final/delivery.svg" alt="" />
+              <h3>Бесплатная доставка</h3>
+              <p>организуем доставку и монтаж под ключ</p>
+            </article>
+            <article class="benefit-card">
+              <img src="../../_design-assets/benefits-icons-final/phone.svg" alt="" />
+              <h3>Быстрый расчёт по телефону</h3>
+              <p>назовите длину и тип забора — подскажем ориентир по цене</p>
+            </article>
+            <article class="benefit-card">
+              <img src="../../_design-assets/benefits-icons-final/crew.svg" alt="" />
+              <h3>Свои бригады</h3>
+              <p>работаем постоянными монтажниками, без случайных подрядчиков</p>
+            </article>
+            <article class="benefit-card">
+              <img src="../../_design-assets/benefits-icons-final/contract.svg" alt="" />
+              <h3>Договор и смета</h3>
+              <p>фиксируем объём работ, материалы, сроки и итоговую стоимость</p>
+            </article>
+            <article class="benefit-card">
+              <img src="../../_design-assets/benefits-icons-final/selection.svg" alt="" />
+              <h3>Подбор под участок</h3>
+              <p>сравним материалы, высоту и цвет под бюджет, дом и грунт</p>
+            </article>
+            <article class="benefit-card">
+              <img src="../../_design-assets/benefits-icons-final/warranty.svg" alt="" />
+              <h3>Гарантия на материалы и монтаж</h3>
+              <p>срок зависит от материала и условий эксплуатации — всё прописываем в договоре</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

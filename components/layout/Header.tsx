@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
@@ -130,11 +131,26 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:gap-4 lg:px-8">
         <Link
-          className="min-w-0 flex-1 truncate text-xl font-bold tracking-tight text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-4 sm:text-2xl lg:flex-none"
+          className="flex min-w-0 flex-1 items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-4 lg:flex-none lg:gap-2"
           href="/"
           onClick={closeMobileMenu}
         >
-          {COMPANY_NAME}
+          <Image
+            alt=""
+            aria-hidden="true"
+            className="size-8 shrink-0 rounded-lg shadow-sm min-[390px]:size-9 sm:size-10"
+            height={48}
+            src="/brand/masterzabor-mark-48.png"
+            width={48}
+          />
+          <span className="min-w-0">
+            <span className="block whitespace-nowrap text-[13px] font-extrabold leading-tight tracking-tight text-[#0A5633] min-[390px]:text-sm sm:text-xl">
+              {COMPANY_NAME}
+            </span>
+            <span className="hidden text-[9px] font-semibold leading-tight text-slate-500 min-[390px]:block sm:text-[10px]">
+              заборы под ключ
+            </span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-5 text-sm font-medium text-slate-700 lg:flex">
@@ -211,7 +227,7 @@ export function Header() {
         <div className="flex shrink-0 items-center gap-2 lg:hidden">
           <TrackedContactLink
             channel="click_call"
-            className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg border border-green-100 px-2 text-xs font-semibold text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 min-[360px]:px-3 min-[360px]:text-sm"
+            className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg border border-green-100 px-2 text-xs font-semibold text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 min-[390px]:px-3 min-[390px]:text-sm"
             eventLocation="header_mobile"
             href={`tel:${PHONE}`}
           >

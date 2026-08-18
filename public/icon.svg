@@ -1,4 +1,23 @@
-﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#1B5E20"/>
-  <text x="32" y="44" text-anchor="middle" font-size="40" font-family="Arial, sans-serif" font-weight="700" fill="#ffffff">М</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0b6f3f"/>
+      <stop offset="1" stop-color="#05301f"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#001b10" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <g filter="url(#shadow)" fill="#fff">
+    <path d="M70 398V176l42-56 42 56v222h-52V196l-10-14-10 14v202H70Z"/>
+    <path d="M358 398V176l42-56 42 56v222h-52V196l-10-14-10 14v202h-12Z"/>
+    <path d="M180 398V124l76 112 76-112v274h-58V261l-18 28-76-102v211h-58Z"/>
+    <path d="M226 126h60l-30 44-30-44Z"/>
+    <path d="M55 405c121-32 281-32 402 0l-12 26c-112-29-266-29-378 0l-12-26Z"/>
+    <rect x="50" y="226" width="72" height="28"/>
+    <rect x="390" y="226" width="72" height="28"/>
+    <rect x="50" y="318" width="72" height="28"/>
+    <rect x="390" y="318" width="72" height="28"/>
+  </g>
 </svg>

@@ -121,6 +121,7 @@ Production/preview:
 | P1-01.1 Telegram analytics report formatting | done | Follow-up: `/report` and `/stats_*` split into leads, contact clicks and quiz funnel sections; local simulation, lint/build, MCP, Browser and curl checks passed. |
 | P1-02 Mobile layout + CRO quick wins | done | Mobile overflow/menu/CTA cleanup completed; `Цены` intentionally not added to header. Local lint/build/MCP/curl/mobile CDP checks passed. |
 | P1-02.1 Homepage mobile first-screen density | done | True mobile viewport kept; homepage first screen is denser, hero phone CTA stays single-line, product cards stack vertically, homepage floating CTA appears after scroll. |
+| P1-02.2 Brand visual system foundation | in_progress | User visually approved homepage brand/benefit direction and new benefit icons for production. Ready for branch commit/push, Preview verification, merge to `main` and Production smoke. |
 | P1-03 Real portfolio photos + project model foundation | not_started | Начать замену placeholder visuals. |
 | P1-04 JSON-LD cleanup | not_started | SearchAction, Product Offer URLs, breadcrumbs URL policy. |
 | P2-01 Blog/content architecture | not_started | MDX/CMS direction for 500+ articles. |
@@ -358,6 +359,47 @@ Done criteria:
 - internal pages keep immediate floating CTA behavior;
 - lint/build/MCP/curl/mobile CDP checks pass.
 
+### P1-02.2 Brand Visual System Foundation
+
+Context:
+
+- user provided reference files from `C:\DiscD\проекты сайта\Фото типов забора\`;
+- important visual direction: green/white fence+M mark, restrained dark-green palette, line icons in one style, subtle fence silhouette/patterns, real fence photos instead of abstract placeholder SVGs;
+- this stage should build the visual foundation before the larger portfolio/photo model stage.
+
+Decision:
+
+- use the fence+M mark from `Иконки-Логотип.png` as the brand source for header/footer/favicon/app icons;
+- keep semantic SEO structure and accessible `next/image` usage;
+- use optimized service thumbnails on homepage product cards now, while full portfolio/project modeling remains P1-03;
+- do not force desktop/zoomed mobile viewport; keep true responsive mobile layout and compact it intentionally;
+- use the user-approved benefit icon files as production assets from `public/icons/benefits/`, with the original design/master files kept under `_design-assets/`.
+
+Tasks:
+
+- refresh favicon/app icon public assets from the fence+M mark;
+- add reusable brand mark assets under `public/brand/`;
+- update `Header` and `Footer` brand lockup to use the mark;
+- replace homepage dark placeholder hero with a lighter reference-style green/photo hero;
+- replace emoji trust icons with the approved 8-file benefits icon set;
+- add real service thumbnail paths to `content/services.ts`;
+- update `ProductCard` to render optimized `next/image` thumbnails and a vertical mobile list;
+- keep mobile first-screen density: header phone one-line, hero compact, `Типы заборов` visible without horizontal overflow.
+- keep `BrandLineIcon` as the existing render seam, but have it load file assets from `/icons/benefits/*.svg`.
+
+Done criteria:
+
+- `npm run lint`, `npm exec tsc -- --noEmit`, `npm run build` pass;
+- Next MCP `get_routes` works and `get_errors` is clean before/after Browser smoke;
+- Browser mobile checks at 360/393 px report no horizontal overflow, header phone is `nowrap`, burger drawer does not shift page, product section appears in first viewport area;
+- service thumbnails have no broken visible images;
+- user visually approves localhost/preview before commit/merge;
+- production smoke confirms homepage and all 8 benefit icon URLs return `200`.
+
+Follow-up, non-blocking cleanup:
+
+- Current approved `public/icons/benefits/*.svg` files are temporary SVG-wrapper assets with embedded raster graphics. This is an intentional production choice to preserve the approved visual design now. A later cleanup can replace them with true vector SVG files without changing the visual design or card layout.
+
 ### P1-03 Real Portfolio Photos + Project Model Foundation
 
 Цель:
@@ -493,3 +535,9 @@ Checks:
 - P1-02.1 started on branch `codex/P1-02-1-home-mobile-density`; reason: production Pixel looked acceptable because it behaved like a wider/zoomed-out viewport, while iPhone showed the real mobile viewport and exposed first-screen density issues.
 - P1-02.1 implemented local changes: homepage hero/trust/types blocks are denser on mobile; hero phone CTA is single-line; mobile product cards use a normal vertical list; homepage floating CTA is hidden at the top and appears after scroll, while non-home pages keep immediate floating CTA.
 - P1-02.1 local checks: `npm run lint` passes with known `QuizForm` warning; `npm run build` passes; Next MCP `get_errors` is clean; CDP 390 px reports homepage `overflowX = 0`, hero height 574 px after single-line CTA restore, trust height 121 px, `Типы` section starts at 764 px; hero phone CTA is `nowrap`; product cards stack vertically; floating CTA is hidden at top and visible after scroll.
+- P1-02.2 started on branch `codex/P1-02-2-brand-visual-system`; goal is visual-system foundation before the full P1-03 portfolio/photo model.
+- P1-02.2 local implementation: cropped/exported fence+M mark from `Иконки-Логотип.png`, replaced public favicon/app icons, added `public/brand/`, updated header/footer brand lockup, added optimized JPEG thumbnails for six services, refreshed homepage hero/trust/product cards toward the green fence reference style, set the homepage hero image from `Исходник с логотипом.png` as `public/images/hero/homepage-fence-with-logo.jpeg`, removed the duplicate dark-green stats strip, kept 8 equal benefit cards, and added `docs/design-concepts/P1-02-2-icon-preview.html` for visual icon approval before further icon changes.
+- P1-02.2 local checks: `npm run lint` passes with known `QuizForm` warning; `npm exec tsc -- --noEmit` passes; `npm run build` passes on Next 16.2.9; Next MCP `get_routes` works and `get_errors` is clean; Browser 393 px reports `overflowX = false`, header phone `nowrap`, `Типы заборов` starts around 694 px, visible images are not broken; 360 px burger drawer stays right-side, does not shift body, and has no horizontal overflow.
+- P1-02.2 sleep checkpoint 2026-06-18: do not commit/merge yet; user says current visual direction is still not approved. Green stats strip was removed as duplicate. Next return point: iterate `docs/design-concepts/P1-02-2-icon-preview.html` first, especially `Свои бригады` should look like the provided worker-in-hardhat reference (`Пример, как сделать иконки/Иконки-пример-3.jpg`), and `Быстрый расчёт` should not use the odd phone handset shape.
+- P1-02.2 icon candidate update 2026-08-18: adjusted the three debated icons. `С 2015 года` now uses calendar + checkmark instead of people, `Рассрочка и оплата частями` uses card + three separate payment stages without shape overlap, and `Свои бригады` uses hardhat worker + explicit hammer above the shoulder. Same shapes are mirrored in `docs/design-concepts/P1-02-2-icon-preview.html`.
+- P1-02.2 final icon approval 2026-08-18: user visually approved the final benefits icon set for production. Source-of-truth design files remain in `_design-assets/benefits-icons-final/`; production copies live in `public/icons/benefits/` as `experience.svg`, `installment.svg`, `delivery.svg`, `phone.svg`, `crew.svg`, `contract.svg`, `selection.svg`, `warranty.svg`. `BrandLineIcon` now loads these file assets, preserving the existing `32x32` mobile and `40x40` `sm+` visual size. These SVG files intentionally wrap embedded raster graphics for now; true-vector migration is a future cleanup, not a blocker.

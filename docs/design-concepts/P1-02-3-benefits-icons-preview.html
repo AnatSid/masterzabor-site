@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>P1-02.3 Benefits Icons Preview</title>
+    <style>
+      :root {
+        --green: #064f32;
+        --line: #dfe7e2;
+        --text: #07140f;
+        --muted: #55606d;
+        --bg: #f7f9f8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, sans-serif;
+      }
+
+      main {
+        width: min(1220px, calc(100vw - 48px));
+        margin: 0 auto;
+        padding: 32px 0 48px;
+      }
+
+      header {
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--green);
+        font-size: 28px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .note {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .section {
+        margin-top: 24px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h2 {
+        margin: 0;
+        color: var(--green);
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .section-title span {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .reference {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: #fff;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .card {
+        min-height: 300px;
+        padding: 28px 24px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        color: var(--green);
+      }
+
+      .card:nth-child(4n) {
+        border-right: 0;
+      }
+
+      .card.special {
+        background:
+          radial-gradient(circle at 88% 10%, rgba(6, 79, 50, 0.08), transparent 28%),
+          #fff;
+      }
+
+      .icon-large {
+        display: block;
+        width: 112px;
+        height: 112px;
+        margin: 0 auto 16px;
+      }
+
+      .icon-real {
+        display: block;
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 18px;
+      }
+
+      .card h3 {
+        margin: 0;
+        color: var(--green);
+        font-size: 20px;
+        font-weight: 800;
+        line-height: 1.15;
+        text-align: center;
+      }
+
+      .card p {
+        margin: 10px auto 0;
+        max-width: 235px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.45;
+        text-align: center;
+      }
+
+      .file-name {
+        margin-top: 16px;
+        color: #7a8490;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      .special-label {
+        margin: 0 auto 12px;
+        width: fit-content;
+        border: 1px solid rgba(6, 79, 50, 0.18);
+        border-radius: 999px;
+        padding: 4px 9px;
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .sprite {
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+      }
+
+      @media (max-width: 900px) {
+        main {
+          width: min(100% - 24px, 760px);
+        }
+
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .card:nth-child(2n) {
+          border-right: 0;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .section-title {
+          display: block;
+        }
+
+        .section-title span {
+          display: block;
+          margin-top: 6px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .card {
+          border-right: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true">
+      <symbol id="icon-experience" viewBox="0 0 64 64">
+        <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="10" y="12" width="40" height="38" rx="4.5" />
+          <path d="M10 23h40" />
+          <path d="M20 8v9" />
+          <path d="M40 8v9" />
+          <rect x="17" y="30" width="8" height="7" rx="1" />
+          <rect x="31" y="30" width="8" height="7" rx="1" />
+          <rect x="17" y="41" width="8" height="7" rx="1" />
+          <circle cx="47" cy="44" r="13" />
+          <path d="M41.5 39h4.2v11" />
+          <path d="M50 39h6l-6 11h6" />
+        </g>
+      </symbol>
+      <symbol id="icon-installment" viewBox="0 0 64 64">
+        <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="10" y="13" width="44" height="30" rx="4" />
+          <path d="M10 23h44" />
+          <rect x="17" y="30" width="12" height="8" rx="1.5" />
+          <path d="M17 34h12" />
+          <path d="M23 30v8" />
+          <path d="M37 36h10" />
+          <circle cx="18" cy="48" r="7.5" />
+          <circle cx="32" cy="48" r="7.5" />
+          <circle cx="46" cy="48" r="7.5" />
+          <path d="M16 44.5h3v8" />
+          <path d="M29.5 45.5c1-1.5 5.2-1.6 5.2 1.4 0 2.6-4.9 3.3-5.3 5.5h5.8" />
+          <path d="M43.5 45h5l-3 3.3c2.2 0 3.7 1 3.7 2.7 0 2.4-3.6 2.7-5.5 1.2" />
+        </g>
+      </symbol>
+      <symbol id="icon-delivery" viewBox="0 0 64 64">
+        <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="10" y="24" width="31" height="22" rx="3" />
+          <path d="M41 31h9l6 8v7H41z" />
+          <path d="M47 31v8h9" />
+          <circle cx="23" cy="47" r="5" />
+          <circle cx="48" cy="47" r="5" />
+          <path d="M17 34h15" />
+        </g>
+      </symbol>
+      <symbol id="icon-phone" viewBox="0 0 64 64">
+        <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="21" y="8" width="28" height="48" rx="6" />
+          <rect x="27" y="20" width="16" height="25" rx="2" />
+          <path d="M31 14h8" />
+          <circle cx="35" cy="51" r="2" />
+        </g>
+      </symbol>
+      <symbol id="icon-crew" viewBox="0 0 64 64">
+        <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 27h27" />
+          <path d="M16 27c0-8.5 4.8-13.5 11-13.5h1c6.2 0 11 5 11 13.5" />
+          <path d="M24 13.5v13" />
+          <path d="M31 13.5v13" />
+          <path d="M14 30c0 2.1 1.1 3.3 3 3.3.8 6.2 4.9 10.7 10.5 10.7S37.2 39.5 38 33.3c1.9 0 3-1.2 3-3.3" />
+          <path d="M10 57v-5.5c0-5.4 4.3-9.5 10-9.5" />
+          <path d="M35 42c4.2 1.2 7 4.7 7 9.5V57" />
+          <path d="M20 43.5V57" />
+          <path d="M35 43.5V57" />
+          <path d="M20 52h15" />
+          <path d="M48 28 37.5 52" />
+          <path d="M44.5 24.5 53 28.2" />
+          <path d="M53 28.2c2.4 1 3.6 2.7 2.8 4.7-.8 1.9-2.8 2.4-5.1 1.4" />
+          <path d="M43.3 34.2 53 38.3" />
+        </g>
+      </symbol>
+      <symbol id="icon-contract" viewBox="0 0 64 64">
+        <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 9h25l9 9v34H18z" />
+          <path d="M42 9v10h10" />
+          <path d="M25 28h18" />
+          <path d="M25 36h15" />
+          <path d="M25 44h10" />
+          <circle cx="46" cy="47" r="10" />
+          <path d="m41 47 4 4 8-10" />
+        </g>
+      </symbol>
+      <symbol id="icon-selection" viewBox="0 0 64 64">
+        <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 33 32 14l22 19" />
+          <path d="M15 32v22h34V32" />
+          <path d="M16 48h32" />
+          <path d="M25 54V39h14v15" />
+          <path d="M22 43h20" />
+          <path d="m27 30 5 5 11-13" />
+        </g>
+      </symbol>
+      <symbol id="icon-warranty" viewBox="0 0 64 64">
+        <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M32 8c6 3.2 12.5 5.3 20 6.5V30c0 13-7.5 22.5-20 27-12.5-4.5-20-14-20-27V14.5C19.5 13.3 26 11.2 32 8Z" />
+          <path d="m22 33 8 8 16-18" />
+        </g>
+      </symbol>
+    </svg>
+
+    <main>
+      <header>
+        <h1>P1-02.3 Benefits Icons Preview</h1>
+        <p class="note">Static file preview. SVG are inline here, separate files also exist.</p>
+      </header>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>Master Reference</h2>
+          <span>_design-assets/benefits-icons-master-reference.png.png</span>
+        </div>
+        <img class="reference" src="../../_design-assets/benefits-icons-master-reference.png.png" alt="Master reference: all benefits icons" />
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>3 Selected Reference</h2>
+          <span>_design-assets/benefits-icons-3-selected-reference.png.png</span>
+        </div>
+        <img class="reference" src="../../_design-assets/benefits-icons-3-selected-reference.png.png" alt="Priority reference for experience, installment and crew icons" />
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <h2>New SVG Set</h2>
+          <span>large preview + real 40x40 size</span>
+        </div>
+        <div class="grid">
+          <article class="card special">
+            <div class="special-label">3 selected reference</div>
+            <svg class="icon-large" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-experience"></use></svg>
+            <svg class="icon-real" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-experience"></use></svg>
+            <h3>experience</h3>
+            <p>С 2015 года: календарь + круг 2015</p>
+            <div class="file-name">experience.svg</div>
+          </article>
+
+          <article class="card special">
+            <div class="special-label">3 selected reference</div>
+            <svg class="icon-large" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-installment"></use></svg>
+            <svg class="icon-real" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-installment"></use></svg>
+            <h3>installment</h3>
+            <p>Рассрочка: карта + круги 1 / 2 / 3</p>
+            <div class="file-name">installment.svg</div>
+          </article>
+
+          <article class="card">
+            <svg class="icon-large" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-delivery"></use></svg>
+            <svg class="icon-real" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-delivery"></use></svg>
+            <h3>delivery</h3>
+            <p>Бесплатная доставка: компактный грузовик</p>
+            <div class="file-name">delivery.svg</div>
+          </article>
+
+          <article class="card">
+            <svg class="icon-large" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-phone"></use></svg>
+            <svg class="icon-real" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-phone"></use></svg>
+            <h3>phone</h3>
+            <p>Быстрый расчёт: современный смартфон</p>
+            <div class="file-name">phone.svg</div>
+          </article>
+
+          <article class="card special">
+            <div class="special-label">3 selected reference</div>
+            <svg class="icon-large" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-crew"></use></svg>
+            <svg class="icon-real" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-crew"></use></svg>
+            <h3>crew</h3>
+            <p>Свои бригады: рабочий в каске + молоток</p>
+            <div class="file-name">crew.svg</div>
+          </article>
+
+          <article class="card">
+            <svg class="icon-large" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-contract"></use></svg>
+            <svg class="icon-real" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-contract"></use></svg>
+            <h3>contract</h3>
+            <p>Договор и смета: документ + круглая галочка</p>
+            <div class="file-name">contract.svg</div>
+          </article>
+
+          <article class="card">
+            <svg class="icon-large" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-selection"></use></svg>
+            <svg class="icon-real" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-selection"></use></svg>
+            <h3>selection</h3>
+            <p>Подбор под участок: дом + забор/ворота + галочка</p>
+            <div class="file-name">selection.svg</div>
+          </article>
+
+          <article class="card">
+            <svg class="icon-large" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-warranty"></use></svg>
+            <svg class="icon-real" viewBox="0 0 64 64" fill="none" aria-hidden="true"><use href="#icon-warranty"></use></svg>
+            <h3>warranty</h3>
+            <p>Гарантия: крупный щит + крупная галочка</p>
+            <div class="file-name">warranty.svg</div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
