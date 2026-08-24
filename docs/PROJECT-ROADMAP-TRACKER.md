@@ -23,6 +23,8 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Benefit icons на главной используют production assets из `public/icons/benefits/`.
 - Выбран финальный размер benefit icons: `44x44` mobile, `52x52` `sm+ / desktop`.
 - Service thumbnails на главной подключены из `public/images/services/<slug>/hero.jpeg`.
+- Service pages получили общий photo/hero pattern: desktop hero image wrapper `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`, data-driven hero/gallery config и fallback для services без реальных фото.
+- `/zabory-iz-evroshtaketnika` - первый визуально утвержденный real-photo reference для ServicePage: hero/gallery подключены из `public/images/services/zabory-iz-evroshtaketnika/`.
 - Остаток после cleanup-попытки: `.tmp/` частично осталась как untracked локальная папка; Chrome держал lock-файлы. Это не production asset и не нужно коммитить.
 
 ## COMPLETED
@@ -76,7 +78,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## OPEN ISSUES
 
 - `/nashi-raboty` все еще использует generated placeholder SVG через `PortfolioGallery`.
-- `ServicePage` hero и gallery все еще используют `data:image/svg` placeholder-функцию.
+- `ServicePage` имеет общий real-photo config; евроштакетник заполнен реальными hero/gallery, остальные services пока используют fallback placeholders до последовательного подключения их фото.
 - `CityPage` hero и "Примеры работ" все еще используют `data:image/svg` placeholder-функцию.
 - `content/blog-posts.ts` использует generated SVG covers.
 - `generateWebsiteJsonLd()` все еще содержит `SearchAction`, но реального поиска нет.
@@ -98,7 +100,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - `/blog`: всего 3 статьи, covers placeholder SVG. Перед масштабированием нужен content model или хотя бы MDX/data decision.
 - Blog articles: полезны как база, но нужны реальные изображения, категории, related links, обновление под 2026 SEO.
 - City pages: композиция улучшена, но hero/examples используют placeholders. Нужны city-specific proof blocks.
-- Service pages: layout хороший, но hero/gallery placeholders все еще мешают доверию.
+- Service pages: общий hero/gallery photo pattern утвержден на евроштакетнике; остальные услуги ждут последовательного подключения реальных фото и отдельной проверки crop/focal position.
 - Mobile: основные overflow/menu/CTA проблемы закрыты; следующие проверки делать после каждого визуального изменения на 360/390/430 px и iPhone safe-area.
 
 ## PHOTOS / CONTENT TO ADD
@@ -186,10 +188,12 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Как проверить: нет `data:image/svg` в portfolio cards; реальные изображения 200; alt описательные; desktop/mobile grid без overflow; `/nashi-raboty` больше не пишет "фото-заглушки".
 
 2. `P1-04-service-page-real-gallery`
-   - Что сделать: заменить `ServicePage` hero/gallery placeholders на реальные service/project photos, сохранив layout.
+   - Статус: in progress. Общий ServicePage photo system готов; `/zabory-iz-evroshtaketnika` заполнен реальными hero/gallery и визуально утвержден. Остальные services пока ждут реальные фото по одной категории.
+   - Что сделать: заменить `ServicePage` hero/gallery placeholders на реальные service photos, сохранив общий layout.
    - Где: `components/templates/ServicePage.tsx`, `content/services.ts`, `public/images/services/`, `public/images/projects/`.
    - Зачем: service pages уже хорошие по структуре, но placeholder gallery снижает доверие.
    - Как проверить: 6 service pages отдают 200; images not broken; `next/image` имеет адекватные `sizes`; mobile no overflow.
+   - Примечание: не смешивать с `P1-03-project-photos-foundation`; `content/projects.ts`, homepage projects и `/nashi-raboty` еще не реализованы.
 
 3. `P1-05-city-proof-blocks`
    - Что сделать: добавить на city pages блоки реальных работ/объектов по региону или fallback "работы по Беларуси", без выдуманных фактов.

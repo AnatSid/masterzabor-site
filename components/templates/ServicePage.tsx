@@ -135,6 +135,17 @@ function ServiceHeroSubtitle({ service }: { service: Service }) {
 export function ServicePage({ service }: ServicePageProps) {
   const quizDefaults = getQuizDefaultsByServiceSlug(service.slug);
   const relatedServices = services.filter((item) => item.slug !== service.slug);
+  const heroImage = service.heroImage ?? {
+    src: imagePlaceholder(service.title, 0),
+    alt: `${service.title} — пример установки в Беларуси`,
+  };
+  const heroImageObjectPosition = heroImage.objectPosition ?? "center";
+  const galleryImages: NonNullable<Service["galleryImages"]> =
+    service.galleryImages ??
+    Array.from({ length: 6 }, (_, index) => ({
+      src: imagePlaceholder(service.title, index + 1),
+      alt: `${service.title} — фото объекта ${index + 1}`,
+    }));
   const breadcrumbs = [
     { name: "Главная", url: "/" },
     { name: service.title, url: `/${service.slug}` },
@@ -203,13 +214,15 @@ export function ServicePage({ service }: ServicePageProps) {
             </div>
           </div>
 
-          <div className="relative aspect-[4/3] min-h-64 w-full overflow-hidden rounded-3xl sm:min-h-72 lg:aspect-auto lg:min-h-[420px]">
+          <div className="service-hero-image-frame relative aspect-[4/3] min-h-64 w-full overflow-hidden rounded-3xl sm:min-h-72 lg:aspect-auto lg:min-h-[420px]">
             <Image
-              alt={`${service.title} — пример установки в Беларуси`}
+              alt={heroImage.alt}
               className="object-cover"
               fill
               priority
-              src={imagePlaceholder(service.title, 0)}
+              sizes="(max-width: 1024px) 100vw, 480px"
+              src={heroImage.src}
+              style={{ objectPosition: heroImageObjectPosition }}
             />
           </div>
         </SiteContainer>
@@ -294,13 +307,15 @@ export function ServicePage({ service }: ServicePageProps) {
             Галерея
           </h2>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
+            {galleryImages.map((image) => (
               <Image
-                alt={`${service.title} — фото объекта ${index + 1}`}
+                alt={image.alt}
                 className="h-60 rounded-2xl object-cover shadow-sm"
                 height={420}
-                key={index}
-                src={imagePlaceholder(service.title, index + 1)}
+                key={image.src}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                src={image.src}
+                style={{ objectPosition: image.objectPosition ?? "center" }}
                 width={620}
               />
             ))}

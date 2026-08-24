@@ -26,6 +26,18 @@ a {
   text-underline-offset: 4px;
 }
 
+@media (min-width: 1024px) {
+  .service-hero-image-frame {
+    aspect-ratio: 1 / 1;
+    height: 480px;
+    justify-self: end;
+    max-width: none;
+    min-height: 0;
+    transform: translateX(32px);
+    width: 480px;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -7,6 +7,16 @@ export type Service = {
   priceFrom: number;
   priceUnit: string;
   imageSrc: string;
+  heroImage?: {
+    src: string;
+    alt: string;
+    objectPosition?: string;
+  };
+  galleryImages?: {
+    src: string;
+    alt: string;
+    objectPosition?: string;
+  }[];
   description: string;
   heroSubtitle?: {
     lead: string;
@@ -66,6 +76,36 @@ export const services: Service[] = [
     priceFrom: 85,
     priceUnit: "BYN/м.п.",
     imageSrc: "/images/services/zabory-iz-evroshtaketnika/hero.jpeg",
+    heroImage: {
+      src: "/images/services/zabory-iz-evroshtaketnika/hero-page.webp",
+      alt: "Забор из евроштакетника рядом с садовыми посадками",
+    },
+    galleryImages: [
+      {
+        src: "/images/services/zabory-iz-evroshtaketnika/gallery-01.webp",
+        alt: "Установленный забор из евроштакетника на участке",
+      },
+      {
+        src: "/images/services/zabory-iz-evroshtaketnika/gallery-02.webp",
+        alt: "Фасадный забор из евроштакетника с металлическими столбами",
+      },
+      {
+        src: "/images/services/zabory-iz-evroshtaketnika/gallery-03.webp",
+        alt: "Секция забора из евроштакетника после монтажа",
+      },
+      {
+        src: "/images/services/zabory-iz-evroshtaketnika/gallery-04.webp",
+        alt: "Евроштакетник для ограждения частного участка",
+      },
+      {
+        src: "/images/services/zabory-iz-evroshtaketnika/gallery-05.webp",
+        alt: "Металлический штакетник в готовом ограждении",
+      },
+      {
+        src: "/images/services/zabory-iz-evroshtaketnika/gallery-06.webp",
+        alt: "Готовый забор из металлического евроштакетника",
+      },
+    ],
     description:
       "Евроштакетник (металлоштакетник или металлический штакетник) — популярный выбор для фасадных заборов частных домов: конструкция выглядит аккуратно, пропускает воздух и сохраняет современный вид участка. Доступна односторонняя и шахматная зашивка.",
     features: [
