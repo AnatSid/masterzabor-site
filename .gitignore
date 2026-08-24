@@ -31,3 +31,4 @@ pnpm-debug.log*
 # local editor/agent state
 .cursor/
 .playwright-mcp/
+.tmp/
