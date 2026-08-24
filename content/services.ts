@@ -171,6 +171,36 @@ export const services: Service[] = [
     priceFrom: 30,
     priceUnit: "BYN/м.п.",
     imageSrc: "/images/services/zabory-iz-setki-rabitsy/hero.jpeg",
+    heroImage: {
+      src: "/images/services/zabory-iz-setki-rabitsy/hero-page-new.webp",
+      alt: "Забор из сетки-рабицы на металлических столбах у сада",
+    },
+    galleryImages: [
+      {
+        src: "/images/services/zabory-iz-setki-rabitsy/gallery-01.webp",
+        alt: "Установленный забор из сетки-рабицы на участке",
+      },
+      {
+        src: "/images/services/zabory-iz-setki-rabitsy/gallery-02.webp",
+        alt: "Сетка-рабица на металлическом каркасе вдоль участка",
+      },
+      {
+        src: "/images/services/zabory-iz-setki-rabitsy/gallery-03.webp",
+        alt: "Забор из сетки-рабицы рядом с зелёным участком",
+      },
+      {
+        src: "/images/services/zabory-iz-setki-rabitsy/gallery-04.webp",
+        alt: "Секция забора из сетки-рабицы с металлическими столбами",
+      },
+      {
+        src: "/images/services/zabory-iz-setki-rabitsy/gallery-05.webp",
+        alt: "Прозрачное ограждение из сетки-рабицы около дома",
+      },
+      {
+        src: "/images/services/zabory-iz-setki-rabitsy/gallery-06.webp",
+        alt: "Готовый забор из сетки-рабицы по периметру участка",
+      },
+    ],
     description:
       "Бюджетное решение для дачи, сада, огорода и технических зон. Сетка-рабица быстро ставится, не затеняет участок и подходит для больших периметров.",
     heroSubtitle: {

@@ -26,7 +26,8 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Service pages получили общий photo/hero pattern: desktop hero image wrapper `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`, data-driven hero/gallery config и fallback для services без реальных фото.
 - `/zabory-iz-evroshtaketnika` - первый визуально утвержденный real-photo reference для ServicePage: hero/gallery подключены из `public/images/services/zabory-iz-evroshtaketnika/`.
 - `/zabory-iz-profnastila` - второй визуально утвержденный real-photo ServicePage: hero/gallery подключены из `public/images/services/zabory-iz-profnastila/`.
-- ServicePage photo workflow confirmed on two real categories: евроштакетник and профнастил.
+- `/zabory-iz-setki-rabitsy` - третий визуально утвержденный real-photo ServicePage: hero/gallery подключены из `public/images/services/zabory-iz-setki-rabitsy/`.
+- ServicePage photo workflow confirmed on three real categories: евроштакетник, профнастил and сетка-рабица.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - Service photo library is separate from the future `content/projects.ts` portfolio/project model; homepage, `/nashi-raboty`, city pages and blog are not part of this workflow.
@@ -193,7 +194,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Как проверить: нет `data:image/svg` в portfolio cards; реальные изображения 200; alt описательные; desktop/mobile grid без overflow; `/nashi-raboty` больше не пишет "фото-заглушки".
 
 2. `P1-04-service-page-real-gallery`
-   - Статус: in progress. Общий ServicePage photo system готов и подтвержден на двух категориях; `/zabory-iz-evroshtaketnika` и `/zabory-iz-profnastila` заполнены реальными hero/gallery и визуально утверждены. Остальные services пока ждут реальные фото по одной категории.
+   - Статус: in progress. Общий ServicePage photo system готов и подтвержден на трех категориях; `/zabory-iz-evroshtaketnika`, `/zabory-iz-profnastila` и `/zabory-iz-setki-rabitsy` заполнены реальными hero/gallery и визуально утверждены. Остальные services пока ждут реальные фото по одной категории.
    - Что сделать: заменить `ServicePage` hero/gallery placeholders на реальные service photos, сохранив общий layout.
    - Где: `components/templates/ServicePage.tsx`, `content/services.ts`, `public/images/services/`, `public/images/projects/`.
    - Зачем: service pages уже хорошие по структуре, но placeholder gallery снижает доверие.
