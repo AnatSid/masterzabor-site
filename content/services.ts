@@ -39,6 +39,36 @@ export const services: Service[] = [
     priceFrom: 70,
     priceUnit: "BYN/м.п.",
     imageSrc: "/images/services/zabory-iz-profnastila/hero.jpeg",
+    heroImage: {
+      src: "/images/services/zabory-iz-profnastila/hero-page.webp",
+      alt: "Забор из профнастила рядом с частным домом",
+    },
+    galleryImages: [
+      {
+        src: "/images/services/zabory-iz-profnastila/gallery-01.webp",
+        alt: "Готовый забор из профнастила на участке",
+      },
+      {
+        src: "/images/services/zabory-iz-profnastila/gallery-02.webp",
+        alt: "Коричневый забор из профнастила вдоль дороги",
+      },
+      {
+        src: "/images/services/zabory-iz-profnastila/gallery-03.webp",
+        alt: "Секция забора из профнастила после монтажа",
+      },
+      {
+        src: "/images/services/zabory-iz-profnastila/gallery-04.webp",
+        alt: "Профнастил в готовом металлическом ограждении",
+      },
+      {
+        src: "/images/services/zabory-iz-profnastila/gallery-05.webp",
+        alt: "Забор из профлиста с металлическими столбами",
+      },
+      {
+        src: "/images/services/zabory-iz-profnastila/gallery-06.webp",
+        alt: "Фрагмент установленного забора из профнастила",
+      },
+    ],
     description:
       "Практичный сплошной забор из профнастила для участка, дома или производства. Подбираем толщину металла, цвет, высоту и комплектуем объект воротами и калиткой.",
     features: [

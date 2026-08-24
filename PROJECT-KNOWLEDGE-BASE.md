@@ -195,7 +195,7 @@ Usage and risks:
 - `Footer`: has full nav including prices/blog/reviews, better coverage than header.
 - `FloatingButtons`: mobile conversion layer for calls and messengers.
 - `SiteContainer`: good shared layout primitive; should continue expanding to all sections.
-- `ServicePage`: good service template; has Product/FAQ/Breadcrumb JSON-LD; uses placeholder images.
+- `ServicePage`: good shared service template; has Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. Desktop hero pattern is `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; services without real photo config still use placeholders as fallback.
 - `CityPage`: good city template; unique city text is generated from city data; doorway/thin risk remains if no real city proof.
 - `QuizForm`: main conversion form; good qualification flow, but multi-step friction on mobile.
 - `LeadForm`: simpler fallback form on homepage.
@@ -298,6 +298,8 @@ Future check protocol after `npm run dev`:
 - Benefit icon assets after P1-02.2: production files live in `public/icons/benefits/` as `experience.svg`, `installment.svg`, `delivery.svg`, `phone.svg`, `crew.svg`, `contract.svg`, `selection.svg`, `warranty.svg`. `BrandLineIcon` loads these files and keeps the existing visual size: `32x32` on mobile and `40x40` on `sm+`. The current files are intentional temporary SVG wrappers with embedded raster graphics to preserve the approved look; future true-vector SVG migration is cleanup, not a blocker. Original design/master files stay under `_design-assets/`.
 - Product/service thumbnails on homepage use optimized JPEGs under `public/images/services/<slug>/hero.jpeg` and are wired through `content/services.ts` as `imageSrc`.
 - Homepage hero image source after P1-02.2: `C:\DiscD\проекты сайта\Фото типов забора\Исходник с логотипом.png`, optimized into `public/images/hero/homepage-fence-with-logo.jpeg`; keep it as visual-only background while the hero H1/text stays real HTML for SEO and accessibility.
+- ServicePage photo workflow after evroshtaketnik/profnastil approval: add real service photos one category at a time using `source folder -> hero selection -> gallery -> optimization -> service data -> localhost -> desktop/mobile visual approval -> commit/push/production`. Do not redesign the shared layout per service; tune only image assets, human `alt`, and optional focal/object-position.
+- `/zabory-iz-evroshtaketnika` is the first approved real-photo ServicePage reference; `/zabory-iz-profnastila` is the second. Homepage, `/nashi-raboty`, city pages and blog are outside this service-photo workflow.
 - P1-03 should build a proper portfolio/project model on top of this, not replace these service thumbnails with ad hoc placeholder SVGs.
 - Floating CTA behavior: on homepage it should not cover the first viewport because header phone and hero CTAs are already visible; on deeper pages it can stay visible immediately as a conversion shortcut.
 - `QuizForm` основной канал заявок; добавить "Не знаю длину" и analytics по шагам.
