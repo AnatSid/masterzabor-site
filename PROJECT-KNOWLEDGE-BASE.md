@@ -6,7 +6,7 @@ Production: https://www.masterzabor.by
 
 ## Рабочие файлы проекта
 
-- `PROJECT-ROADMAP-TRACKER.md` - текущие этапы исправлений, статусы, порядок работы и инструкция для нового чата.
+- `docs/PROJECT-ROADMAP-TRACKER.md` - текущие этапы исправлений, статусы, порядок работы и инструкция для нового чата. Это единственный roadmap source of truth.
 - `PROJECT-KNOWLEDGE-BASE.md` - архитектурная память проекта.
 - `AUDIT-MASTERZABOR-2026.md` - полный аудит, причины решений и roadmap.
 - `docs/` - история проекта, production/domain/analytics/OAuth runbooks.

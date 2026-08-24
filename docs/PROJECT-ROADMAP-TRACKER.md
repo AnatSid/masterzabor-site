@@ -4,11 +4,11 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая точка отсчета: `6d7f3d4 feat(home): use large benefits icons`
+Текущая точка отсчета: `abda6ae docs: add project handoff tracker`
 
-Этот файл - главный handoff-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
+Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
-Root `PROJECT-ROADMAP-TRACKER.md` is intentionally kept only as a compatibility pointer to this file. Do not maintain a second roadmap there.
+Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; treat that as an old path and read this file instead.
 
 ## CURRENT STATE
 
@@ -87,6 +87,7 @@ Root `PROJECT-ROADMAP-TRACKER.md` is intentionally kept only as a compatibility 
 - Dependencies still use several `latest` ranges in `package.json` (`tailwindcss`, `eslint`, `typescript`, types). Not urgent, but hurts reproducibility.
 - Known lint warning: `components/forms/QuizForm.tsx` React Hook Form `watch()` / React Compiler compatibility. Не blocker сейчас.
 - `.tmp/` local scratch is ignored in `.gitignore`; if it contains Chrome lock files, do not force-delete while Chrome/processes are running.
+- Root `PROJECT-ROADMAP-TRACKER.md` has been removed to avoid two competing roadmap sources; use `docs/PROJECT-ROADMAP-TRACKER.md`.
 
 ## REMAINING PAGES / UI WORK
 
@@ -170,13 +171,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Зачем: `.tmp/` уже ignored, но физическая папка может оставаться после browser checks.
    - Как проверить: `git status --short --branch` не показывает `.tmp/`; `npm run dev` не падает на `.tmp/chrome-*`.
 
-2. `P0-HANDOFF-docs-tracker-source`
-   - Что сделать: root `PROJECT-ROADMAP-TRACKER.md` оставить только compatibility pointer; основной tracker вести в `docs/PROJECT-ROADMAP-TRACKER.md`.
-   - Где: `PROJECT-ROADMAP-TRACKER.md`.
-   - Зачем: чтобы не было двух конкурирующих source of truth.
-   - Как проверить: root file не содержит самостоятельный roadmap, а только ссылку на docs tracker.
-
-3. `P0-JSONLD-fake-searchaction`
+2. `P0-JSONLD-fake-searchaction`
    - Что сделать: убрать `SearchAction` из WebSite JSON-LD или реализовать реальный поиск. Практичнее сейчас убрать.
    - Где: `lib/seo.ts` -> `generateWebsiteJsonLd()`.
    - Зачем: schema не должна заявлять несуществующую функцию.
@@ -254,4 +249,4 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 - `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`: domain strategy remains valid. Some "docs drift" notes are historical because docs were later synchronized.
 - `docs/AUDIT-ANALYTICS-DOMAIN-CONSISTENCY.md`: still valid for GA server env/OAuth warning diagnosis.
 - `PROJECT-KNOWLEDGE-BASE.md`: mostly current, but benefit icon size line still may mention old `32/40`; new selected size is `44/52`.
-- Root `PROJECT-ROADMAP-TRACKER.md`: compatibility pointer only; source of truth is this file.
+- Root `PROJECT-ROADMAP-TRACKER.md`: removed. Source of truth is `docs/PROJECT-ROADMAP-TRACKER.md`.
