@@ -294,7 +294,7 @@ export default function Home() {
               className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/70 sm:rounded-2xl sm:p-6"
               key={item.title}
             >
-              <BrandLineIcon className="h-8 w-8 text-[#0A5633] sm:h-10 sm:w-10" name={item.icon} />
+              <BrandLineIcon className="h-11 w-11 text-[#0A5633] sm:h-[52px] sm:w-[52px]" name={item.icon} />
               <h2 className="mt-3 text-[15px] font-bold leading-tight text-slate-950 sm:mt-5 sm:text-lg">
                 {item.title}
               </h2>

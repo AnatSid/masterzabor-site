@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>P1-02.6 Benefits Icon Size Comparison</title>
+    <style>
+      :root {
+        --bg: #f5f5f5;
+        --card: #ffffff;
+        --line: #d8e2dc;
+        --muted: #475569;
+        --green: #0a5633;
+        --text: #020817;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Arial,
+          Helvetica,
+          sans-serif;
+      }
+
+      main {
+        width: min(1240px, calc(100vw - 40px));
+        margin: 0 auto;
+        padding: 32px 0 56px;
+      }
+
+      header {
+        margin-bottom: 24px;
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--green);
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .note {
+        max-width: 920px;
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .comparison {
+        margin-top: 28px;
+      }
+
+      .comparison-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 12px;
+      }
+
+      h2 {
+        margin: 0;
+        color: var(--green);
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .label {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .block {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--bg);
+        padding: 20px;
+        overflow: hidden;
+      }
+
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .benefit-card {
+        min-height: 216px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--card);
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+      }
+
+      .benefit-card img {
+        display: block;
+        width: var(--icon-size);
+        height: var(--icon-size);
+        object-fit: contain;
+      }
+
+      .benefit-card h3 {
+        margin: 20px 0 0;
+        color: var(--text);
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.25;
+        letter-spacing: 0;
+      }
+
+      .benefit-card p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .desktop-a {
+        --icon-size: 40px;
+      }
+
+      .desktop-b {
+        --icon-size: 48px;
+      }
+
+      .desktop-c {
+        --icon-size: 52px;
+      }
+
+      .mobile-frame {
+        width: 390px;
+        max-width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--bg);
+        padding: 12px;
+      }
+
+      .mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .mobile-grid .benefit-card {
+        min-height: 192px;
+        padding: 16px;
+      }
+
+      .mobile-grid .benefit-card h3 {
+        margin-top: 14px;
+        font-size: 15px;
+        line-height: 1.22;
+      }
+
+      .mobile-grid .benefit-card p {
+        margin-top: 8px;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .mobile-a {
+        --icon-size: 32px;
+      }
+
+      .mobile-b {
+        --icon-size: 40px;
+      }
+
+      .mobile-c {
+        --icon-size: 44px;
+      }
+
+      .mobile-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        align-items: start;
+      }
+
+      @media (max-width: 980px) {
+        .benefits-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .mobile-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        main {
+          width: min(100% - 24px, 430px);
+          padding-top: 24px;
+        }
+
+        .comparison-title {
+          display: block;
+        }
+
+        .label {
+          display: block;
+          margin-top: 4px;
+        }
+
+        .block {
+          padding: 12px;
+        }
+
+        .benefits-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .benefit-card {
+          min-height: 192px;
+          padding: 16px;
+        }
+
+        .benefit-card h3 {
+          margin-top: 14px;
+          font-size: 15px;
+        }
+
+        .benefit-card p {
+          font-size: 13px;
+          line-height: 1.45;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Benefits Icon Size Comparison</h1>
+        <p class="note">
+          Сравнение использует текущие production assets из
+          <code>public/icons/benefits/</code>. Геометрия иконок не менялась.
+          Во всех вариантах одинаковые карточки, grid, typography, тексты,
+          borders, background и gaps. Меняется только размер контейнера иконки.
+        </p>
+      </header>
+
+      <section class="comparison">
+        <div class="comparison-title">
+          <h2>CURRENT</h2>
+          <span class="label">40 desktop / 32 mobile</span>
+        </div>
+        <div class="block desktop-a">
+          <div class="benefits-grid"></div>
+        </div>
+      </section>
+
+      <section class="comparison">
+        <div class="comparison-title">
+          <h2>MEDIUM</h2>
+          <span class="label">48 desktop / 40 mobile</span>
+        </div>
+        <div class="block desktop-b">
+          <div class="benefits-grid"></div>
+        </div>
+      </section>
+
+      <section class="comparison">
+        <div class="comparison-title">
+          <h2>LARGE</h2>
+          <span class="label">52 desktop / 44 mobile</span>
+        </div>
+        <div class="block desktop-c">
+          <div class="benefits-grid"></div>
+        </div>
+      </section>
+
+      <section class="comparison">
+        <div class="comparison-title">
+          <h2>Mobile comparison</h2>
+          <span class="label">same card style, 390px frame</span>
+        </div>
+        <div class="mobile-row">
+          <div>
+            <div class="comparison-title">
+              <h2>CURRENT</h2>
+              <span class="label">32 mobile</span>
+            </div>
+            <div class="mobile-frame mobile-a">
+              <div class="mobile-grid"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="comparison-title">
+              <h2>MEDIUM</h2>
+              <span class="label">40 mobile</span>
+            </div>
+            <div class="mobile-frame mobile-b">
+              <div class="mobile-grid"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="comparison-title">
+              <h2>LARGE</h2>
+              <span class="label">44 mobile</span>
+            </div>
+            <div class="mobile-frame mobile-c">
+              <div class="mobile-grid"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <template id="benefit-card-template">
+      <article class="benefit-card">
+        <img alt="" aria-hidden="true" />
+        <h3></h3>
+        <p></p>
+      </article>
+    </template>
+
+    <script>
+      const benefits = [
+        {
+          icon: "experience.svg",
+          title: "С 2015 года",
+          text: "10 000+ заборов — опыт частных участков, дач и въездных групп",
+        },
+        {
+          icon: "installment.svg",
+          title: "Рассрочка и оплата частями",
+          text: "подберём комфортный платёж — работаем с 8 банками",
+        },
+        {
+          icon: "delivery.svg",
+          title: "Бесплатная доставка",
+          text: "организуем доставку и монтаж под ключ",
+        },
+        {
+          icon: "phone.svg",
+          title: "Быстрый расчёт по телефону",
+          text: "назовите длину и тип забора — подскажем ориентир по цене",
+        },
+        {
+          icon: "crew.svg",
+          title: "Свои бригады",
+          text: "работаем постоянными монтажниками, без случайных подрядчиков",
+        },
+        {
+          icon: "contract.svg",
+          title: "Договор и смета",
+          text: "фиксируем объём работ, материалы, сроки и итоговую стоимость",
+        },
+        {
+          icon: "selection.svg",
+          title: "Подбор под участок",
+          text: "сравним материалы, высоту и цвет под бюджет, дом и грунт",
+        },
+        {
+          icon: "warranty.svg",
+          title: "Гарантия на материалы и монтаж",
+          text: "срок зависит от материала и условий эксплуатации — всё прописываем в договоре",
+        },
+      ];
+
+      const template = document.querySelector("#benefit-card-template");
+      const targets = document.querySelectorAll(".benefits-grid, .mobile-grid");
+
+      for (const target of targets) {
+        for (const item of benefits) {
+          const card = template.content.firstElementChild.cloneNode(true);
+          const img = card.querySelector("img");
+          img.src = `../../public/icons/benefits/${item.icon}`;
+          img.width = 52;
+          img.height = 52;
+          card.querySelector("h3").textContent = item.title;
+          card.querySelector("p").textContent = item.text;
+          target.appendChild(card);
+        }
+      }
+    </script>
+  </body>
+</html>

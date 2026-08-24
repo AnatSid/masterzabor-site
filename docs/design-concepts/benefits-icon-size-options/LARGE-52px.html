@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Benefits Icons LARGE - 52px</title>
+    <style>
+      :root {
+        --bg: #f5f5f5;
+        --card: #ffffff;
+        --line: #d8e2dc;
+        --muted: #475569;
+        --green: #0a5633;
+        --text: #020817;
+        --icon-size: 44px;
+      }
+
+      @media (min-width: 640px) {
+        :root {
+          --icon-size: 52px;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      main {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 40px 16px 56px;
+      }
+
+      header {
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--green);
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .note {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .block {
+        background: var(--bg);
+        padding: 20px 0;
+      }
+
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .benefit-card {
+        min-height: 192px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--card);
+        padding: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+      }
+
+      .benefit-card img {
+        display: block;
+        width: var(--icon-size);
+        height: var(--icon-size);
+        object-fit: contain;
+      }
+
+      .benefit-card h2 {
+        margin: 14px 0 0;
+        color: var(--text);
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1.22;
+        letter-spacing: 0;
+      }
+
+      .benefit-card p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      @media (min-width: 640px) {
+        main {
+          padding-inline: 24px;
+        }
+
+        .block {
+          padding: 20px 0;
+        }
+
+        .benefits-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .benefit-card {
+          min-height: 216px;
+          border-radius: 16px;
+          padding: 24px;
+        }
+
+        .benefit-card h2 {
+          margin-top: 20px;
+          font-size: 18px;
+          line-height: 1.25;
+        }
+
+        .benefit-card p {
+          font-size: 14px;
+          line-height: 1.55;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .benefits-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>LARGE - 52 desktop / 44 mobile</h1>
+        <p class="note">
+          Candidate. Используются реальные assets из public/icons/benefits/.
+          Меняется только rendered size.
+        </p>
+      </header>
+
+      <section class="block" aria-label="Преимущества">
+        <div class="benefits-grid" data-benefits></div>
+      </section>
+    </main>
+
+    <template id="benefit-card-template">
+      <article class="benefit-card">
+        <img alt="" aria-hidden="true" />
+        <h2></h2>
+        <p></p>
+      </article>
+    </template>
+
+    <script>
+      const benefits = [
+        ["experience.svg", "С 2015 года", "10 000+ заборов — опыт частных участков, дач и въездных групп"],
+        ["installment.svg", "Рассрочка и оплата частями", "подберём комфортный платёж — работаем с 8 банками"],
+        ["delivery.svg", "Бесплатная доставка", "организуем доставку и монтаж под ключ"],
+        ["phone.svg", "Быстрый расчёт по телефону", "назовите длину и тип забора — подскажем ориентир по цене"],
+        ["crew.svg", "Свои бригады", "работаем постоянными монтажниками, без случайных подрядчиков"],
+        ["contract.svg", "Договор и смета", "фиксируем объём работ, материалы, сроки и итоговую стоимость"],
+        ["selection.svg", "Подбор под участок", "сравним материалы, высоту и цвет под бюджет, дом и грунт"],
+        ["warranty.svg", "Гарантия на материалы и монтаж", "срок зависит от материала и условий эксплуатации — всё прописываем в договоре"],
+      ];
+
+      const template = document.querySelector("#benefit-card-template");
+      const grid = document.querySelector("[data-benefits]");
+
+      for (const [icon, title, text] of benefits) {
+        const card = template.content.firstElementChild.cloneNode(true);
+        const img = card.querySelector("img");
+        img.src = `../../../public/icons/benefits/${icon}`;
+        img.width = 52;
+        img.height = 52;
+        card.querySelector("h2").textContent = title;
+        card.querySelector("p").textContent = text;
+        grid.appendChild(card);
+      }
+    </script>
+  </body>
+</html>
