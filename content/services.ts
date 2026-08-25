@@ -236,6 +236,37 @@ export const services: Service[] = [
     priceFrom: 1200,
     priceUnit: "BYN",
     imageSrc: "/images/services/vorota-raspashnye/hero.jpeg",
+    heroImage: {
+      src: "/images/services/vorota-raspashnye/hero-page-square-new.webp",
+      alt: "Распашные ворота с кирпичными столбами в квадратном кадре",
+      objectPosition: "center",
+    },
+    galleryImages: [
+      {
+        src: "/images/services/vorota-raspashnye/gallery-01.webp",
+        alt: "Серые распашные ворота между бетонными столбами",
+      },
+      {
+        src: "/images/services/vorota-raspashnye/gallery-02.webp",
+        alt: "Коричневые распашные ворота с декоративной дугой",
+      },
+      {
+        src: "/images/services/vorota-raspashnye/gallery-03.webp",
+        alt: "Закрытые распашные ворота между кирпичными столбами",
+      },
+      {
+        src: "/images/services/vorota-raspashnye/gallery-04.webp",
+        alt: "Зелёные распашные ворота с калиткой рядом с лесом",
+      },
+      {
+        src: "/images/services/vorota-raspashnye/gallery-05.webp",
+        alt: "Распашные ворота с установленной автоматикой",
+      },
+      {
+        src: "/images/services/vorota-raspashnye/gallery-06.webp",
+        alt: "Декоративные распашные ворота у жилого дома",
+      },
+    ],
     description:
       "Классические распашные ворота для частного дома, дачи или производственной территории. Изготавливаем под размер проёма и стиль забора.",
     features: [
