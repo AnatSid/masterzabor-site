@@ -395,7 +395,28 @@ Gallery:
 - `5.jpg` -> `gallery-05.webp` (`1200x800`) -> gallery.
 - `6.jpg` -> `gallery-06.webp` (`1200x800`) -> gallery.
 
-Unverified source filenames: none for these five approved ServicePage sets based on current repository, local source folders and task decisions. The mapping is kept here as operational documentation because optimized WebP files do not embed their original local source path.
+### `/kalitki`
+
+Status: visually approved real-photo ServicePage.
+
+Hero source folder: `C:\DiscD\проекты сайта\Фото типов забора\КАЛИТКИ`.
+
+Hero: `главная.png` -> `public/images/services/kalitki/hero-page.webp` (`1200x900`) -> hero. Object position: center.
+
+Gallery source folder: `C:\DiscD\проекты сайта\Фото типов забора\КАЛИТКИ\новый формат не обрезанный`.
+
+Note: this gallery set was prepared with extra space around the wicket so `/kalitki` can return to the standard ServicePage gallery layout: fixed wide cards, `object-cover`, centered crop, no `contain` fields. Early `contain` / portrait-aware previews were removed after the final wide sources worked in the standard gallery. Confirmed rule from `/kalitki`: when a standard gallery card is about 1.73:1 and uses `object-cover`, vertical or 4:3 sources can crop the object too aggressively; for gate/wicket photos, prefer a wide source close to 16:9 with the full object kept inside a safe zone.
+
+Gallery:
+
+- `gallery-new-01-профнастил-коричневый.png` -> `gallery-01.webp` (`1200x675`) -> gallery.
+- `gallery-new-02-евроштакетник-серый.png` -> `gallery-02.webp` (`1200x800`) -> gallery.
+- `gallery-new-03-3dsetka-zelenaya.png` -> `gallery-03.webp` (`1200x675`) -> gallery.
+- `gallery-new-04-profnastil-antratsit-zakrytaya.png` -> `gallery-04.webp` (`1200x675`) -> gallery.
+- `gallery-new-05-profnastil-iznutri-kozyrek.png` -> `gallery-05.webp` (`1200x675`) -> gallery.
+- `gallery-new-06-evroshtaketnik-korichneviy.png` -> `gallery-06.webp` (`1000x750`) -> gallery.
+
+Unverified source filenames: none for the six completed ServicePage sets based on current repository, local source folders and task decisions. The mapping is kept here as operational documentation because optimized WebP files do not embed their original local source path.
 
 ## Remaining Frontend / Mobile / CRO Notes
 

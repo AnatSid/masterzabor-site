@@ -358,6 +358,37 @@ export const services: Service[] = [
     priceFrom: 1000,
     priceUnit: "BYN",
     imageSrc: "/images/services/kalitki/hero.jpeg",
+    heroImage: {
+      src: "/images/services/kalitki/hero-page.webp",
+      alt: "Калитка из профнастила с ручкой и петлями",
+      objectPosition: "center",
+    },
+    galleryImages: [
+      {
+        src: "/images/services/kalitki/gallery-01.webp",
+        alt: "Серая калитка из евроштакетника у частного дома",
+      },
+      {
+        src: "/images/services/kalitki/gallery-02.webp",
+        alt: "Коричневая калитка из профнастила с металлическим обрамлением",
+      },
+      {
+        src: "/images/services/kalitki/gallery-03.webp",
+        alt: "Зелёная калитка из 3D-сетки",
+      },
+      {
+        src: "/images/services/kalitki/gallery-04.webp",
+        alt: "Обычная калитка из коричневого профнастила",
+      },
+      {
+        src: "/images/services/kalitki/gallery-05.webp",
+        alt: "Калитка из профнастила с внутренней стороны с козырьком",
+      },
+      {
+        src: "/images/services/kalitki/gallery-06.webp",
+        alt: "Калитка из евроштакетника на участке",
+      },
+    ],
     description:
       "Изготавливаем калитки в едином стиле с забором и воротами. Подбираем ширину, заполнение, замок, петли и сторону открывания.",
     features: [
