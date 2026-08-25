@@ -298,10 +298,107 @@ Future check protocol after `npm run dev`:
 - Benefit icon assets after P1-02.2: production files live in `public/icons/benefits/` as `experience.svg`, `installment.svg`, `delivery.svg`, `phone.svg`, `crew.svg`, `contract.svg`, `selection.svg`, `warranty.svg`. `BrandLineIcon` loads these files and keeps the existing visual size: `32x32` on mobile and `40x40` on `sm+`. The current files are intentional temporary SVG wrappers with embedded raster graphics to preserve the approved look; future true-vector SVG migration is cleanup, not a blocker. Original design/master files stay under `_design-assets/`.
 - Product/service thumbnails on homepage use optimized JPEGs under `public/images/services/<slug>/hero.jpeg` and are wired through `content/services.ts` as `imageSrc`.
 - Homepage hero image source after P1-02.2: `C:\DiscD\проекты сайта\Фото типов забора\Исходник с логотипом.png`, optimized into `public/images/hero/homepage-fence-with-logo.jpeg`; keep it as visual-only background while the hero H1/text stays real HTML for SEO and accessibility.
-- ServicePage photo workflow after evroshtaketnik/profnastil/rabitsa/raspashnye approval: add real service photos one category at a time using `source folder -> hero selection -> gallery -> optimization -> service data -> localhost -> desktop/mobile visual approval -> commit/push/production`. Do not redesign the shared layout per service; tune only image assets, human `alt`, and optional focal/object-position.
-- `/zabory-iz-evroshtaketnika` is the first approved real-photo ServicePage reference; `/zabory-iz-profnastila` is the second; `/zabory-iz-setki-rabitsy` is the third; `/vorota-raspashnye` is the fourth. Homepage, `/nashi-raboty`, city pages and blog are outside this service-photo workflow.
+- ServicePage photo workflow after evroshtaketnik/profnastil/rabitsa/raspashnye/otkatnye approval: add real service photos one category at a time using `source folder -> hero selection -> gallery -> optimization -> service data -> localhost -> desktop/mobile visual approval -> commit/push/production`. Do not redesign the shared layout per service; tune only image assets, human `alt`, and optional focal/object-position.
+- `/zabory-iz-evroshtaketnika` is the first approved real-photo ServicePage reference; `/zabory-iz-profnastila` is the second; `/zabory-iz-setki-rabitsy` is the third; `/vorota-raspashnye` is the fourth; `/vorota-otkatnye` is the fifth. Homepage, `/nashi-raboty`, city pages and blog are outside this service-photo workflow.
 - For square ServicePage hero, prefer a source composition prepared for 1:1 when the full object must stay visible. Keep important visual elements away from the source image edges; ordinary photos are still acceptable when `480x480 object-cover` looks good.
+- Service photo assets live in `public/images/services/{slug}/`. Large local PNG/JPEG sources do not need to be stored in repo; commit optimized production WebP copies. `content/services.ts` is the linking layer for hero/gallery assets.
 - P1-03 should build a proper portfolio/project model on top of this, not replace these service thumbnails with ad hoc placeholder SVGs.
+
+## Service Photo Source Map
+
+Verified on 2026-08-25 against `content/services.ts`, `public/images/services/*` production assets and local source folders under `C:\DiscD\проекты сайта\Фото типов забора\...`.
+
+Reusable workflow: `local source folder -> selected hero/gallery sources -> optimized production WebP -> content/services.ts -> localhost visual approval -> production`.
+
+General rules:
+
+- Service photo assets live in `public/images/services/{slug}/`.
+- Source PNG/JPEG files stay outside repo unless there is a separate reason to commit them.
+- Production assets committed to repo should be optimized WebP copies.
+- `content/services.ts` is the source of truth linking service hero/gallery assets to pages.
+- Desktop ServicePage hero stays `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill`, `object-cover`.
+- If a wide source works with `480x480 object-cover`, use it. If important elements are cut off, prefer a composition prepared for 1:1 instead of changing the shared layout.
+- Per-service `objectPosition` is allowed when needed, but should stay data-driven.
+
+### `/zabory-iz-evroshtaketnika`
+
+Source folder: `C:\DiscD\проекты сайта\Фото типов забора\ЕВРОШТАКЕТНИК`.
+
+Hero: `Запасная.jpg` -> `public/images/services/zabory-iz-evroshtaketnika/hero-page.webp` (`1200x1200`) -> hero. Object position: default/center. Note: selected after replacing the first hero candidate because the previous image duplicated the homepage service thumbnail too closely.
+
+Gallery:
+
+- `1.jpg` -> `gallery-01.webp` (`1200x900`) -> gallery.
+- `2.jpg` -> `gallery-02.webp` (`1200x1200`) -> gallery.
+- `3.jpg` -> `gallery-03.webp` (`1200x900`) -> gallery.
+- `4.jpg` -> `gallery-04.webp` (`1200x553`) -> gallery.
+- `5.jpg` -> `gallery-05.webp` (`1200x900`) -> gallery.
+- `6.jpg` -> `gallery-06.webp` (`1200x900`) -> gallery.
+
+### `/zabory-iz-profnastila`
+
+Source folder: `C:\DiscD\проекты сайта\Фото типов забора\ПРОФНАСТИЛ`.
+
+Hero: `Главная-2.png` -> `public/images/services/zabory-iz-profnastila/hero-page.webp` (`1200x800`) -> hero. Object position: default/center.
+
+Gallery:
+
+- `1.jpg` -> `gallery-01.webp` (`1200x900`) -> gallery.
+- `2.jpg` -> `gallery-02.webp` (`1200x674`) -> gallery.
+- `3.jpeg` -> `gallery-03.webp` (`1000x750`) -> gallery.
+- `4.jpeg` -> `gallery-04.webp` (`1000x750`) -> gallery.
+- `5.jpeg` -> `gallery-05.webp` (`1000x750`) -> gallery.
+- `6.jpg` -> `gallery-06.webp` (`769x577`) -> gallery.
+
+### `/zabory-iz-setki-rabitsy`
+
+Source folder: `C:\DiscD\проекты сайта\Фото типов забора\СЕТКА-РАБИЦА`.
+
+Hero: `5(новый с хорошим качетсвом).png` -> `public/images/services/zabory-iz-setki-rabitsy/hero-page-new.webp` (`1200x675`) -> hero. Object position: default/center. Note: older low-quality `5` source and `Главная для заставки.jpeg` are not production hero assets.
+
+Gallery:
+
+- `1.webp` -> `gallery-01.webp` (`1024x768`) -> gallery.
+- `2.jpg` -> `gallery-02.webp` (`1200x900`) -> gallery.
+- `3.jpg` -> `gallery-03.webp` (`1200x800`) -> gallery.
+- `4.jpg` -> `gallery-04.webp` (`1200x678`) -> gallery.
+- `6.png` -> `gallery-05.webp` (`1200x800`) -> gallery.
+- `7.png` -> `gallery-06.webp` (`1200x800`) -> gallery.
+
+### `/vorota-raspashnye`
+
+Source folder: `C:\DiscD\проекты сайта\Фото типов забора\ВОРОТА РАСПАШНЫЕ`.
+
+Hero: `Главная квадратная hero.png` -> `public/images/services/vorota-raspashnye/hero-page-square-new.webp` (`1200x1200`) -> hero. Object position: center. Note: FIT/WIDE preview variants were explored but are not the production solution; final hero uses a composition prepared for standard square ServicePage hero.
+
+Gallery:
+
+- `4.jpg` -> `gallery-01.webp` (`1200x552`) -> gallery.
+- `2.jpg` -> `gallery-02.webp` (`1200x900`) -> gallery.
+- `1.jpg` -> `gallery-03.webp` (`1024x768`) -> gallery.
+- `6.jpg` -> `gallery-04.webp` (`1200x900`) -> gallery.
+- `3.jpg` -> `gallery-05.webp` (`1200x900`) -> gallery.
+- `5.jpg` -> `gallery-06.webp` (`885x1180`) -> gallery.
+
+### `/vorota-otkatnye`
+
+Source folder: `C:\DiscD\проекты сайта\Фото типов забора\ВОРОТА ОТКАТНЫЕ`.
+
+Hero: `Главная квадратная hero.png` -> `public/images/services/vorota-otkatnye/hero-page-square-new.webp` (`1200x1200`) -> hero. Object position: center. Note: original `Главная.png` was tested first, but in standard square hero it cut off important gate/pillar context; the square source is the approved production hero.
+
+Gallery:
+
+- `1.jpeg` -> `gallery-01.webp` (`1000x450`) -> gallery.
+- `2.jpeg` -> `gallery-02.webp` (`1000x450`) -> gallery.
+- `3.jpeg` -> `gallery-03.webp` (`1000x692`) -> gallery.
+- `4.jpg` -> `gallery-04.webp` (`1200x800`) -> gallery.
+- `5.jpg` -> `gallery-05.webp` (`1200x800`) -> gallery.
+- `6.jpg` -> `gallery-06.webp` (`1200x800`) -> gallery.
+
+Unverified source filenames: none for these five approved ServicePage sets based on current repository, local source folders and task decisions. The mapping is kept here as operational documentation because optimized WebP files do not embed their original local source path.
+
+## Remaining Frontend / Mobile / CRO Notes
+
 - Floating CTA behavior: on homepage it should not cover the first viewport because header phone and hero CTAs are already visible; on deeper pages it can stay visible immediately as a conversion shortcut.
 - `QuizForm` основной канал заявок; добавить "Не знаю длину" и analytics по шагам.
 - `LeadForm` остаётся хорошим быстрым fallback.

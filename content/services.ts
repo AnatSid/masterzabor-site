@@ -297,6 +297,37 @@ export const services: Service[] = [
     priceFrom: 3000,
     priceUnit: "BYN",
     imageSrc: "/images/services/vorota-otkatnye/hero.jpeg",
+    heroImage: {
+      src: "/images/services/vorota-otkatnye/hero-page-square-new.webp",
+      alt: "Откатные ворота с кирпичными столбами в квадратном кадре",
+      objectPosition: "center",
+    },
+    galleryImages: [
+      {
+        src: "/images/services/vorota-otkatnye/gallery-01.webp",
+        alt: "Откатные ворота с металлическим заполнением",
+      },
+      {
+        src: "/images/services/vorota-otkatnye/gallery-02.webp",
+        alt: "Откатные ворота на участке частного дома",
+      },
+      {
+        src: "/images/services/vorota-otkatnye/gallery-03.webp",
+        alt: "Серые откатные ворота с приводом",
+      },
+      {
+        src: "/images/services/vorota-otkatnye/gallery-04.webp",
+        alt: "Откатные ворота с профнастилом между кирпичными столбами",
+      },
+      {
+        src: "/images/services/vorota-otkatnye/gallery-05.webp",
+        alt: "Закрытые откатные ворота перед двором",
+      },
+      {
+        src: "/images/services/vorota-otkatnye/gallery-06.webp",
+        alt: "Откатные ворота рядом с забором из профнастила",
+      },
+    ],
     description:
       "Откатные ворота экономят место перед въездом и удобны зимой. Рассчитываем проём, фундамент, фурнитуру и заполнение под конкретный участок.",
     features: [
