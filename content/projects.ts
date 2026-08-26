@@ -1,3 +1,5 @@
+import type { City } from "@/content/cities";
+
 export const projectFilters = [
   { value: "all", label: "Все" },
   { value: "profnastil", label: "Профнастил" },
@@ -26,23 +28,25 @@ export type ProjectPhoto = {
   objectPosition?: string;
 };
 
+export type ProjectCity = Pick<City, "slug" | "name" | "oblast">;
+
 export type Project = {
   id: string;
   title: string;
   serviceSlug: ProjectServiceSlug;
   category: ProjectCategory;
   categoryLabel: string;
-  material: string;
+  city: ProjectCity;
   description: string;
-  locationLabel?: string;
-  citySlug?: string;
+  material?: string;
   length?: string;
   height?: string;
   priceRange?: string;
   completedAt?: string;
   mainPhoto: ProjectPhoto;
-  photos: ProjectPhoto[];
-  isFeatured: boolean;
+  photos?: ProjectPhoto[];
+  review?: string;
+  isFeatured?: boolean;
 };
 
 export const projects: Project[] = [
@@ -52,10 +56,14 @@ export const projects: Project[] = [
     serviceSlug: "zabory-iz-profnastila",
     category: "profnastil",
     categoryLabel: "Профнастил",
+    city: {
+      slug: "grodno",
+      name: "Гродно",
+      oblast: "Гродненская область",
+    },
     material: "профнастил с полимерным покрытием",
     description:
       "Сплошное ограждение для приватности участка с аккуратной линией секций и металлическими столбами.",
-    locationLabel: "Беларусь",
     mainPhoto: {
       src: "/images/projects/profnastil-brown-perimeter/main.webp",
       alt: "Коричневый забор из профнастила вдоль частного участка",
@@ -78,10 +86,14 @@ export const projects: Project[] = [
     serviceSlug: "zabory-iz-profnastila",
     category: "profnastil",
     categoryLabel: "Профнастил",
+    city: {
+      slug: "brest",
+      name: "Брест",
+      oblast: "Брестская область",
+    },
     material: "профнастил, металлический каркас",
     description:
       "Ровная линия забора с контрастным каркасом для большого открытого участка.",
-    locationLabel: "Беларусь",
     mainPhoto: {
       src: "/images/projects/profnastil-light-yard/main.webp",
       alt: "Светлый забор из профнастила с красным металлическим каркасом",
@@ -104,10 +116,14 @@ export const projects: Project[] = [
     serviceSlug: "zabory-iz-evroshtaketnika",
     category: "evroshtaketnik",
     categoryLabel: "Евроштакетник",
+    city: {
+      slug: "vitebsk",
+      name: "Витебск",
+      oblast: "Витебская область",
+    },
     material: "металлический евроштакетник",
     description:
       "Фасадное ограждение с просветами: участок выглядит легче, но граница остаётся аккуратной.",
-    locationLabel: "Беларусь",
     mainPhoto: {
       src: "/images/projects/evroshtaketnik-brown-front/main.webp",
       alt: "Коричневый фасадный забор из металлического евроштакетника",
@@ -130,10 +146,14 @@ export const projects: Project[] = [
     serviceSlug: "zabory-iz-evroshtaketnika",
     category: "evroshtaketnik",
     categoryLabel: "Евроштакетник",
+    city: {
+      slug: "lida",
+      name: "Лида",
+      oblast: "Гродненская область",
+    },
     material: "евроштакетник серого цвета",
     description:
       "Металлический штакетник с вертикальным ритмом секций и спокойным современным цветом.",
-    locationLabel: "Беларусь",
     mainPhoto: {
       src: "/images/projects/evroshtaketnik-gray-facade/main.webp",
       alt: "Серый забор из евроштакетника перед частным участком",
@@ -156,10 +176,14 @@ export const projects: Project[] = [
     serviceSlug: "zabory-iz-setki-rabitsy",
     category: "rabitsa",
     categoryLabel: "Сетка-рабица",
+    city: {
+      slug: "polotsk",
+      name: "Полоцк",
+      oblast: "Витебская область",
+    },
     material: "сетка-рабица на металлических столбах",
     description:
       "Лёгкое прозрачное ограждение для сада, дачи или большого периметра без лишнего затенения.",
-    locationLabel: "Беларусь",
     mainPhoto: {
       src: "/images/projects/rabitsa-garden-perimeter/main.webp",
       alt: "Забор из сетки-рабицы вокруг зелёного участка",
@@ -182,10 +206,14 @@ export const projects: Project[] = [
     serviceSlug: "vorota-otkatnye",
     category: "gates",
     categoryLabel: "Ворота",
+    city: {
+      slug: "novopolotsk",
+      name: "Новополоцк",
+      oblast: "Витебская область",
+    },
     material: "металлические откатные ворота",
     description:
       "Готовая въездная группа с откатной конструкцией, удобной для ежедневного проезда.",
-    locationLabel: "Беларусь",
     mainPhoto: {
       src: "/images/projects/sliding-gate-covered-entry/main.webp",
       alt: "Откатные ворота с металлическим заполнением у въезда на участок",
@@ -208,10 +236,14 @@ export const projects: Project[] = [
     serviceSlug: "vorota-raspashnye",
     category: "gates",
     categoryLabel: "Ворота",
+    city: {
+      slug: "orsha",
+      name: "Орша",
+      oblast: "Витебская область",
+    },
     material: "распашные ворота, профнастил",
     description:
       "Классическая распашная конструкция в едином цвете с ограждением и аккуратным верхним контуром.",
-    locationLabel: "Беларусь",
     mainPhoto: {
       src: "/images/projects/swing-gate-brown-entry/main.webp",
       alt: "Коричневые распашные ворота с заполнением профнастилом",
@@ -234,10 +266,14 @@ export const projects: Project[] = [
     serviceSlug: "kalitki",
     category: "wickets",
     categoryLabel: "Калитки",
+    city: {
+      slug: "slutsk",
+      name: "Слуцк",
+      oblast: "Минская область",
+    },
     material: "калитка с заполнением профнастилом",
     description:
       "Отдельная калитка в цвет основного ограждения с простой геометрией и закрытым заполнением.",
-    locationLabel: "Беларусь",
     mainPhoto: {
       src: "/images/projects/wicket-gray-profnastil/main.webp",
       alt: "Серая калитка из профнастила рядом с ограждением участка",
@@ -256,8 +292,14 @@ export const projects: Project[] = [
   },
 ];
 
-export const featuredProjects = projects.filter((project) => project.isFeatured);
+export const featuredProjects = projects.filter(
+  (project) => project.isFeatured === true,
+);
 
 export function getProjectsByServiceSlug(serviceSlug: ProjectServiceSlug) {
   return projects.filter((project) => project.serviceSlug === serviceSlug);
+}
+
+export function getProjectsByCitySlug(citySlug: string) {
+  return projects.filter((project) => project.city.slug === citySlug);
 }

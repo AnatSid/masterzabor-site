@@ -12,7 +12,6 @@ type ProjectCardProps = {
 
 function getProjectFacts(project: Project) {
   return [
-    { label: "Материал", value: project.material },
     { label: "Длина", value: project.length },
     { label: "Высота", value: project.height },
     { label: "Бюджет", value: project.priceRange },
@@ -47,11 +46,9 @@ export function ProjectCard({
           <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-[#0A5633] shadow-sm">
             {project.categoryLabel}
           </span>
-          {project.locationLabel ? (
-            <span className="rounded-full bg-slate-950/75 px-3 py-1 text-xs font-semibold text-white">
-              {project.locationLabel}
-            </span>
-          ) : null}
+          <span className="rounded-full bg-slate-950/75 px-3 py-1 text-xs font-semibold text-white">
+            {project.city.name}
+          </span>
         </div>
       </div>
 
@@ -84,7 +81,7 @@ export function ProjectCard({
             className="inline-flex min-h-10 items-center justify-center rounded-lg bg-[#0A5633] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#06321F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2"
             href={`/${project.serviceSlug}`}
           >
-            Подробнее об услуге
+            Подробнее
           </Link>
         </div>
       </div>
