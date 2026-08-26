@@ -1,10 +1,10 @@
 # PROJECT ROADMAP TRACKER / HANDOFF: MASTERZABOR
 
-Дата handoff: 2026-08-24  
+Дата handoff: 2026-08-26
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая точка отсчета: `abda6ae docs: add project handoff tracker`
+Текущая точка отсчета: P1-03 completion branch `codex/P1-03-project-photos-foundation`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,6 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
+- Последний production commit: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -34,7 +35,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
-- Service photo library is separate from the future `content/projects.ts` portfolio/project model; homepage, `/nashi-raboty`, city pages and blog are not part of this workflow.
+- Service photo library is separate from the `content/projects.ts` portfolio/project model; homepage, `/nashi-raboty`, city pages and blog are not part of this workflow.
 - Остаток после cleanup-попытки: `.tmp/` частично осталась как untracked локальная папка; Chrome держал lock-файлы. Это не production asset и не нужно коммитить.
 
 ## COMPLETED
@@ -84,11 +85,12 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Homepage brand direction: fence+M mark, real-ish hero image, equal 8 benefit cards.
 - Benefit icons: final approved asset set подключен через files, не через hand-drawn inline SVG.
 - Benefit icon size: selected LARGE `44/52`.
+- Portfolio foundation: P1-03 completed on branch `codex/P1-03-project-photos-foundation`; homepage "Наши работы" and `/nashi-raboty` now use real project photos from `content/projects.ts`.
 
 ## OPEN ISSUES
 
-- `/nashi-raboty` все еще использует generated placeholder SVG через `PortfolioGallery`.
-- `ServicePage` имеет общий real-photo config; евроштакетник заполнен реальными hero/gallery, остальные services пока используют fallback placeholders до последовательного подключения их фото.
+- P1-03 portfolio foundation is complete; current first records are starter/demo portfolio metadata and should be gradually replaced or expanded with confirmed real MasterZabor projects.
+- `ServicePage` real-photo block завершен: все 6 service pages имеют утвержденные hero/gallery из production assets.
 - `CityPage` hero и "Примеры работ" все еще используют `data:image/svg` placeholder-функцию.
 - `content/blog-posts.ts` использует generated SVG covers.
 - `generateWebsiteJsonLd()` все еще содержит `SearchAction`, но реального поиска нет.
@@ -103,14 +105,14 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 
 ## REMAINING PAGES / UI WORK
 
-- `/nashi-raboty`: главный следующий кандидат. Сейчас страница прямо описывает "фото-заглушки" и показывает synthetic SVG cards. Нужны реальные проекты, фильтры, нормальные карточки, города, материалы, краткие параметры.
+- `/nashi-raboty`: P1-03 foundation complete. Дальше не redesign, а постепенная замена/расширение starter records собственными подтвержденными объектами MasterZabor.
 - `/tseny`: рабочая, но простая. Не добавлять "Цены" в top nav без новой pricing strategy. Можно улучшить mobile price cards, пояснения "от чего зависит цена", CTA и ссылки на service pages.
 - `/otzyvy`: рабочая, но слабая как trust page. Нужны реальные отзывы/скриншоты/источники/объекты, иначе выглядит generic.
 - `/kontakty`: рабочая. Можно привести hero/card style к текущему brand direction, но не трогать webhook/domain.
 - `/blog`: всего 3 статьи, covers placeholder SVG. Перед масштабированием нужен content model или хотя бы MDX/data decision.
 - Blog articles: полезны как база, но нужны реальные изображения, категории, related links, обновление под 2026 SEO.
 - City pages: композиция улучшена, но hero/examples используют placeholders. Нужны city-specific proof blocks.
-- Service pages: общий hero/gallery photo pattern утвержден на евроштакетнике; остальные услуги ждут последовательного подключения реальных фото и отдельной проверки crop/focal position.
+- Service pages: P1-04 завершен; общий hero/gallery photo pattern утвержден на всех 6 услугах.
 - Mobile: основные overflow/menu/CTA проблемы закрыты; следующие проверки делать после каждого визуального изменения на 360/390/430 px и iPhone safe-area.
 
 ## PHOTOS / CONTENT TO ADD
@@ -131,7 +133,12 @@ Recommended production structure:
 Recommended content model:
 
 - `content/projects.ts`
-- fields: `id`, `title`, `citySlug`, `serviceSlug`, `type`, `material`, `length`, `height`, `priceRange`, `completedAt`, `photos`, `mainPhoto`, `review`, `isFeatured`.
+- current P1-03 fields: `id`, `title`, `serviceSlug`, `category`, `categoryLabel`, `city`, `description`, `mainPhoto`.
+- optional fields: `material`, `length`, `height`, `priceRange`, `completedAt`, `photos`, `review`, `isFeatured`.
+- `city` is data-driven as `{ slug, name, oblast }`, so future city filtering/pages can reuse the same project records.
+- Homepage "Наши работы" uses `featuredProjects`; `/nashi-raboty` uses the full `projects` array; both render the same reusable `ProjectCard`.
+- Project assets are separate from the service photo library and live under `public/images/projects/{project-id}/`.
+- Current first project records are starter/demo portfolio metadata. Replace city/project metadata with confirmed values as real objects are added; do not hardcode city/category/material inside `ProjectCard`.
 
 Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `alt`, add `sizes`, verify LCP.
 
@@ -151,7 +158,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 ## TECHNICAL DEBT
 
 - Benefits icons true-vector migration: LOW priority cleanup only. Current `public/icons/benefits/*.svg` are SVG wrappers with embedded raster PNG. They are approved production visual source of truth. Future true-vector replacement must preserve look 1:1 and must not use `<image>`, base64, PNG/JPEG/WebP inside. If vector version looks worse, do not replace.
-- Placeholder SVG helpers in `PortfolioGallery`, `ServicePage`, `CityPage`, `content/blog-posts.ts`.
+- Placeholder SVG helpers remain in `CityPage` and `content/blog-posts.ts`; portfolio cards and the six ServicePage galleries now use real photo assets.
 - `SearchAction` without search.
 - Product JSON-LD Offer URLs.
 - Dependency ranges with `latest`.
@@ -189,23 +196,26 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Зачем: schema не должна заявлять несуществующую функцию.
    - Как проверить: production HTML JSON-LD не содержит `SearchAction`; homepage/blog status `200`; rich results/schema validator без fake search.
 
-### P1 - следующий этап
+### P1 - этапы
 
 1. `P1-03-project-photos-foundation`
-   - Что сделать: создать `content/projects.ts`, модель проекта и `ProjectCard`; подключить реальные фото минимум к homepage "Наши работы" и `/nashi-raboty`.
+   - Статус: DONE after approved local/Preview flow and Production smoke.
+   - Что сделано: создан `content/projects.ts` как единый source of truth для portfolio/project metadata; добавлены reusable `ProjectCard` и `PortfolioGallery` от общего project dataset; реальные portfolio photos подключены к homepage "Наши работы" и `/nashi-raboty`.
    - Где: `content/projects.ts`, `components/portfolio/`, `app/page.tsx`, `app/nashi-raboty/page.tsx`, `public/images/projects/`.
-   - Зачем: главный текущий trust/CRO/SEO пробел - вместо реальных работ стоят placeholder SVG.
-   - Как проверить: нет `data:image/svg` в portfolio cards; реальные изображения 200; alt описательные; desktop/mobile grid без overflow; `/nashi-raboty` больше не пишет "фото-заглушки".
+   - Зачем: закрыт главный trust/CRO/SEO пробел - вместо generated/data SVG portfolio placeholders появились реальные фото работ.
+   - Как проверить: нет `data:image/svg` в portfolio cards; реальные изображения 200; alt описательные; desktop/mobile grid без overflow; `/nashi-raboty` больше не пишет "фото-заглушки"; category + city badges data-driven; filters work.
+   - Rules: project metadata не hardcoded внутри `ProjectCard`; city metadata подготовлена для future reuse/filtering; current starter records can use demo/starter city metadata until confirmed real project data replaces it.
+   - Scope: ServicePage/CityPage integration deliberately not done in P1-03.
 
 2. `P1-04-service-page-real-gallery`
    - Статус: DONE. Общий ServicePage photo system подтвержден на всех шести категориях; `/zabory-iz-evroshtaketnika`, `/zabory-iz-profnastila`, `/zabory-iz-setki-rabitsy`, `/vorota-raspashnye`, `/vorota-otkatnye` и `/kalitki` заполнены реальными hero/gallery и визуально утверждены.
    - Что сделано: заменены `ServicePage` hero/gallery placeholders на реальные service photos с сохранением общего layout.
-   - Где: `components/templates/ServicePage.tsx`, `content/services.ts`, `public/images/services/`, `public/images/projects/`.
+   - Где: `components/templates/ServicePage.tsx`, `content/services.ts`, `public/images/services/`.
    - Зачем: service pages уже хорошие по структуре, но placeholder gallery снижает доверие.
    - Как проверить: 6 service pages отдают 200; images not broken; `next/image` имеет адекватные `sizes`; mobile no overflow.
    - Workflow: `source folder -> hero selection -> gallery -> optimization -> service data -> localhost -> desktop/mobile visual approval -> commit/push/production`.
    - Scope: не трогать homepage, `/nashi-raboty`, city pages, blog, domain/canonical, analytics, Telegram; не создавать `content/projects.ts` в рамках service-photo tasks.
-   - Примечание: не смешивать с `P1-03-project-photos-foundation`; `content/projects.ts`, homepage projects и `/nashi-raboty` еще не реализованы.
+   - Примечание: не смешивать с P1-03 project dataset; service photo library and project portfolio library stay separate.
 
 3. `P1-05-city-proof-blocks`
    - Что сделать: добавить на city pages блоки реальных работ/объектов по региону или fallback "работы по Беларуси", без выдуманных фактов.

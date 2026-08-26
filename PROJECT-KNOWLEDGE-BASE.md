@@ -3,6 +3,8 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
+Latest production baseline after P1-03: current `main` HEAD after Production smoke.
+Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
 
@@ -135,8 +137,8 @@ Production: https://www.masterzabor.by
 - `components/forms/` - lead capture forms and phone field.
 - `components/templates/` - reusable page templates for city/service pages.
 - `components/cards/` - repeated product card.
-- `components/portfolio/` - portfolio filter/gallery.
-- `content/` - 40 cities, 6 services, 3 posts.
+- `components/portfolio/` - portfolio cards and filter/gallery.
+- `content/` - 40 cities, 6 services, 3 posts, project portfolio dataset.
 - `lib/` - constants, SEO, phone, Telegram, leads, reporting, analytics.
 - `public/` - icons, manifest, logo, OG image.
 - `docs/` - project history and runbooks.
@@ -187,6 +189,7 @@ Robots coverage: `/api/` is disallowed; public routes are allowed.
 - `ServicePage`
 - `CityPage`
 - `ProductCard`
+- `ProjectCard`
 - `PortfolioGallery`
 
 Usage and risks:
@@ -195,11 +198,12 @@ Usage and risks:
 - `Footer`: has full nav including prices/blog/reviews, better coverage than header.
 - `FloatingButtons`: mobile conversion layer for calls and messengers.
 - `SiteContainer`: good shared layout primitive; should continue expanding to all sections.
-- `ServicePage`: good shared service template; has Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. Desktop hero pattern is `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; services without real photo config still use placeholders as fallback.
+- `ServicePage`: good shared service template; has Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. Desktop hero pattern is `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; all six service pages have approved real-photo hero/gallery assets.
 - `CityPage`: good city template; unique city text is generated from city data; doorway/thin risk remains if no real city proof.
 - `QuizForm`: main conversion form; good qualification flow, but multi-step friction on mobile.
 - `LeadForm`: simpler fallback form on homepage.
-- `PortfolioGallery`: useful client filter, but current items are generated placeholder images.
+- `ProjectCard`: reusable project card for portfolio surfaces. It must read category, city, title, service link, photos and optional facts from the project record; do not hardcode cities/materials/project titles in the component.
+- `PortfolioGallery`: useful client filter over the shared project dataset.
 
 Duplicated/centralization candidates:
 
@@ -298,15 +302,57 @@ Future check protocol after `npm run dev`:
 - Benefit icon assets after P1-02.2: production files live in `public/icons/benefits/` as `experience.svg`, `installment.svg`, `delivery.svg`, `phone.svg`, `crew.svg`, `contract.svg`, `selection.svg`, `warranty.svg`. `BrandLineIcon` loads these files and keeps the existing visual size: `32x32` on mobile and `40x40` on `sm+`. The current files are intentional temporary SVG wrappers with embedded raster graphics to preserve the approved look; future true-vector SVG migration is cleanup, not a blocker. Original design/master files stay under `_design-assets/`.
 - Product/service thumbnails on homepage use optimized JPEGs under `public/images/services/<slug>/hero.jpeg` and are wired through `content/services.ts` as `imageSrc`.
 - Homepage hero image source after P1-02.2: `C:\DiscD\проекты сайта\Фото типов забора\Исходник с логотипом.png`, optimized into `public/images/hero/homepage-fence-with-logo.jpeg`; keep it as visual-only background while the hero H1/text stays real HTML for SEO and accessibility.
-- ServicePage photo workflow after evroshtaketnik/profnastil/rabitsa/raspashnye/otkatnye approval: add real service photos one category at a time using `source folder -> hero selection -> gallery -> optimization -> service data -> localhost -> desktop/mobile visual approval -> commit/push/production`. Do not redesign the shared layout per service; tune only image assets, human `alt`, and optional focal/object-position.
-- `/zabory-iz-evroshtaketnika` is the first approved real-photo ServicePage reference; `/zabory-iz-profnastila` is the second; `/zabory-iz-setki-rabitsy` is the third; `/vorota-raspashnye` is the fourth; `/vorota-otkatnye` is the fifth. Homepage, `/nashi-raboty`, city pages and blog are outside this service-photo workflow.
+- ServicePage photo workflow is complete for all six service pages: real service photos were added one category at a time using `source folder -> hero selection -> gallery -> optimization -> service data -> localhost -> desktop/mobile visual approval -> commit/push/production`. Do not redesign the shared layout per service; tune only image assets, human `alt`, and optional focal/object-position.
+- `/zabory-iz-evroshtaketnika` is the first approved real-photo ServicePage reference; `/zabory-iz-profnastila` is the second; `/zabory-iz-setki-rabitsy` is the third; `/vorota-raspashnye` is the fourth; `/vorota-otkatnye` is the fifth; `/kalitki` is the sixth and final P1-04 page. Homepage, `/nashi-raboty`, city pages and blog are outside this service-photo workflow.
 - For square ServicePage hero, prefer a source composition prepared for 1:1 when the full object must stay visible. Keep important visual elements away from the source image edges; ordinary photos are still acceptable when `480x480 object-cover` looks good.
 - Service photo assets live in `public/images/services/{slug}/`. Large local PNG/JPEG sources do not need to be stored in repo; commit optimized production WebP copies. `content/services.ts` is the linking layer for hero/gallery assets.
-- P1-03 should build a proper portfolio/project model on top of this, not replace these service thumbnails with ad hoc placeholder SVGs.
+- P1-03 built the portfolio/project model on top of this. It does not replace the service photo library; project photos live separately in `public/images/projects/{project-id}/`.
+
+## Project Portfolio Foundation
+
+Status: P1-03 project photos foundation is DONE after approved local visual/technical review, Preview build, merge to `main`, Production deployment and Production smoke.
+
+Source of truth: `content/projects.ts`.
+
+Implemented rules:
+
+- `content/projects.ts` is the single source of truth for portfolio/project metadata.
+- Project assets live in `public/images/projects/{project-id}/`.
+- `ProjectCard` is reusable and data-driven; it must not hardcode city/category/material/project titles.
+- `PortfolioGallery` filters the shared project dataset.
+- Homepage "Наши работы" uses `featuredProjects` from the shared dataset.
+- `/nashi-raboty` uses the full `projects` array from the same dataset.
+- Portfolio cards use real optimized WebP photos, not generated/data SVG placeholders.
+- Category + city badges are data-driven from project records.
+- Project `city` metadata is `{ slug, name, oblast }`, which prepares future reuse for city filtering/pages.
+- ServicePage and CityPage integration with project records was deliberately kept out of P1-03 scope.
+
+Current project fields:
+
+- Required: `id`, `title`, `serviceSlug`, `category`, `categoryLabel`, `city`, `description`, `mainPhoto`.
+- Optional: `material`, `length`, `height`, `priceRange`, `completedAt`, `photos`, `review`, `isFeatured`.
+
+Current first portfolio records are starter/demo content. Their city metadata is allowed to be starter metadata until confirmed real MasterZabor project data replaces it. Future updates should be simple data/file changes: add optimized production images under `public/images/projects/{project-id}/`, then add or update a record in `content/projects.ts`.
+
+Future real-project expansion workflow:
+
+`source folder реальных работ -> read-only inventory -> group photos by object -> choose main/gallery photos -> determine serviceSlug -> prepare project metadata -> optimize production WebP -> public/images/projects/{project-id}/ -> add/update content/projects.ts -> visual check homepage and /nashi-raboty`.
+
+Important future rules:
+
+- One real job equals one project record.
+- Several photos of the same object stay in one project gallery; do not turn them into separate projects.
+- Do not commit large original source photos unless there is a separate reason.
+- Commit optimized production assets.
+- Do not redesign `ProjectCard` or portfolio architecture for each new object.
+- Real confirmed projects should gradually replace or expand the current starter/demo records.
+- Homepage should select the strongest `featuredProjects`; `/nashi-raboty` can contain the fuller set.
+- Use known real cities and metadata when confirmed.
+- Do not start bulk photo processing before a separate read-only inventory of the new source folder.
 
 ## Service Photo Source Map
 
-Verified on 2026-08-25 against `content/services.ts`, `public/images/services/*` production assets and local source folders under `C:\DiscD\проекты сайта\Фото типов забора\...`.
+Verified on 2026-08-26 against `content/services.ts`, `public/images/services/*` production assets and local source folders under `C:\DiscD\проекты сайта\Фото типов забора\...`.
 
 Reusable workflow: `local source folder -> selected hero/gallery sources -> optimized production WebP -> content/services.ts -> localhost visual approval -> production`.
 
