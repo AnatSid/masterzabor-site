@@ -4,7 +4,9 @@ import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { QuizForm } from "@/components/forms/QuizForm";
+import { ProjectCard } from "@/components/portfolio/ProjectCard";
 import { cities } from "@/content/cities";
+import { featuredProjects } from "@/content/projects";
 import { services } from "@/content/services";
 import {
   PHONE,
@@ -64,15 +66,6 @@ const benefitItems = [
     title: "Гарантия на материалы и монтаж",
     text: "срок зависит от материала и условий эксплуатации — всё прописываем в договоре",
   },
-] as const;
-
-const works = [
-  "Забор из профнастила для частного дома",
-  "Фасадный забор из евроштакетника",
-  "Откатные ворота с заполнением профнастилом",
-  "Сетка-рабица для дачного участка",
-  "Распашные ворота и калитка",
-  "Комбинированное ограждение участка",
 ] as const;
 
 const reviews = [
@@ -153,30 +146,6 @@ const sectionIntroFlexClassName = `${sectionIntroClassName} min-w-0 flex-1`;
 
 const sectionSubtitleClassName =
   "mt-4 text-pretty leading-relaxed text-slate-600 md:text-[1.0625rem] md:leading-[1.65]";
-
-function placeholderImage(title: string, index: number) {
-  const colors = ["#1B5E20", "#2E7D32", "#F59E0B", "#334155"];
-  const color = colors[index % colors.length];
-  const svg = `
-    <svg width="900" height="640" viewBox="0 0 900 640" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="900" height="640" fill="#F5F5F5"/>
-      <rect y="380" width="900" height="260" fill="${color}"/>
-      <path d="M0 380L900 220V380H0Z" fill="#E2E8F0"/>
-      <g stroke="white" stroke-width="18">
-        <path d="M90 415V590"/>
-        <path d="M240 385V590"/>
-        <path d="M390 355V590"/>
-        <path d="M540 325V590"/>
-        <path d="M690 295V590"/>
-        <path d="M840 265V590"/>
-        <path d="M70 450H860"/>
-        <path d="M70 520H860"/>
-      </g>
-      <text x="60" y="110" fill="#0F172A" font-size="42" font-family="Arial, sans-serif" font-weight="700">${title}</text>
-    </svg>`;
-
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-}
 
 type BrandIconName = (typeof benefitItems)[number]["icon"];
 
@@ -366,11 +335,11 @@ export default function Home() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className={sectionIntroFlexClassName}>
               <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-                Примеры работ
+                Наши работы
               </h2>
               <p className={sectionSubtitleClassName}>
-                Реальные объекты: частные дома, дачи, въездные группы
-                и&nbsp;большие периметры.
+                Реальные объекты: частные участки, дачи, въездные группы
+                и&nbsp;периметры с разными материалами.
               </p>
             </div>
             <Link
@@ -381,20 +350,8 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {works.map((work, index) => (
-              <article
-                className="overflow-hidden rounded-2xl bg-white shadow-sm"
-                key={work}
-              >
-                <Image
-                  alt={work}
-                  className="h-56 w-full object-cover"
-                  height={420}
-                  src={placeholderImage(work, index + 1)}
-                  width={620}
-                />
-                <h3 className="p-5 font-semibold text-slate-950">{work}</h3>
-              </article>
+            {featuredProjects.slice(0, 6).map((project) => (
+              <ProjectCard key={project.id} project={project} />
             ))}
           </div>
         </div>

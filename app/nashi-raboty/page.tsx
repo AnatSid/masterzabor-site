@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { PortfolioGallery } from "@/components/portfolio/PortfolioGallery";
+import { projectFilters, projects } from "@/content/projects";
 import { generateBreadcrumbJsonLd, generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
   title: "Наши работы — фото установленных заборов | МастерЗабор",
   description:
-    "Портфолио установленных заборов, ворот и калиток в Беларуси. Фото-заглушки по типам ограждений с фильтрами для быстрого выбора решений.",
+    "Реальные фото установленных заборов, ворот и калиток в Беларуси. Смотрите материалы, решения для участков и примеры готового монтажа.",
   path: "/nashi-raboty",
 });
 
@@ -42,13 +43,14 @@ export default function NashiRabotyPage() {
             Наши работы — фото установленных заборов
           </h1>
           <p className="mt-4 text-slate-600">
-            Подборка типовых объектов: профнастил, евроштакетник, сетка-рабица,
-            ворота и калитки. Используйте фильтры, чтобы быстрее найти нужный
-            формат.
+            Подборка реальных объектов: профнастил, евроштакетник,
+            сетка-рабица, ворота и калитки. Точные города, метраж и стоимость
+            будем добавлять только там, где есть подтверждённые данные по
+            объекту.
           </p>
         </header>
 
-        <PortfolioGallery />
+        <PortfolioGallery filters={projectFilters} projects={projects} />
       </section>
     </main>
   );
