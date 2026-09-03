@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production baseline after P1-03: current `main` HEAD after Production smoke.
+Latest production baseline after P1-03.1: `66615fbb0d32de7e33516ac7080a887785731cc0` (`feat(projects): refine real portfolio content`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -312,6 +312,8 @@ Future check protocol after `npm run dev`:
 
 Status: P1-03 project photos foundation is DONE after approved local visual/technical review, Preview build, merge to `main`, Production deployment and Production smoke.
 
+P1-03.1 real project content is DONE after approved local visual review, Preview build, merge to `main`, Production deployment and Production smoke. It added 9 own real MasterZabor project objects above the existing 8 starter/demo records, so the portfolio dataset now contains 17 records.
+
 Source of truth: `content/projects.ts`.
 
 Implemented rules:
@@ -325,14 +327,30 @@ Implemented rules:
 - Portfolio cards use real optimized WebP photos, not generated/data SVG placeholders.
 - Category + city badges are data-driven from project records.
 - Project `city` metadata is `{ slug, name, oblast }`, which prepares future reuse for city filtering/pages.
+- `serviceSlug` is optional for portfolio-only project categories. 3D/Gitter records use category `3D-сетка` and intentionally omit `serviceSlug`, so `ProjectCard` does not show a false service CTA to `zabory-iz-setki-rabitsy`.
 - ServicePage and CityPage integration with project records was deliberately kept out of P1-03 scope.
 
 Current project fields:
 
-- Required: `id`, `title`, `serviceSlug`, `category`, `categoryLabel`, `city`, `description`, `mainPhoto`.
+- Required: `id`, `title`, `category`, `categoryLabel`, `city`, `description`, `mainPhoto`.
 - Optional: `material`, `length`, `height`, `priceRange`, `completedAt`, `photos`, `review`, `isFeatured`.
+- Optional service mapping: `serviceSlug`, used only when the project has a truthful matching service page.
 
-Current first portfolio records are starter/demo content. Their city metadata is allowed to be starter metadata until confirmed real MasterZabor project data replaces it. Future updates should be simple data/file changes: add optimized production images under `public/images/projects/{project-id}/`, then add or update a record in `content/projects.ts`.
+Current first 9 portfolio records are own real MasterZabor objects from P1-03.1. The older 8 starter/demo records remain below them and should be gradually replaced or expanded as more confirmed real MasterZabor projects are prepared. Future updates should be simple data/file changes: add optimized production images under `public/images/projects/{project-id}/`, then add or update a record in `content/projects.ts`.
+
+P1-03.1 current first 9 order on `/nashi-raboty`:
+
+1. Евроштакетник на бетонном основании - Слоним.
+2. Сетка-рабица с калиткой из евроштакетника - Поставы.
+3. Графитовый евроштакетник с калиткой и цоколем - Новогрудок.
+4. Ограждение из 3D-сетки для участка - Щучин.
+5. Ограждение из 3D-сетки с калиткой - Островец.
+6. Зелёный профнастил в металлической окантовке - Глубокое.
+7. Графитовый профнастил с калиткой - Лепель.
+8. Двухсторонний евроштакетник для частного участка - Ошмяны.
+9. Комбинированный забор с бетонным основанием - Сморгонь.
+
+Homepage `featuredProjects` was intentionally not changed in P1-03.1; selecting the strongest new real projects for homepage remains a separate product decision.
 
 Future real-project expansion workflow:
 
