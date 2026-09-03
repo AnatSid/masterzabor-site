@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production baseline after P1-03.1: `66615fbb0d32de7e33516ac7080a887785731cc0` (`feat(projects): refine real portfolio content`).
+Latest production implementation/content baseline after P1-03.2: `c7ef4da808c07c7479ffeec8039f13696d96e109` (`feat(projects): feature real projects on homepage`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -314,6 +314,8 @@ Status: P1-03 project photos foundation is DONE after approved local visual/tech
 
 P1-03.1 real project content is DONE after approved local visual review, Preview build, merge to `main`, Production deployment and Production smoke. It added 9 own real MasterZabor project objects above the existing 8 starter/demo records, so the portfolio dataset now contains 17 records.
 
+P1-03.2 homepage real projects is DONE after approved local visual review, Preview build, merge to `main`, Production deployment and Production smoke. It changed homepage `featuredProjects` to show stronger real works while preserving the existing block design and keeping `/nashi-raboty` unchanged at 17 records.
+
 Source of truth: `content/projects.ts`.
 
 Implemented rules:
@@ -327,7 +329,8 @@ Implemented rules:
 - Portfolio cards use real optimized WebP photos, not generated/data SVG placeholders.
 - Category + city badges are data-driven from project records.
 - Project `city` metadata is `{ slug, name, oblast }`, which prepares future reuse for city filtering/pages.
-- `serviceSlug` is optional for portfolio-only project categories. 3D/Gitter records use category `3D-сетка` and intentionally omit `serviceSlug`, so `ProjectCard` does not show a false service CTA to `zabory-iz-setki-rabitsy`.
+- `serviceSlug` is optional. It is used when a portfolio card should show `Подробнее` and route to a matching service page.
+- P1-03.2 product decision: 3D/Gitter records keep category/categoryLabel `3D-сетка`, but can use `serviceSlug: "zabory-iz-setki-rabitsy"` for the CTA because the current site has no separate 3D ServicePage and the user prefers a route instead of a missing button. This is an intentional combined routing decision, not a claim that the category is сетка-рабица.
 - ServicePage and CityPage integration with project records was deliberately kept out of P1-03 scope.
 
 Current project fields:
@@ -351,6 +354,24 @@ P1-03.1 current first 9 order on `/nashi-raboty`:
 9. Комбинированный забор с бетонным основанием - Сморгонь.
 
 Homepage `featuredProjects` was intentionally not changed in P1-03.1; selecting the strongest new real projects for homepage remains a separate product decision.
+
+P1-03.2 homepage featured selection:
+
+1. Евроштакетник на бетонном основании - Слоним - Евроштакетник.
+2. Сетка-рабица с калиткой из евроштакетника - Поставы - Сетка-рабица.
+3. Графитовый евроштакетник с калиткой и цоколем - Новогрудок - Евроштакетник.
+4. Ограждение из 3D-сетки с калиткой - Островец - 3D-сетка; CTA routes to `/zabory-iz-setki-rabitsy`.
+5. Графитовый профнастил с калиткой - Лепель - Профнастил.
+6. Откатные ворота для въездной группы - Новополоцк - Ворота.
+
+P1-03.2 change rules:
+
+- Change only the `featuredProjects` data selection through `content/projects.ts`; do not redesign the homepage block.
+- Keep `/nashi-raboty` at 17 cards and preserve the existing full portfolio order.
+- Keep `ProjectCard` reusable and data-driven; do not hardcode homepage-only titles, cities or categories in the component.
+- Keep one old gate project in homepage featured to preserve visual/category variety.
+- `app/nashi-raboty/page.tsx` may keep the small `max-w-5xl` intro width adjustment so the desktop H1 does not wrap "заборов" too early.
+- P1-03.2 is now production baseline; future homepage featured changes should still be data-only unless the user explicitly asks for redesign.
 
 Future real-project expansion workflow:
 

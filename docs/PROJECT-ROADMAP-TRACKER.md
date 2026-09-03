@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая точка отсчета: P1-03.1 completion branch `codex/P1-03.1-real-project-content`
+Текущая production точка отсчета: P1-03.2 completion commit `c7ef4da808c07c7479ffeec8039f13696d96e109`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production commit: `66615fbb0d32de7e33516ac7080a887785731cc0` (`feat(projects): refine real portfolio content`).
+- Последний production implementation/content baseline: `c7ef4da808c07c7479ffeec8039f13696d96e109` (`feat(projects): feature real projects on homepage`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -87,6 +87,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Benefit icon size: selected LARGE `44/52`.
 - Portfolio foundation: P1-03 completed on branch `codex/P1-03-project-photos-foundation`; homepage "Наши работы" and `/nashi-raboty` now use real project photos from `content/projects.ts`.
 - P1-03.1 real project content completed on branch `codex/P1-03.1-real-project-content`: added 9 own real MasterZabor objects above the existing 8 starter projects; `/nashi-raboty` now has 17 project records.
+- P1-03.2 homepage real projects completed on branch `codex/P1-03.2-homepage-real-projects`: homepage "Наши работы" now features 5 stronger own real projects plus the retained old sliding-gate project.
 
 ## OPEN ISSUES
 
@@ -138,9 +139,10 @@ Recommended content model:
 - optional fields: `material`, `length`, `height`, `priceRange`, `completedAt`, `photos`, `review`, `isFeatured`.
 - `city` is data-driven as `{ slug, name, oblast }`, so future city filtering/pages can reuse the same project records.
 - Homepage "Наши работы" uses `featuredProjects`; `/nashi-raboty` uses the full `projects` array; both render the same reusable `ProjectCard`.
+- P1-03.2 keeps the homepage block layout/design unchanged and changes only `isFeatured` selection in `content/projects.ts`.
 - Project assets are separate from the service photo library and live under `public/images/projects/{project-id}/`.
 - Current first 9 project records are own real MasterZabor objects; the older 8 starter/demo records remain after them. Replace starter records with confirmed values as more real objects are added; do not hardcode city/category/material inside `ProjectCard`.
-- 3D/Gitter projects are stored as a portfolio-only category (`3D-сетка`) without false mapping to `zabory-iz-setki-rabitsy`; their `serviceSlug` is intentionally omitted until a real service page/category decision exists.
+- 3D/Gitter projects stay visually labeled as portfolio category `3D-сетка`. In P1-03.2 they are allowed to use `serviceSlug: "zabory-iz-setki-rabitsy"` only as an intentional product routing decision for the `Подробнее` CTA; this does not create a separate 3D service page and does not rename the portfolio category.
 
 Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `alt`, add `sizes`, verify LCP.
 
@@ -215,11 +217,21 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Где: `content/projects.ts`, `components/portfolio/ProjectCard.tsx`, `public/images/projects/real-*/`.
    - Порядок: новые 9 объектов идут выше старых 8 starter/demo projects.
    - Homepage: `featuredProjects` намеренно не изменен; выбор новых featured projects остается отдельным решением.
-   - 3D/Gitter: хранится как portfolio-only category `3D-сетка`; `serviceSlug` у этих records отсутствует, чтобы не вести на ложную страницу про сетку-рабицу.
+   - 3D/Gitter: на момент P1-03.1 хранился как portfolio-only category `3D-сетка` без `serviceSlug`; P1-03.2 позже добавил intentional CTA routing на `/zabory-iz-setki-rabitsy`.
    - Как проверить: `/nashi-raboty` 200; 17 cards; filters: `Профнастил` 4, `Евроштакетник` 6, `Сетка-рабица` 2, `3D-сетка` 2; images not broken; mobile 390 no overflow; UI не содержит `сварное`, `сварные секции`, `3D-секционное`.
    - Scope: не менять homepage featured, ServicePage, CityPage, domain/canonical, analytics, Telegram.
 
-3. `P1-04-service-page-real-gallery`
+3. `P1-03.2-homepage-real-projects`
+   - Статус: DONE after approved local visual review, Preview build, merge to `main`, Production deployment and Production smoke.
+   - Что сделано: homepage block "Наши работы" теперь выбирает 6 утвержденных `featuredProjects` из существующего общего dataset без изменения `ProjectCard`, grid/layout, размеров карточек, typography, spacing или `/nashi-raboty` order.
+   - Где: `content/projects.ts` controls the homepage featured selection; `app/nashi-raboty/page.tsx` has a narrow header-width adjustment so the desktop H1 does not wrap the word "заборов" too early.
+   - Зачем: homepage proof block should show stronger own real works from P1-03.1 while preserving one old gate card for category variety.
+   - Homepage selection: `Евроштакетник на бетонном основании` (Слоним), `Сетка-рабица с калиткой из евроштакетника` (Поставы), `Графитовый евроштакетник с калиткой и цоколем` (Новогрудок), `Ограждение из 3D-сетки с калиткой` (Островец), `Графитовый профнастил с калиткой` (Лепель), `Откатные ворота для въездной группы` (Новополоцк).
+   - 3D/Gitter routing: category badge remains `3D-сетка`; `Подробнее` may route to `/zabory-iz-setki-rabitsy` as an approved combined service path for now. Do not create a new 3D ServicePage in this stage.
+   - Как проверить: `/` 200; homepage "Наши работы" has exactly 6 cards in the approved order; `/nashi-raboty` still has 17 cards and existing order; filters unchanged; broken images 0; mobile 390 no horizontal overflow; Preview URL may be blocked by Vercel Deployment Protection/SSO.
+   - Scope: do not change `main`, Production, homepage layout/design, `ProjectCard`, service galleries, CityPage, domain/canonical, analytics or Telegram without separate approval.
+
+4. `P1-04-service-page-real-gallery`
    - Статус: DONE. Общий ServicePage photo system подтвержден на всех шести категориях; `/zabory-iz-evroshtaketnika`, `/zabory-iz-profnastila`, `/zabory-iz-setki-rabitsy`, `/vorota-raspashnye`, `/vorota-otkatnye` и `/kalitki` заполнены реальными hero/gallery и визуально утверждены.
    - Что сделано: заменены `ServicePage` hero/gallery placeholders на реальные service photos с сохранением общего layout.
    - Где: `components/templates/ServicePage.tsx`, `content/services.ts`, `public/images/services/`.
@@ -229,19 +241,19 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Scope: не трогать homepage, `/nashi-raboty`, city pages, blog, domain/canonical, analytics, Telegram; не создавать `content/projects.ts` в рамках service-photo tasks.
    - Примечание: не смешивать с P1-03 project dataset; service photo library and project portfolio library stay separate.
 
-4. `P1-05-city-proof-blocks`
+5. `P1-05-city-proof-blocks`
    - Что сделать: добавить на city pages блоки реальных работ/объектов по региону или fallback "работы по Беларуси", без выдуманных фактов.
    - Где: `components/templates/CityPage.tsx`, `content/projects.ts`, `content/cities.ts`.
    - Зачем: снизить doorway/thin risk и повысить доверие на городских страницах.
    - Как проверить: выбранные `/gomel`, `/minsk`, `/brest`, `/vitebsk` показывают реальные/релевантные proof cards; JSON/canonical не ломаются.
 
-5. `P1-06-commercial-pages-visual-polish`
+6. `P1-06-commercial-pages-visual-polish`
    - Что сделать: привести `/tseny`, `/otzyvy`, `/kontakty` к визуальному уровню главной: brand hero, аккуратные секции, реальные proof blocks.
    - Где: `app/tseny/page.tsx`, `app/otzyvy/page.tsx`, `app/kontakty/page.tsx`.
    - Зачем: эти страницы рабочие, но выглядят проще и менее убедительно.
    - Как проверить: mobile/desktop screenshots, no overflow, CTA visible, contact links tracked, status `200`.
 
-6. `P1-07-product-jsonld-offer-urls`
+7. `P1-07-product-jsonld-offer-urls`
    - Что сделать: Product JSON-LD Offer `url` привязать к конкретной service page, не к homepage.
    - Где: `lib/seo.ts`, `components/templates/ServicePage.tsx`, `app/tseny/page.tsx`.
    - Зачем: schema должна быть точнее для поисковиков.
