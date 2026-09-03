@@ -85,7 +85,7 @@ export const projects: Project[] = [
         height: 900,
       },
     ],
-    isFeatured: false,
+    isFeatured: true,
   },
   {
     id: "real-rabitsa-wicket-postavy",
@@ -121,7 +121,7 @@ export const projects: Project[] = [
         height: 900,
       },
     ],
-    isFeatured: false,
+    isFeatured: true,
   },
   {
     id: "real-graphite-evroshtaketnik-wicket-novogrudok",
@@ -151,11 +151,12 @@ export const projects: Project[] = [
         height: 750,
       },
     ],
-    isFeatured: false,
+    isFeatured: true,
   },
   {
     id: "real-3d-fence-shchuchin",
     title: "Ограждение из 3D-сетки для участка",
+    serviceSlug: "zabory-iz-setki-rabitsy",
     category: "sectional",
     categoryLabel: "3D-сетка",
     city: {
@@ -186,6 +187,7 @@ export const projects: Project[] = [
   {
     id: "real-3d-fence-wicket-ostrovets",
     title: "Ограждение из 3D-сетки с калиткой",
+    serviceSlug: "zabory-iz-setki-rabitsy",
     category: "sectional",
     categoryLabel: "3D-сетка",
     city: {
@@ -210,7 +212,7 @@ export const projects: Project[] = [
         height: 750,
       },
     ],
-    isFeatured: false,
+    isFeatured: true,
   },
   {
     id: "real-green-profnastil-glubokoe",
@@ -277,7 +279,7 @@ export const projects: Project[] = [
         height: 1280,
       },
     ],
-    isFeatured: false,
+    isFeatured: true,
   },
   {
     id: "real-evroshtaketnik-double-oshmyany",
@@ -367,7 +369,7 @@ export const projects: Project[] = [
         height: 674,
       },
     ],
-    isFeatured: true,
+    isFeatured: false,
   },
   {
     id: "profnastil-light-yard",
@@ -427,7 +429,7 @@ export const projects: Project[] = [
         height: 900,
       },
     ],
-    isFeatured: true,
+    isFeatured: false,
   },
   {
     id: "evroshtaketnik-gray-facade",
@@ -487,7 +489,7 @@ export const projects: Project[] = [
         height: 900,
       },
     ],
-    isFeatured: true,
+    isFeatured: false,
   },
   {
     id: "sliding-gate-covered-entry",
@@ -547,7 +549,7 @@ export const projects: Project[] = [
         height: 900,
       },
     ],
-    isFeatured: true,
+    isFeatured: false,
   },
   {
     id: "wicket-gray-profnastil",
@@ -577,7 +579,7 @@ export const projects: Project[] = [
         height: 675,
       },
     ],
-    isFeatured: true,
+    isFeatured: false,
   },
 ];
 

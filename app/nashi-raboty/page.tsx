@@ -38,7 +38,7 @@ export default function NashiRabotyPage() {
           </ol>
         </nav>
 
-        <header className="mt-5 max-w-3xl">
+        <header className="mt-5 max-w-5xl">
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Наши работы — фото установленных заборов
           </h1>
