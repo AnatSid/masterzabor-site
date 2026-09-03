@@ -76,14 +76,16 @@ export function ProjectCard({
           </dl>
         ) : null}
 
-        <div className="mt-auto pt-5">
-          <Link
-            className="inline-flex min-h-10 items-center justify-center rounded-lg bg-[#0A5633] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#06321F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2"
-            href={`/${project.serviceSlug}`}
-          >
-            Подробнее
-          </Link>
-        </div>
+        {project.serviceSlug ? (
+          <div className="mt-auto pt-5">
+            <Link
+              className="inline-flex min-h-10 items-center justify-center rounded-lg bg-[#0A5633] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#06321F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2"
+              href={`/${project.serviceSlug}`}
+            >
+              Подробнее
+            </Link>
+          </div>
+        ) : null}
       </div>
     </article>
   );

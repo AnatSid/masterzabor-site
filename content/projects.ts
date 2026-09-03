@@ -5,6 +5,7 @@ export const projectFilters = [
   { value: "profnastil", label: "Профнастил" },
   { value: "evroshtaketnik", label: "Евроштакетник" },
   { value: "rabitsa", label: "Сетка-рабица" },
+  { value: "sectional", label: "3D-сетка" },
   { value: "gates", label: "Ворота" },
   { value: "wickets", label: "Калитки" },
 ] as const;
@@ -33,7 +34,7 @@ export type ProjectCity = Pick<City, "slug" | "name" | "oblast">;
 export type Project = {
   id: string;
   title: string;
-  serviceSlug: ProjectServiceSlug;
+  serviceSlug?: ProjectServiceSlug;
   category: ProjectCategory;
   categoryLabel: string;
   city: ProjectCity;
@@ -50,6 +51,294 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    id: "real-evroshtaketnik-double-oshmyany",
+    title: "Двухсторонний евроштакетник для частного участка",
+    serviceSlug: "zabory-iz-evroshtaketnika",
+    category: "evroshtaketnik",
+    categoryLabel: "Евроштакетник",
+    city: {
+      slug: "oshmyany",
+      name: "Ошмяны",
+      oblast: "Гродненская область",
+    },
+    material: "двухсторонний металлический евроштакетник",
+    description:
+      "Аккуратное фасадное ограждение с двусторонним заполнением и ровным верхним контуром.",
+    mainPhoto: {
+      src: "/images/projects/real-evroshtaketnik-double-oshmyany/main.webp",
+      alt: "Двухсторонний забор из металлического евроштакетника в Ошмянах",
+      width: 1200,
+      height: 750,
+    },
+    photos: [
+      {
+        src: "/images/projects/real-evroshtaketnik-double-oshmyany/main.webp",
+        alt: "Двухсторонний забор из металлического евроштакетника в Ошмянах",
+        width: 1200,
+        height: 750,
+      },
+    ],
+    isFeatured: false,
+  },
+  {
+    id: "real-rabitsa-wicket-postavy",
+    title: "Сетка-рабица с калиткой из евроштакетника",
+    serviceSlug: "zabory-iz-setki-rabitsy",
+    category: "rabitsa",
+    categoryLabel: "Сетка-рабица",
+    city: {
+      slug: "postavy",
+      name: "Поставы",
+      oblast: "Витебская область",
+    },
+    material: "сетка-рабица, металлические столбы, калитка из евроштакетника",
+    description:
+      "Прозрачное ограждение для садового участка с отдельной калиткой в более закрытом заполнении.",
+    mainPhoto: {
+      src: "/images/projects/real-rabitsa-wicket-postavy/main.webp",
+      alt: "Ограждение из сетки-рабицы с калиткой из евроштакетника в Поставах",
+      width: 1200,
+      height: 750,
+    },
+    photos: [
+      {
+        src: "/images/projects/real-rabitsa-wicket-postavy/main.webp",
+        alt: "Ограждение из сетки-рабицы с калиткой из евроштакетника в Поставах",
+        width: 1200,
+        height: 750,
+      },
+      {
+        src: "/images/projects/real-rabitsa-wicket-postavy/gallery-01.webp",
+        alt: "Секция забора из сетки-рабицы на садовом участке в Поставах",
+        width: 1200,
+        height: 900,
+      },
+    ],
+    isFeatured: false,
+  },
+  {
+    id: "real-combined-fence-smorgon",
+    title: "Комбинированный забор с бетонным основанием",
+    serviceSlug: "zabory-iz-evroshtaketnika",
+    category: "evroshtaketnik",
+    categoryLabel: "Евроштакетник",
+    city: {
+      slug: "smorgon",
+      name: "Сморгонь",
+      oblast: "Гродненская область",
+    },
+    material: "евроштакетник, профнастил, бетонное основание",
+    description:
+      "Комбинированное заполнение с зелёными металлическими секциями и цоколем по нижней линии.",
+    mainPhoto: {
+      src: "/images/projects/real-combined-fence-smorgon/main.webp",
+      alt: "Комбинированный забор из евроштакетника и профнастила с бетонным основанием в Сморгони",
+      width: 1200,
+      height: 750,
+    },
+    photos: [
+      {
+        src: "/images/projects/real-combined-fence-smorgon/main.webp",
+        alt: "Комбинированный забор из евроштакетника и профнастила с бетонным основанием в Сморгони",
+        width: 1200,
+        height: 750,
+      },
+    ],
+    isFeatured: false,
+  },
+  {
+    id: "real-3d-fence-shchuchin",
+    title: "3D-секционное сварное ограждение участка",
+    category: "sectional",
+    categoryLabel: "3D-сетка",
+    city: {
+      slug: "shchuchin",
+      name: "Щучин",
+      oblast: "Гродненская область",
+    },
+    material: "3D-секционная сварная сетка",
+    description:
+      "Секционное ограждение Gitter с жёсткими металлическими панелями и открытым обзором участка.",
+    mainPhoto: {
+      src: "/images/projects/real-3d-fence-shchuchin/main.webp",
+      alt: "3D-секционное сварное ограждение Gitter в Щучине",
+      width: 1200,
+      height: 750,
+      objectPosition: "center",
+    },
+    photos: [
+      {
+        src: "/images/projects/real-3d-fence-shchuchin/main.webp",
+        alt: "3D-секционное сварное ограждение Gitter в Щучине",
+        width: 1200,
+        height: 750,
+      },
+    ],
+    isFeatured: false,
+  },
+  {
+    id: "real-3d-fence-wicket-ostrovets",
+    title: "3D-секционное ограждение с калиткой",
+    category: "sectional",
+    categoryLabel: "3D-сетка",
+    city: {
+      slug: "ostrovets",
+      name: "Островец",
+      oblast: "Гродненская область",
+    },
+    material: "3D-секционная сварная сетка, калитка из 3D-сетки",
+    description:
+      "Сварные секции и калитка в единой системе для прозрачного и прочного периметра.",
+    mainPhoto: {
+      src: "/images/projects/real-3d-fence-wicket-ostrovets/main.webp",
+      alt: "3D-секционное сварное ограждение с калиткой в Островце",
+      width: 1200,
+      height: 750,
+    },
+    photos: [
+      {
+        src: "/images/projects/real-3d-fence-wicket-ostrovets/main.webp",
+        alt: "3D-секционное сварное ограждение с калиткой в Островце",
+        width: 1200,
+        height: 750,
+      },
+    ],
+    isFeatured: false,
+  },
+  {
+    id: "real-green-profnastil-glubokoe",
+    title: "Зелёный профнастил в металлической окантовке",
+    serviceSlug: "zabory-iz-profnastila",
+    category: "profnastil",
+    categoryLabel: "Профнастил",
+    city: {
+      slug: "glubokoe",
+      name: "Глубокое",
+      oblast: "Витебская область",
+    },
+    material: "профнастил с металлической окантовкой",
+    description:
+      "Закрытое ограждение из профнастила с контрастным каркасом и аккуратной линией секций.",
+    mainPhoto: {
+      src: "/images/projects/real-green-profnastil-glubokoe/main.webp",
+      alt: "Зелёный забор из профнастила в металлической окантовке в Глубоком",
+      width: 1200,
+      height: 750,
+      objectPosition: "center",
+    },
+    photos: [
+      {
+        src: "/images/projects/real-green-profnastil-glubokoe/main.webp",
+        alt: "Зелёный забор из профнастила в металлической окантовке в Глубоком",
+        width: 1200,
+        height: 750,
+      },
+    ],
+    isFeatured: false,
+  },
+  {
+    id: "real-graphite-profnastil-wicket-lepel",
+    title: "Графитовый профнастил с калиткой",
+    serviceSlug: "zabory-iz-profnastila",
+    category: "profnastil",
+    categoryLabel: "Профнастил",
+    city: {
+      slug: "lepel",
+      name: "Лепель",
+      oblast: "Витебская область",
+    },
+    material: "профнастил графитового цвета, калитка",
+    description:
+      "Сплошное ограждение в графитовом цвете с калиткой в той же стилистике и чёрной окантовкой.",
+    mainPhoto: {
+      src: "/images/projects/real-graphite-profnastil-wicket-lepel/main.webp",
+      alt: "Графитовый забор из профнастила с калиткой в Лепеле",
+      width: 1200,
+      height: 750,
+    },
+    photos: [
+      {
+        src: "/images/projects/real-graphite-profnastil-wicket-lepel/main.webp",
+        alt: "Графитовый забор из профнастила с калиткой в Лепеле",
+        width: 1200,
+        height: 750,
+      },
+      {
+        src: "/images/projects/real-graphite-profnastil-wicket-lepel/gallery-01.webp",
+        alt: "Графитовый забор из профнастила на участке в Лепеле",
+        width: 960,
+        height: 1280,
+      },
+    ],
+    isFeatured: false,
+  },
+  {
+    id: "real-evroshtaketnik-base-slonim",
+    title: "Евроштакетник на бетонном основании",
+    serviceSlug: "zabory-iz-evroshtaketnika",
+    category: "evroshtaketnik",
+    categoryLabel: "Евроштакетник",
+    city: {
+      slug: "slonim",
+      name: "Слоним",
+      oblast: "Гродненская область",
+    },
+    material: "евроштакетник, бетонное основание",
+    description:
+      "Металлический штакетник с цоколем по нижней части, который отделяет секции от рельефа участка.",
+    mainPhoto: {
+      src: "/images/projects/real-evroshtaketnik-base-slonim/main.webp",
+      alt: "Забор из евроштакетника на бетонном основании в Слониме",
+      width: 1200,
+      height: 750,
+    },
+    photos: [
+      {
+        src: "/images/projects/real-evroshtaketnik-base-slonim/main.webp",
+        alt: "Забор из евроштакетника на бетонном основании в Слониме",
+        width: 1200,
+        height: 750,
+      },
+      {
+        src: "/images/projects/real-evroshtaketnik-base-slonim/gallery-01.webp",
+        alt: "Секция евроштакетника с бетонным основанием в Слониме",
+        width: 1200,
+        height: 900,
+      },
+    ],
+    isFeatured: false,
+  },
+  {
+    id: "real-graphite-evroshtaketnik-wicket-novogrudok",
+    title: "Графитовый евроштакетник с калиткой и цоколем",
+    serviceSlug: "zabory-iz-evroshtaketnika",
+    category: "evroshtaketnik",
+    categoryLabel: "Евроштакетник",
+    city: {
+      slug: "novogrudok",
+      name: "Новогрудок",
+      oblast: "Гродненская область",
+    },
+    material: "евроштакетник графитового цвета, калитка, бетонное основание",
+    description:
+      "Фасадное ограждение в тёмном цвете с калиткой и бетонным основанием по нижней линии.",
+    mainPhoto: {
+      src: "/images/projects/real-graphite-evroshtaketnik-wicket-novogrudok/main.webp",
+      alt: "Графитовый забор из евроштакетника с калиткой и бетонным основанием в Новогрудке",
+      width: 1200,
+      height: 750,
+    },
+    photos: [
+      {
+        src: "/images/projects/real-graphite-evroshtaketnik-wicket-novogrudok/main.webp",
+        alt: "Графитовый забор из евроштакетника с калиткой и бетонным основанием в Новогрудке",
+        width: 1200,
+        height: 750,
+      },
+    ],
+    isFeatured: false,
+  },
   {
     id: "profnastil-brown-perimeter",
     title: "Забор из профнастила вдоль участка",
