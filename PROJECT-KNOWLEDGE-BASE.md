@@ -10,6 +10,7 @@ Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d91
 
 - `docs/PROJECT-ROADMAP-TRACKER.md` - текущие этапы исправлений, статусы, порядок работы и инструкция для нового чата. Это единственный roadmap source of truth.
 - `PROJECT-KNOWLEDGE-BASE.md` - архитектурная память проекта.
+- `AGENTS.md` - постоянный project-level operating contract для Codex: sources of truth, domain/scope/git/dev/verification rules and tooling baseline.
 - `AUDIT-MASTERZABOR-2026.md` - полный аудит, причины решений и roadmap.
 - `docs/` - история проекта, production/domain/analytics/OAuth runbooks.
 
@@ -33,6 +34,36 @@ Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d91
 - Storage: `@vercel/kv`.
 - Hosting: Vercel.
 - Integrations: Telegram, Google Analytics, Yandex Metrika, reporting APIs.
+
+## Codex Workflow / Tooling Baseline
+
+TOOLING-01 created root `AGENTS.md` as the stable Codex project-level operating
+contract. It is intentionally short and stores only durable operational rules:
+source-of-truth priority, domain invariants, scope discipline, git/deployment
+workflow, local dev rules, proportional verification and the current tooling
+baseline.
+
+Source-of-truth priority for Codex work:
+
+1. Actual repository state.
+2. `docs/PROJECT-ROADMAP-TRACKER.md`.
+3. Relevant sections of `PROJECT-KNOWLEDGE-BASE.md`.
+4. Historical docs and `.cursorrules` only when relevant.
+
+`.cursorrules` is historical/reference for Codex, not the primary active
+instruction source. Do not migrate it wholesale because it contains stale
+workflow details.
+
+Stage prompts should now be shorter and mostly contain task-specific goal,
+scope, allowed/protected files and acceptance criteria. Detailed backlog,
+history, city lists, project records, photo source maps, OAuth/analytics
+runbooks and future acceptance criteria stay outside `AGENTS.md`.
+
+The current tooling baseline is sufficient: Next DevTools MCP, Browser/CUA,
+screenshots, terminal/git/curl, Node tooling, Vercel CLI, and existing relevant
+Skills only when needed. Do not add new MCP servers, plugins, dependencies,
+test frameworks, hooks, CI, custom Skills, Vercel settings or domain/Telegram
+architecture changes without separate rationale and user decision.
 
 ## История проекта и уже принятые решения
 

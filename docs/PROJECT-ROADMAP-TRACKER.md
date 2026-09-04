@@ -18,6 +18,8 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
 - Next DevTools MCP доступен на running dev server через `nextjs_index` / `nextjs_call`.
+- Root `AGENTS.md` создан в TOOLING-01 и является постоянным Codex project-level operating contract.
+- Current Codex tooling baseline: Next DevTools MCP, Browser/CUA, screenshots, terminal/git/curl, Node tooling, Vercel CLI, plus relevant existing Skills only when needed.
 - Canonical / sitemap / robots / OG / JSON-LD policy: `www` + no trailing slash.
 - Telegram webhook: только `https://www.masterzabor.by/api/telegram-webhook`.
 - Главная визуально сильно улучшена: brand mark, новая hero-фотография, 8 benefit cards, утвержденные benefit icons.
@@ -64,6 +66,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-02.1 homepage mobile first-screen density.
 - P1-02.2 brand visual foundation and benefit icons.
 - P1-02.2 LARGE icon size selection and production deploy.
+- TOOLING-01 Codex persistent instructions / workflow cleanup.
 
 ## AUDITS COMPLETED
 
@@ -92,6 +95,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-03.1 real project content completed on branch `codex/P1-03.1-real-project-content`: added 9 own real MasterZabor objects above the existing 8 starter projects; `/nashi-raboty` now has 17 project records.
 - P1-03.2 homepage real projects completed on branch `codex/P1-03.2-homepage-real-projects`: homepage "Наши работы" now features 5 stronger own real projects plus the retained old sliding-gate project.
 - P1-05.1 city page visual parity and real proof completed on branch `codex/P1-05.1-citypage-visual-parity`: city pages now reuse the homepage benefit/trust block, real service thumbnails and real project proof with deterministic exact -> oblast -> nationwide fallback. Implementation/main SHA: `1559823776b633359cc8a47c6f847922b8d3d288`.
+- TOOLING-01 completed on branch `codex/TOOLING-01-codex-workflow-cleanup`: root `AGENTS.md` created for Codex persistent instructions; `.cursorrules` remains historical/reference; roadmap remains the only roadmap source of truth; Knowledge Base remains architecture/project memory; future stage prompts should mostly contain goal, scope and acceptance instead of repeating stable repository rules; no MCP/plugins/dependencies/Skills were added. Implementation/main SHA: `edf728009c2d3b2199e3fc0334330e4a20a10a74`.
 
 ## OPEN ISSUES
 
@@ -287,10 +291,11 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Как проверить: visual diff 1:1 с текущими icons; no `<image>`/base64 inside.
 
 4. `P2-regression-tests`
-   - Что сделать: добавить минимальные tests/scripts для sitemap/canonical/API/phone utils.
-   - Где: `scripts/`, possibly test setup.
+   - Что сделать: добавить небольшой deterministic regression script для sitemap/canonical/API/phone utils.
+   - Где: `scripts/`, possibly package script if a separate task approves it.
    - Зачем: ловить SEO/API regressions до production.
-   - Как проверить: one command runs checks and fails on redirecting sitemap/canonical URLs.
+   - Как проверить: one command checks representative 200 pages, canonical host, no trailing slash policy, sitemap URLs without redirects, robots host, apex/duplicate host redirects, protected API unauthorized behavior, and later SearchAction absence / Product Offer URLs.
+   - Tooling note: do not add a test framework if a plain Node script is enough.
 
 5. `P2-dependency-pin-cleanup`
    - Что сделать: заменить оставшиеся `latest` на pinned versions after controlled install.
