@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production implementation/content baseline after P1-03.2: `c7ef4da808c07c7479ffeec8039f13696d96e109` (`feat(projects): feature real projects on homepage`).
+Latest production implementation/content baseline after P1-05.1: `1559823776b633359cc8a47c6f847922b8d3d288` (`merge P1-05.1 city page visual parity`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -188,6 +188,7 @@ Robots coverage: `/api/` is disallowed; public routes are allowed.
 - `BelarusPhoneField`
 - `ServicePage`
 - `CityPage`
+- `BenefitTrustSection`
 - `ProductCard`
 - `ProjectCard`
 - `PortfolioGallery`
@@ -199,7 +200,8 @@ Usage and risks:
 - `FloatingButtons`: mobile conversion layer for calls and messengers.
 - `SiteContainer`: good shared layout primitive; should continue expanding to all sections.
 - `ServicePage`: good shared service template; has Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. Desktop hero pattern is `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; all six service pages have approved real-photo hero/gallery assets.
-- `CityPage`: good city template; unique city text is generated from city data; doorway/thin risk remains if no real city proof.
+- `CityPage`: universal city template for all city routes; unique city text is generated from city data. After P1-05.1 it uses the homepage hero photo direction, real service thumbnails, shared `BenefitTrustSection`, and truthful project proof from confirmed real records.
+- `BenefitTrustSection`: shared 8-card benefit/trust block used by homepage and CityPage. It is the single source for approved benefit titles, text and production icon paths.
 - `QuizForm`: main conversion form; good qualification flow, but multi-step friction on mobile.
 - `LeadForm`: simpler fallback form on homepage.
 - `ProjectCard`: reusable project card for portfolio surfaces. It must read category, city, title, service link, photos and optional facts from the project record; do not hardcode cities/materials/project titles in the component.
@@ -285,8 +287,8 @@ Future check protocol after `npm run dev`:
 - Главный duplicate-риск P0-02 закрыт кодом: `next.config.ts` redirects `masterzabor-site.vercel.app` to `https://www.masterzabor.by`; production `308` проверен.
 - Главный lead-риск P0-03 снижен: новые заявки пишутся атомарно, имеют `leadId` и delivery status; legacy data remains readable.
 - Главный security-риск P0-03 снижен: cron/stats/webhook secrets fail-closed in Vercel Production; production stats/cron without token return `401`.
-- Главный CRO-риск: placeholder-изображения вместо реальных работ.
-- Главный scale-риск: city pages могут стать doorway/thin pages при расширении без уникального контента.
+- Главный CRO-риск снижен по P1 pages: homepage, portfolio, services and CityPage now use real/project/service visual proof instead of generated placeholders. Blog covers still use generated SVG.
+- Главный scale-риск для city pages снижен P1-05.1 за счет real proof fallback, но будущие city-local improvements должны добавлять подтвержденные проекты, а не размножать шаблоны.
 
 ## Frontend / Mobile / CRO Notes
 
@@ -299,10 +301,13 @@ Future check protocol after `npm run dev`:
 - Brand assets live in `public/brand/`; public favicon/app icon compatibility paths still exist at the root (`favicon.ico`, `icon-192.png`, `apple-touch-icon.png`, etc.).
 - Homepage visual system should stay in the green fence reference direction: dark green + white + light neutral sections, restrained lime accents, line icons, subtle fence/mark patterns, real fence photos when available.
 - Homepage proof/benefit system after P1-02.2: duplicate top dark-green stats strip was removed; use 8 equal practical ordering benefit cards (`С 2015 года`, рассрочка, доставка, быстрый расчёт, свои бригады, договор/смета, подбор под участок, гарантия на материалы и монтаж). User visually approved the final benefit icon design for production.
-- Benefit icon assets after P1-02.2: production files live in `public/icons/benefits/` as `experience.svg`, `installment.svg`, `delivery.svg`, `phone.svg`, `crew.svg`, `contract.svg`, `selection.svg`, `warranty.svg`. `BrandLineIcon` loads these files and keeps the existing visual size: `32x32` on mobile and `40x40` on `sm+`. The current files are intentional temporary SVG wrappers with embedded raster graphics to preserve the approved look; future true-vector SVG migration is cleanup, not a blocker. Original design/master files stay under `_design-assets/`.
+- Benefit icon assets after P1-05.1: production files live in `public/icons/benefits/` as `experience.svg`, `installment.svg`, `delivery.svg`, `phone.svg`, `crew.svg`, `contract.svg`, `selection.svg`, `warranty.svg`. Shared `BenefitTrustSection` loads these files and keeps the approved visual size: `44x44` mobile, `52x52` `sm+ / desktop`. The current files are intentional temporary SVG wrappers with embedded raster graphics to preserve the approved look; future true-vector SVG migration is cleanup, not a blocker. Original design/master files stay under `_design-assets/`.
 - Product/service thumbnails on homepage use optimized JPEGs under `public/images/services/<slug>/hero.jpeg` and are wired through `content/services.ts` as `imageSrc`.
 - Homepage hero image source after P1-02.2: `C:\DiscD\проекты сайта\Фото типов забора\Исходник с логотипом.png`, optimized into `public/images/hero/homepage-fence-with-logo.jpeg`; keep it as visual-only background while the hero H1/text stays real HTML for SEO and accessibility.
 - ServicePage photo workflow is complete for all six service pages: real service photos were added one category at a time using `source folder -> hero selection -> gallery -> optimization -> service data -> localhost -> desktop/mobile visual approval -> commit/push/production`. Do not redesign the shared layout per service; tune only image assets, human `alt`, and optional focal/object-position.
+- CityPage visual parity and proof are complete after P1-05.1. All 40+ city URLs still use one route/template chain: `app/[city]/page.tsx -> components/templates/CityPage.tsx -> content/cities.ts`. CityPage reuses `BenefitTrustSection`, real service thumbnails and `ProjectCard` proof cards.
+- City proof selection after P1-05.1 is deterministic: confirmed projects are `content/projects.ts` records with `id.startsWith("real-")`; older starter/demo records are excluded from truthful local proof. Selection order is exact city -> same oblast -> nationwide, preserving featured-first/source order inside each bucket.
+- City proof reference behavior after P1-05.1: `/slonim` shows exact-city heading `Наши работы в Слониме`; `/lida` shows oblast heading `Наши работы в Гродненской области`; `/gomel` shows nationwide fallback heading `Примеры наших работ по Беларуси` and does not claim works in Gomel.
 - `/zabory-iz-evroshtaketnika` is the first approved real-photo ServicePage reference; `/zabory-iz-profnastila` is the second; `/zabory-iz-setki-rabitsy` is the third; `/vorota-raspashnye` is the fourth; `/vorota-otkatnye` is the fifth; `/kalitki` is the sixth and final P1-04 page. Homepage, `/nashi-raboty`, city pages and blog are outside this service-photo workflow.
 - For square ServicePage hero, prefer a source composition prepared for 1:1 when the full object must stay visible. Keep important visual elements away from the source image edges; ordinary photos are still acceptable when `480x480 object-cover` looks good.
 - Service photo assets live in `public/images/services/{slug}/`. Large local PNG/JPEG sources do not need to be stored in repo; commit optimized production WebP copies. `content/services.ts` is the linking layer for hero/gallery assets.
@@ -332,6 +337,7 @@ Implemented rules:
 - `serviceSlug` is optional. It is used when a portfolio card should show `Подробнее` and route to a matching service page.
 - P1-03.2 product decision: 3D/Gitter records keep category/categoryLabel `3D-сетка`, but can use `serviceSlug: "zabory-iz-setki-rabitsy"` for the CTA because the current site has no separate 3D ServicePage and the user prefers a route instead of a missing button. This is an intentional combined routing decision, not a claim that the category is сетка-рабица.
 - ServicePage and CityPage integration with project records was deliberately kept out of P1-03 scope.
+- P1-05.1 later integrated CityPage with confirmed real project records while excluding starter/demo records from truthful city proof.
 
 Current project fields:
 

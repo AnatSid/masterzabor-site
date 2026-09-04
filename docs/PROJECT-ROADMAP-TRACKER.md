@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: P1-03.2 completion commit `c7ef4da808c07c7479ffeec8039f13696d96e109`
+Текущая production точка отсчета: P1-05.1 implementation/main SHA `1559823776b633359cc8a47c6f847922b8d3d288`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production implementation/content baseline: `c7ef4da808c07c7479ffeec8039f13696d96e109` (`feat(projects): feature real projects on homepage`).
+- Последний production implementation/content baseline: `1559823776b633359cc8a47c6f847922b8d3d288` (`merge P1-05.1 city page visual parity`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -32,6 +32,9 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - `/vorota-otkatnye` - пятый визуально утвержденный real-photo ServicePage: hero/gallery подключены из `public/images/services/vorota-otkatnye/`.
 - `/kalitki` - шестой и последний визуально утвержденный real-photo ServicePage: hero/gallery подключены из `public/images/services/kalitki/`.
 - ServicePage photo workflow confirmed on all six real categories: евроштакетник, профнастил, сетка-рабица, распашные ворота, откатные ворота and калитки.
+- CityPage visual parity foundation is complete after P1-05.1: all 40 city pages still use one universal `app/[city]/page.tsx -> components/templates/CityPage.tsx -> content/cities.ts` route/template, now with the homepage hero photo, real service images, shared 8-card `BenefitTrustSection`, and real `ProjectCard` proof.
+- City proof behavior is deterministic: confirmed `content/projects.ts` records whose `id` starts with `real-` are selected in exact city -> same oblast -> nationwide order; older starter/demo records are excluded from truthful local proof.
+- P1-05.1 reference behavior: `/slonim` uses exact-city proof heading `Наши работы в Слониме`; `/lida` uses oblast heading `Наши работы в Гродненской области`; `/gomel` uses nationwide fallback heading `Примеры наших работ по Беларуси`.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
@@ -88,18 +91,18 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Portfolio foundation: P1-03 completed on branch `codex/P1-03-project-photos-foundation`; homepage "Наши работы" and `/nashi-raboty` now use real project photos from `content/projects.ts`.
 - P1-03.1 real project content completed on branch `codex/P1-03.1-real-project-content`: added 9 own real MasterZabor objects above the existing 8 starter projects; `/nashi-raboty` now has 17 project records.
 - P1-03.2 homepage real projects completed on branch `codex/P1-03.2-homepage-real-projects`: homepage "Наши работы" now features 5 stronger own real projects plus the retained old sliding-gate project.
+- P1-05.1 city page visual parity and real proof completed on branch `codex/P1-05.1-citypage-visual-parity`: city pages now reuse the homepage benefit/trust block, real service thumbnails and real project proof with deterministic exact -> oblast -> nationwide fallback. Implementation/main SHA: `1559823776b633359cc8a47c6f847922b8d3d288`.
 
 ## OPEN ISSUES
 
 - P1-03.1 added the first 9 own real MasterZabor project records. The older 8 starter/demo records remain below them and should be gradually replaced or expanded as more confirmed real objects are prepared.
 - `ServicePage` real-photo block завершен: все 6 service pages имеют утвержденные hero/gallery из production assets.
-- `CityPage` hero и "Примеры работ" все еще используют `data:image/svg` placeholder-функцию.
 - `content/blog-posts.ts` использует generated SVG covers.
 - `generateWebsiteJsonLd()` все еще содержит `SearchAction`, но реального поиска нет.
 - `generateProductJsonLd()` Offer `url` сейчас указывает на `SITE_URL`, не на конкретную service page.
 - `/tseny`, `/kontakty`, `/otzyvy` визуально слабее главной: более простые hero/sections, меньше brand visual system.
 - `/otzyvy` содержит текстовые отзывы без внешнего proof: Google/Yandex screenshots, ссылки, фото объекта, город/тип работ.
-- City pages остаются templated и нуждаются в real local proof, иначе есть doorway/thin risk.
+- City pages remain templated, but P1-05.1 reduced doorway/thin risk by adding truthful real proof blocks. Future work can add more confirmed local projects, but starter/demo records must not be used as local proof.
 - Dependencies still use several `latest` ranges in `package.json` (`tailwindcss`, `eslint`, `typescript`, types). Not urgent, but hurts reproducibility.
 - Known lint warning: `components/forms/QuizForm.tsx` React Hook Form `watch()` / React Compiler compatibility. Не blocker сейчас.
 - `.tmp/` local scratch is ignored in `.gitignore`; if it contains Chrome lock files, do not force-delete while Chrome/processes are running.
@@ -113,7 +116,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - `/kontakty`: рабочая. Можно привести hero/card style к текущему brand direction, но не трогать webhook/domain.
 - `/blog`: всего 3 статьи, covers placeholder SVG. Перед масштабированием нужен content model или хотя бы MDX/data decision.
 - Blog articles: полезны как база, но нужны реальные изображения, категории, related links, обновление под 2026 SEO.
-- City pages: композиция улучшена, но hero/examples используют placeholders. Нужны city-specific proof blocks.
+- City pages: P1-05.1 replaced hero/examples placeholders with the approved homepage photo direction, real service images and truthful project proof. Future improvements should add more confirmed local projects, not separate city templates.
 - Service pages: P1-04 завершен; общий hero/gallery photo pattern утвержден на всех 6 услугах.
 - Mobile: основные overflow/menu/CTA проблемы закрыты; следующие проверки делать после каждого визуального изменения на 360/390/430 px и iPhone safe-area.
 
@@ -162,7 +165,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 ## TECHNICAL DEBT
 
 - Benefits icons true-vector migration: LOW priority cleanup only. Current `public/icons/benefits/*.svg` are SVG wrappers with embedded raster PNG. They are approved production visual source of truth. Future true-vector replacement must preserve look 1:1 and must not use `<image>`, base64, PNG/JPEG/WebP inside. If vector version looks worse, do not replace.
-- Placeholder SVG helpers remain in `CityPage` and `content/blog-posts.ts`; portfolio cards and the six ServicePage galleries now use real photo assets.
+- Placeholder SVG helpers remain in `content/blog-posts.ts`; CityPage, portfolio cards and the six ServicePage galleries now use real photo assets.
 - `SearchAction` without search.
 - Product JSON-LD Offer URLs.
 - Dependency ranges with `latest`.
@@ -242,10 +245,14 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Примечание: не смешивать с P1-03 project dataset; service photo library and project portfolio library stay separate.
 
 5. `P1-05-city-proof-blocks`
-   - Что сделать: добавить на city pages блоки реальных работ/объектов по региону или fallback "работы по Беларуси", без выдуманных фактов.
-   - Где: `components/templates/CityPage.tsx`, `content/projects.ts`, `content/cities.ts`.
-   - Зачем: снизить doorway/thin risk и повысить доверие на городских страницах.
-   - Как проверить: выбранные `/gomel`, `/minsk`, `/brest`, `/vitebsk` показывают реальные/релевантные proof cards; JSON/canonical не ломаются.
+   - Статус: DONE after approved local visual/technical review, Preview deployment, merge to `main`, Production deployment and Production smoke.
+   - Что сделано: P1-05.1 привел CityPage к визуальному языку homepage и добавил реальные proof cards без выдуманных городских объектов.
+   - Где: `app/[city]/page.tsx`, `components/templates/CityPage.tsx`, `components/sections/BenefitTrustSection.tsx`, `content/projects.ts`, `content/cities.ts`.
+   - Архитектура: все 40+ city pages используют один universal `CityPage`; homepage и CityPage используют общий `BenefitTrustSection` с 8 утвержденными benefit cards и production icons.
+   - Proof logic: `id.startsWith("real-")` marks confirmed real projects; older starter/demo records are excluded. Fallback order is deterministic: exact city -> same oblast -> nationwide.
+   - Reference behavior: `/slonim` -> `Наши работы в Слониме`; `/lida` -> `Наши работы в Гродненской области`; `/gomel` -> `Примеры наших работ по Беларуси`.
+   - Implementation commit: `32c5b59216a756cb1d8f083086f834b567518208`; merge/main SHA before docs: `1559823776b633359cc8a47c6f847922b8d3d288`.
+   - Как проверить: `/`, `/lida`, `/slonim`, `/gomel`, `/bobruysk`, `/zabory-iz-profnastila`, `/nashi-raboty` return 200; CityPage has real hero/service/project images, 8 benefits, no `data:image/svg`, no demo Lida proof, and mobile no horizontal overflow.
 
 6. `P1-06-commercial-pages-visual-polish`
    - Что сделать: привести `/tseny`, `/otzyvy`, `/kontakty` к визуальному уровню главной: brand hero, аккуратные секции, реальные proof blocks.
