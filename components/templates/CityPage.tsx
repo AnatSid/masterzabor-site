@@ -4,14 +4,16 @@ import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { QuizForm } from "@/components/forms/QuizForm";
 import { SiteContainer } from "@/components/layout/SiteContainer";
+import { ProjectCard } from "@/components/portfolio/ProjectCard";
+import { BenefitTrustSection } from "@/components/sections/BenefitTrustSection";
 import { cities, type City } from "@/content/cities";
+import { projects, type Project } from "@/content/projects";
 import { services } from "@/content/services";
 import {
   ADDRESS,
   COMPANY_NAME,
   PHONE,
   PHONE_DISPLAY,
-  TRUST_FACTS,
   UNP,
   WORKING_HOURS,
 } from "@/lib/constants";
@@ -24,34 +26,22 @@ type CityPageProps = {
 
 const fenceServices = services.slice(0, 3);
 const gateServices = services.slice(3);
+const CITY_PROOF_LIMIT = 3;
+const cityHeroImage = {
+  src: "/images/hero/homepage-fence-with-logo.jpeg",
+  alt: "Забор из профнастила на участке в Беларуси",
+};
 
 const normalizeOblastGroup = (oblast: string) =>
   oblast === "Минская область" ? "Минск и Минская область" : oblast;
 
-function placeholderImage(title: string, index: number) {
-  const colors = ["#1B5E20", "#2E7D32", "#F59E0B", "#475569"];
-  const color = colors[index % colors.length];
-  const svg = `
-    <svg width="900" height="640" viewBox="0 0 900 640" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="900" height="640" fill="#F5F5F5"/>
-      <circle cx="735" cy="110" r="58" fill="#F59E0B" opacity="0.9"/>
-      <path d="M0 370L900 245V640H0V370Z" fill="#E2E8F0"/>
-      <rect y="390" width="900" height="250" fill="${color}"/>
-      <g stroke="white" stroke-width="16" stroke-linecap="round">
-        <path d="M85 420V590"/>
-        <path d="M235 400V590"/>
-        <path d="M385 380V590"/>
-        <path d="M535 360V590"/>
-        <path d="M685 340V590"/>
-        <path d="M835 320V590"/>
-        <path d="M65 460H865"/>
-        <path d="M65 535H865"/>
-      </g>
-      <text x="55" y="115" fill="#0F172A" font-size="40" font-family="Arial, sans-serif" font-weight="700">${title}</text>
-    </svg>`;
+const sectionIntroClassName =
+  "w-full max-w-none lg:max-w-[70%] xl:max-w-[56rem]";
 
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-}
+const sectionIntroFlexClassName = `${sectionIntroClassName} min-w-0 flex-1`;
+
+const sectionSubtitleClassName =
+  "mt-4 text-pretty leading-relaxed text-slate-600 md:text-[1.0625rem] md:leading-[1.65]";
 
 function getRelatedCities(city: City) {
   const currentGroup = normalizeOblastGroup(city.oblast);
@@ -63,6 +53,96 @@ function getRelatedCities(city: City) {
         normalizeOblastGroup(item.oblast) === currentGroup,
     )
     .slice(0, 8);
+}
+
+function byFeaturedThenSourceOrder(left: Project, right: Project) {
+  if (left.isFeatured === right.isFeatured) {
+    return 0;
+  }
+
+  return left.isFeatured ? -1 : 1;
+}
+
+function getConfirmedProjects() {
+  return projects.filter((project) => project.id.startsWith("real-"));
+}
+
+function getCityProjectProof(city: City) {
+  const currentGroup = normalizeOblastGroup(city.oblast);
+  const confirmedProjects = getConfirmedProjects();
+  const exactProjects = confirmedProjects
+    .filter((project) => project.city.slug === city.slug)
+    .sort(byFeaturedThenSourceOrder);
+  const sameOblastProjects = confirmedProjects
+    .filter(
+      (project) =>
+        project.city.slug !== city.slug &&
+        normalizeOblastGroup(project.city.oblast) === currentGroup,
+    )
+    .sort(byFeaturedThenSourceOrder);
+  const nationwideProjects = confirmedProjects
+    .filter(
+      (project) =>
+        project.city.slug !== city.slug &&
+        normalizeOblastGroup(project.city.oblast) !== currentGroup,
+    )
+    .sort(byFeaturedThenSourceOrder);
+  const selectedProjects: Project[] = [];
+
+  for (const project of [
+    ...exactProjects,
+    ...sameOblastProjects,
+    ...nationwideProjects,
+  ]) {
+    if (
+      selectedProjects.length < CITY_PROOF_LIMIT &&
+      !selectedProjects.some((item) => item.id === project.id)
+    ) {
+      selectedProjects.push(project);
+    }
+  }
+
+  const regionalCount = exactProjects.length + sameOblastProjects.length;
+  const mode =
+    exactProjects.length > 0
+      ? "exact"
+      : sameOblastProjects.length > 0
+        ? "oblast"
+        : "nationwide";
+
+  return {
+    mode,
+    projects: selectedProjects,
+    regionalCount,
+  };
+}
+
+function getProofHeading(city: City, mode: ReturnType<typeof getCityProjectProof>["mode"]) {
+  if (mode === "exact") {
+    return `Наши работы в ${city.namePrepositional}`;
+  }
+
+  if (mode === "oblast") {
+    return `Наши работы в ${city.oblastGenitive}`;
+  }
+
+  return "Примеры наших работ по Беларуси";
+}
+
+function getProofDescription(city: City, proof: ReturnType<typeof getCityProjectProof>) {
+  if (proof.mode === "exact") {
+    return `Показываем подтверждённые объекты в ${city.namePrepositional} и рядом по региону. Карточки сохраняют фактический город каждого проекта.`;
+  }
+
+  if (proof.mode === "oblast" && proof.regionalCount >= CITY_PROOF_LIMIT) {
+    return `Подобрали подтверждённые объекты в ${city.oblastGenitive}. Не называем их объектами в ${city.namePrepositional}, если такой записи нет в портфолио.`;
+  }
+
+  if (proof.mode === "oblast") {
+    return `В ${city.oblastGenitive} есть подтверждённые объекты, а недостающие карточки дополняем реальными работами МастерЗабор по Беларуси.`;
+  }
+
+  return `В текущем портфолио пока нет подтверждённых объектов в ${city.namePrepositional} или ${city.oblastGenitive}, поэтому показываем реальные работы МастерЗабор из других регионов.`;
 }
 
 function citySeoText(city: City) {
@@ -111,6 +191,9 @@ function generateCityLocalBusinessJsonLd(city: City) {
 
 export function CityPage({ city }: CityPageProps) {
   const relatedCities = getRelatedCities(city);
+  const cityProof = getCityProjectProof(city);
+  const proofHeading = getProofHeading(city, cityProof.mode);
+  const proofDescription = getProofDescription(city, cityProof);
   const breadcrumbs = [
     { name: "Главная", url: "/" },
     { name: `Заборы в ${city.namePrepositional}`, url: `/${city.slug}` },
@@ -132,113 +215,131 @@ export function CityPage({ city }: CityPageProps) {
         />
       ))}
 
-      <section className="relative overflow-hidden bg-slate-950 text-white">
-        <div className="absolute inset-0 opacity-35">
+      <section className="relative overflow-hidden bg-[#F6F8F5]">
+        <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block">
           <Image
-            alt={`Установка забора в ${city.namePrepositional}`}
-            className="object-cover"
+            alt={cityHeroImage.alt}
+            className="object-cover object-center"
             fill
             priority
-            src={placeholderImage(city.name, 0)}
+            sizes="58vw"
+            src={cityHeroImage.src}
           />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#F6F8F5_0%,rgba(246,248,245,0.82)_14%,rgba(246,248,245,0.2)_36%,rgba(246,248,245,0)_58%)]" />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/30" />
 
-        <SiteContainer className="relative grid gap-10 py-16 lg:grid-cols-[minmax(0,1.45fr)_minmax(300px,380px)] lg:items-start lg:gap-10 lg:py-24">
-          <div>
-          <nav aria-label="Хлебные крошки" className="text-sm text-slate-300">
-            <ol className="flex flex-wrap gap-2">
-              {breadcrumbs.map((item, index) => (
-                <li key={item.url}>
-                  {index > 0 ? <span className="mr-2">/</span> : null}
-                  <Link className="hover:text-white" href={item.url}>
-                    {item.name}
-                  </Link>
+        <SiteContainer className="relative py-6 pb-5 sm:pb-10 sm:pt-16 lg:pb-8 lg:pt-20">
+          <div className="max-w-2xl lg:max-w-[48%]">
+            <nav aria-label="Хлебные крошки" className="text-sm text-slate-500">
+              <ol className="flex flex-wrap gap-2">
+                {breadcrumbs.map((item, index) => (
+                  <li key={item.url}>
+                    {index > 0 ? <span className="mr-2">/</span> : null}
+                    <Link className="hover:text-[#0A5633]" href={item.url}>
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+
+            <div className="mt-8 min-w-0">
+              <p className="text-sm font-semibold uppercase text-[#0A5633]">
+                {city.oblast}
+              </p>
+              <h1 className="mt-5 text-balance text-[1.9rem] font-extrabold leading-[1.08] text-[#202020] sm:text-6xl lg:text-[3.25rem]">
+                Установка заборов в {city.namePrepositional}{" "}
+                <span className="text-[#0A5633]">под ключ</span>
+              </h1>
+              <ul className="mt-3 max-w-xl space-y-1.5 text-[13px] font-semibold leading-snug text-slate-700 sm:mt-6 sm:space-y-2 sm:text-lg">
+                <li className="flex gap-2">
+                  <span className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-[#0A5633] text-xs text-white">
+                    ✓
+                  </span>
+                  <span>Профнастил • Евроштакетник • Сетка-рабица</span>
                 </li>
-              ))}
-            </ol>
-          </nav>
-
-          <div className="mt-8 min-w-0">
-            <p className="font-semibold uppercase tracking-[0.25em] text-amber-300">
-              {city.oblast}
-            </p>
-            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
-              Установка заборов
-              <br />
-              в {city.namePrepositional} под ключ
-            </h1>
-            <p className="mt-6 text-xl leading-relaxed text-slate-200 sm:text-2xl">
-              Профнастил • Евроштакетник • Сетка-рабица
-              <br />
-              Цены от 30 BYN/м.п.
-              <br />
-              Рассрочка и оплата частями до 60 месяцев
-            </p>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <a
-                className="inline-flex justify-center rounded-xl bg-[#F59E0B] px-6 py-3 font-bold text-white transition hover:bg-amber-600"
-                href="#lead-form"
-              >
-                Рассчитать стоимость
-              </a>
-              <TrackedContactLink
-                channel="click_call"
-                className="inline-flex justify-center rounded-xl bg-white px-6 py-3 font-bold text-[#1B5E20] transition hover:bg-slate-100"
-                eventLocation="city_hero"
-                href={`tel:${PHONE}`}
-                source={`city-${city.slug}`}
-              >
-                Позвонить: {PHONE_DISPLAY}
-              </TrackedContactLink>
-            </div>
-          </div>
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/10 p-5 backdrop-blur lg:flex lg:self-stretch lg:p-6">
-            <div className="flex flex-col lg:w-full lg:justify-between">
-              <div>
-                <p className="text-2xl font-bold">Бесплатный расчёт сегодня</p>
-                <p className="mt-3 text-slate-200">
-                  Рассчитаем стоимость, подберём материалы и покажем варианты
-                  заборов под ваш участок.
-                </p>
-              </div>
-              <div className="mt-5 grid grid-cols-2 gap-3 text-sm lg:mt-6">
-                <span className="rounded-2xl bg-white/10 px-4 py-3">Гарантия 20 лет</span>
-                <span className="rounded-2xl bg-white/10 px-4 py-3">Договор и смета</span>
-                <span className="rounded-2xl bg-white/10 px-4 py-3">Свои бригады</span>
-                <span className="rounded-2xl bg-white/10 px-4 py-3">Работаем по РБ</span>
-                <span className="rounded-2xl bg-white/10 px-4 py-3">Рассрочка и оплата частями</span>
-                <span className="rounded-2xl bg-white/10 px-4 py-3">Быстрый расчёт по телефону</span>
+                <li className="flex gap-2">
+                  <span className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-[#0A5633] text-xs text-white">
+                    ✓
+                  </span>
+                  <span>Цены от 30 BYN/м.п.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-[#0A5633] text-xs text-white">
+                    ✓
+                  </span>
+                  <span>Рассрочка и оплата частями до 60 месяцев</span>
+                </li>
+              </ul>
+              <div className="mt-4 grid gap-2 sm:mt-8 sm:flex sm:flex-row sm:gap-4">
+                <a
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#0A5633] px-4 py-2 text-xs font-bold leading-tight text-white shadow-lg shadow-green-950/10 transition hover:bg-[#06321F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2 sm:px-6 sm:py-3 sm:text-base"
+                  href="#lead-form"
+                >
+                  Рассчитать стоимость
+                </a>
+                <TrackedContactLink
+                  channel="click_call"
+                  className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg border border-[#b9d7c6] bg-white px-4 py-2 text-xs font-bold leading-tight text-[#0A5633] transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2 sm:px-6 sm:py-3 sm:text-base"
+                  eventLocation="city_hero"
+                  href={`tel:${PHONE}`}
+                  source={`city-${city.slug}`}
+                >
+                  Позвонить: {PHONE_DISPLAY}
+                </TrackedContactLink>
               </div>
             </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-xl shadow-green-950/10 backdrop-blur sm:p-5 lg:hidden">
+            <p className="text-lg font-bold leading-tight text-[#06321F]">
+              Бесплатный расчёт сегодня
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-semibold leading-tight text-slate-700 sm:text-sm">
+              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Гарантия на работы</span>
+              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Договор и смета</span>
+              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Свои бригады</span>
+              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Расчёт по телефону</span>
+            </div>
+          </div>
+
+          <div className="relative mt-5 aspect-[16/10] overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-xl shadow-green-950/10 lg:hidden">
+            <Image
+              alt={cityHeroImage.alt}
+              className="object-cover object-center"
+              fill
+              priority
+              sizes="100vw"
+              src={cityHeroImage.src}
+            />
           </div>
         </SiteContainer>
       </section>
 
-      <section className="py-16">
+      <BenefitTrustSection />
+
+      <section className="py-12 sm:py-16">
         <SiteContainer>
           <article className="max-w-5xl text-lg leading-8 text-slate-700">
-          <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-            Заборы в {city.namePrepositional}: расчёт, доставка и монтаж
-          </h2>
-          <div className="mt-6 space-y-5">
-            {citySeoText(city).map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Заборы в {city.namePrepositional}: расчёт, доставка и монтаж
+            </h2>
+            <div className="mt-6 space-y-5">
+              {citySeoText(city).map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
           </article>
         </SiteContainer>
       </section>
 
-      <section className="bg-[#F5F5F5] py-16">
+      <section className="bg-[#F5F5F5] py-12 sm:py-16">
         <SiteContainer>
-          <div>
+          <div className={sectionIntroClassName}>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Типы заборов
             </h2>
-            <p className="mt-4 max-w-3xl text-slate-600">
+            <p className={sectionSubtitleClassName}>
               Подберём ограждение для участка в {city.namePrepositional}: от
               бюджетного решения до фасадного забора с воротами.
             </p>
@@ -248,6 +349,7 @@ export function CityPage({ city }: CityPageProps) {
               <ProductCard
                 description={service.description}
                 href={`/${service.slug}`}
+                imageSrc={service.imageSrc}
                 key={service.slug}
                 priceFrom={service.priceFrom}
                 priceUnit={service.priceUnit}
@@ -258,13 +360,13 @@ export function CityPage({ city }: CityPageProps) {
         </SiteContainer>
       </section>
 
-      <section className="py-16">
+      <section className="py-12 sm:py-16">
         <SiteContainer>
-          <div>
+          <div className={sectionIntroClassName}>
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Ворота и калитки
             </h2>
-            <p className="mt-4 max-w-3xl text-slate-600">
+            <p className={sectionSubtitleClassName}>
               Изготавливаем въездную группу в едином стиле с забором:
               распашные, откатные ворота и калитки под размер проёма.
             </p>
@@ -274,6 +376,7 @@ export function CityPage({ city }: CityPageProps) {
               <ProductCard
                 description={service.description}
                 href={`/${service.slug}`}
+                imageSrc={service.imageSrc}
                 key={service.slug}
                 priceFrom={service.priceFrom}
                 priceUnit={service.priceUnit}
@@ -285,11 +388,13 @@ export function CityPage({ city }: CityPageProps) {
       </section>
 
       {city.districts?.length ? (
-        <section className="bg-[#F5F5F5] py-16">
+        <section className="bg-[#F5F5F5] py-12 sm:py-16">
           <SiteContainer>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Работаем во всех районах {city.nameGenitive}
-            </h2>
+            <div className={sectionIntroClassName}>
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                Работаем во всех районах {city.nameGenitive}
+              </h2>
+            </div>
             <div className="mt-8 flex flex-wrap gap-3">
               {city.districts.map((district) => (
                 <span
@@ -304,31 +409,30 @@ export function CityPage({ city }: CityPageProps) {
         </section>
       ) : null}
 
-      <section className="py-16">
+      <section className="bg-[#F5F5F5] py-12 sm:py-16">
         <SiteContainer>
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className={sectionIntroFlexClassName}>
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Примеры работ
+                {proofHeading}
               </h2>
-              <p className="mt-4 text-slate-600">
-                Фото-заглушки для будущей галереи объектов в {city.oblastGenitive}.
+              <p className={sectionSubtitleClassName}>
+                {proofDescription}
               </p>
             </div>
-            <p className="font-semibold text-[#1B5E20]">
-              С {TRUST_FACTS.sinceYear} года установили {TRUST_FACTS.completedFences}{" "}
-              заборов
-            </p>
+            <Link
+              className="font-semibold text-[#1B5E20] hover:text-green-800"
+              href="/nashi-raboty"
+            >
+              Смотреть портфолио
+            </Link>
           </div>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <Image
-                alt={`Забор в ${city.namePrepositional} — пример объекта ${index + 1}`}
-                className="h-56 rounded-2xl object-cover shadow-sm"
-                height={360}
-                key={index}
-                src={placeholderImage(`${city.name}: объект ${index + 1}`, index + 1)}
-                width={520}
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {cityProof.projects.map((project, index) => (
+              <ProjectCard
+                key={project.id}
+                priority={index === 0}
+                project={project}
               />
             ))}
           </div>
@@ -356,13 +460,15 @@ export function CityPage({ city }: CityPageProps) {
 
       <section className="py-16">
         <SiteContainer>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Другие города
-          </h2>
-          <p className="mt-4 max-w-3xl text-slate-600">
-            Работаем не только в {city.namePrepositional}, но и в других городах
-            региона.
-          </p>
+          <div className={sectionIntroClassName}>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Другие города
+            </h2>
+            <p className={sectionSubtitleClassName}>
+              Работаем не только в {city.namePrepositional}, но и в других городах
+              региона.
+            </p>
+          </div>
           <div className="mt-8 flex flex-wrap gap-3">
             {relatedCities.map((item) => (
               <Link
