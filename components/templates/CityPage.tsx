@@ -3,6 +3,7 @@ import Link from "next/link";
 import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { QuizForm } from "@/components/forms/QuizForm";
+import { QUIZ_TOTAL_STEPS } from "@/components/forms/quiz-form-config";
 import { SiteContainer } from "@/components/layout/SiteContainer";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
 import { BenefitTrustSection } from "@/components/sections/BenefitTrustSection";
@@ -439,22 +440,32 @@ export function CityPage({ city }: CityPageProps) {
         </SiteContainer>
       </section>
 
-      <section className="bg-[#1B5E20] py-16" id="lead-form">
-        <SiteContainer className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="text-white">
-            <p className="font-semibold uppercase tracking-wide text-amber-300">
-              Получите расчёт по телефону
+      <section className="py-16" id="lead-form">
+        <SiteContainer className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div className={sectionIntroClassName}>
+            <p className="font-semibold uppercase tracking-wide text-[#1B5E20]">
+              РАСЧЁТ СТОИМОСТИ
             </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              Узнайте цену забора в {city.namePrepositional}
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Рассчитайте стоимость забора в {city.namePrepositional}
             </h2>
-            <p className="mt-5 text-green-50">
-              Оставьте номер, примерную длину и пожелания. Перезвоним,
-              рассчитаем стоимость за 5 минут и предложим подходящую
-              комплектацию для вашего участка.
-            </p>
+            <div className={`${sectionSubtitleClassName} mt-5 space-y-3`}>
+              <p>
+                Ответьте на {QUIZ_TOTAL_STEPS} вопросов — этого достаточно,
+                чтобы понять, что вам нужно, и вернуться к вам с понятным
+                ориентиром по цене.
+              </p>
+              <p>
+                Уточним детали по телефону, чтобы вы могли сравнить варианты и
+                спокойно принять решение.
+              </p>
+            </div>
           </div>
-          <QuizForm cityName={city.name} source={`city-${city.slug}`} />
+          <QuizForm
+            cityName={city.name}
+            presentation="compact"
+            source={`city-${city.slug}`}
+          />
         </SiteContainer>
       </section>
 

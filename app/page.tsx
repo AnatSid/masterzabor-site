@@ -4,6 +4,7 @@ import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { QuizForm } from "@/components/forms/QuizForm";
+import { QUIZ_TOTAL_STEPS } from "@/components/forms/quiz-form-config";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
 import { BenefitTrustSection } from "@/components/sections/BenefitTrustSection";
 import { cities } from "@/content/cities";
@@ -272,8 +273,9 @@ export default function Home() {
             </h2>
             <div className={`${sectionSubtitleClassName} mt-5 space-y-3`}>
               <p>
-                Ответьте на 6 вопросов — этого достаточно, чтобы понять, что
-                вам нужно, и вернуться к вам с понятным ориентиром по цене.
+                Ответьте на {QUIZ_TOTAL_STEPS} вопросов — этого достаточно,
+                чтобы понять, что вам нужно, и вернуться к вам с понятным
+                ориентиром по цене.
               </p>
               <p>
                 Уточним детали по телефону, чтобы вы могли сравнить варианты и
