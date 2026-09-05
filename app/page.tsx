@@ -270,12 +270,18 @@ export default function Home() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
               Рассчитайте стоимость забора за 1 минуту
             </h2>
-            <p className={`${sectionSubtitleClassName} mt-5`}>
-              Ответьте на 6 вопросов — подготовим предварительный расчёт
-              и&nbsp;уточним стоимость по&nbsp;телефону за&nbsp;5&nbsp;минут.
-            </p>
+            <div className={`${sectionSubtitleClassName} mt-5 space-y-3`}>
+              <p>
+                Ответьте на 6 вопросов — этого достаточно, чтобы понять, что
+                вам нужно, и вернуться к вам с понятным ориентиром по цене.
+              </p>
+              <p>
+                Уточним детали по телефону, чтобы вы могли сравнить варианты и
+                спокойно принять решение.
+              </p>
+            </div>
           </div>
-          <QuizForm />
+          <QuizForm presentation="compact" />
         </div>
       </section>
 
