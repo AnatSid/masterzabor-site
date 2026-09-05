@@ -164,6 +164,7 @@ type QuizFormProps = {
   defaultGateType?: string;
   defaultWicketType?: string;
   defaultStep?: number;
+  presentation?: "default" | "compact";
 };
 
 function sanitizeDefaultStep(step?: number) {
@@ -181,7 +182,9 @@ export function QuizForm({
   defaultGateType,
   defaultWicketType,
   defaultStep,
+  presentation = "default",
 }: QuizFormProps) {
+  const isCompact = presentation === "compact";
   const initialFenceType = fenceTypes.includes(defaultFenceType as (typeof fenceTypes)[number])
     ? defaultFenceType
     : "Профнастил";
@@ -321,10 +324,14 @@ export function QuizForm({
 
   return (
     <form
-      className="rounded-3xl bg-white p-6 shadow-xl ring-1 ring-slate-200 sm:p-8"
+      className={
+        isCompact
+          ? "rounded-2xl bg-white p-5 shadow-lg shadow-slate-950/5 ring-1 ring-slate-200 sm:p-6"
+          : "rounded-3xl bg-white p-6 shadow-xl ring-1 ring-slate-200 sm:p-8"
+      }
       onSubmit={onSubmit}
     >
-      <div className="mb-8">
+      <div className={isCompact ? "mb-6" : "mb-8"}>
         <div className="flex items-center justify-between text-sm font-semibold text-slate-600">
           <span>Шаг {step} из 6</span>
           <span>{Math.round(progress)}%</span>
@@ -337,7 +344,7 @@ export function QuizForm({
         </div>
       </div>
 
-      <div className="min-h-[520px]">
+      <div className={isCompact ? "min-h-0 lg:min-h-[260px]" : "min-h-[520px]"}>
         <div className="h-full animate-[fadeIn_220ms_ease-out]" key={step}>
         {step === 1 ? (
           <fieldset>
@@ -586,7 +593,7 @@ export function QuizForm({
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-between">
+      <div className={`${isCompact ? "mt-6" : "mt-8"} flex flex-col gap-3 sm:flex-row sm:justify-between`}>
         <button
           className="rounded-xl border border-slate-300 px-6 py-3 font-semibold text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
           disabled={step === 1 || status === "loading"}
