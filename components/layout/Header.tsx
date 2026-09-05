@@ -18,6 +18,7 @@ const navigation = [
   { label: "Штакетник", href: "/zabory-iz-evroshtaketnika" },
   { label: "Сетка-рабица", href: "/zabory-iz-setki-rabitsy" },
   { label: "Наши работы", href: "/nashi-raboty" },
+  { label: "Цены", href: "/tseny" },
   { label: "Контакты", href: "/kontakty" },
 ] as const;
 
@@ -144,19 +145,19 @@ export function Header() {
             width={48}
           />
           <span className="min-w-0">
-            <span className="block whitespace-nowrap text-[13px] font-extrabold leading-tight tracking-tight text-[#0A5633] min-[390px]:text-sm sm:text-xl">
+            <span className="block whitespace-nowrap text-[13px] font-extrabold leading-tight tracking-tight text-[#0A5633] min-[390px]:text-sm sm:text-xl lg:text-base xl:text-xl">
               {COMPANY_NAME}
             </span>
-            <span className="hidden text-[9px] font-semibold leading-tight text-slate-500 min-[390px]:block sm:text-[10px]">
+            <span className="hidden text-[9px] font-semibold leading-tight text-slate-500 min-[390px]:block sm:text-[10px] lg:text-[9px] xl:text-[10px]">
               заборы под ключ
             </span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-5 text-sm font-medium text-slate-700 lg:flex">
+        <nav className="hidden items-center gap-3 text-xs font-medium text-slate-700 lg:flex xl:gap-5 xl:text-sm">
           {navigation.slice(0, 3).map((item) => (
             <Link
-              className="transition hover:text-[#1B5E20]"
+              className="whitespace-nowrap transition hover:text-[#1B5E20]"
               href={item.href}
               key={item.href}
             >
@@ -166,7 +167,7 @@ export function Header() {
           <div className="group relative">
             <button
               aria-haspopup="menu"
-              className="inline-flex items-center gap-1 transition hover:text-[#1B5E20]"
+              className="inline-flex items-center gap-1 whitespace-nowrap transition hover:text-[#1B5E20]"
               type="button"
             >
               Ворота
@@ -186,7 +187,7 @@ export function Header() {
           </div>
           {navigation.slice(3).map((item) => (
             <Link
-              className="transition hover:text-[#1B5E20]"
+              className="whitespace-nowrap transition hover:text-[#1B5E20]"
               href={item.href}
               key={item.href}
             >
@@ -195,16 +196,16 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden shrink-0 items-center gap-2 lg:flex xl:gap-3">
           <TrackedContactLink
             channel="click_call"
-            className="font-semibold text-[#1B5E20] transition hover:text-green-800"
+            className="whitespace-nowrap text-sm font-semibold text-[#1B5E20] transition hover:text-green-800 xl:text-base"
             eventLocation="header_desktop"
             href={`tel:${PHONE}`}
           >
             {PHONE_DISPLAY}
           </TrackedContactLink>
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2 xl:gap-3">
             {messengers.map((item) => (
               <TrackedContactLink
                 aria-label={item.label}
@@ -218,7 +219,9 @@ export function Header() {
                 target={item.href.startsWith("http") ? "_blank" : undefined}
               >
                 <item.icon />
-                <span className="text-[10px] leading-none">{item.label}</span>
+                <span className="hidden text-[10px] leading-none xl:block">
+                  {item.label}
+                </span>
               </TrackedContactLink>
             ))}
           </div>
