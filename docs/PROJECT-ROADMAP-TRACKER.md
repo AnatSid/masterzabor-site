@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: P1-06.1 implementation/main merge SHA `e3ca26e08892562e2a7ae887153c2b45355250c7`
+Текущая production точка отсчета: P1-06.2 implementation/main merge SHA `296157b27463df47c34ce6359614e9942836aa2c`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production implementation/content baseline: `e3ca26e08892562e2a7ae887153c2b45355250c7` (`Merge P1-06.1 pricing landing`).
+- Последний production implementation/content baseline: `296157b27463df47c34ce6359614e9942836aa2c` (`Merge P1-06.2 homepage quiz compact`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -39,6 +39,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-05.1 reference behavior: `/slonim` uses exact-city proof heading `Наши работы в Слониме`; `/lida` uses oblast heading `Наши работы в Гродненской области`; `/gomel` uses nationwide fallback heading `Примеры наших работ по Беларуси`.
 - P1-06.1 pricing landing is complete: `/tseny` is now a focused SEO/commercial pricing landing, not a precise price list; it uses existing `content/services.ts` price data, real service photography, service links, cost-factor explanation, approximate-data guidance and a branded compact QuizForm CTA.
 - Header intentionally includes `Цены` after `Наши работы` because the pricing strategy is now defined. Final header order: `Профнастил -> Штакетник -> Сетка-рабица -> Ворота -> Наши работы -> Цены -> Контакты`.
+- P1-06.2 homepage QuizForm compact refinement is complete: homepage calculator keeps its existing visual design, reuses `QuizForm presentation="compact"`, and splits the approved explanatory copy into two paragraphs.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
@@ -69,6 +70,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-02.2 brand visual foundation and benefit icons.
 - P1-02.2 LARGE icon size selection and production deploy.
 - P1-06.1 pricing landing strategy and Header pricing nav.
+- P1-06.2 homepage QuizForm compact refinement.
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
 
 ## AUDITS COMPLETED
@@ -99,6 +101,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-03.2 homepage real projects completed on branch `codex/P1-03.2-homepage-real-projects`: homepage "Наши работы" now features 5 stronger own real projects plus the retained old sliding-gate project.
 - P1-05.1 city page visual parity and real proof completed on branch `codex/P1-05.1-citypage-visual-parity`: city pages now reuse the homepage benefit/trust block, real service thumbnails and real project proof with deterministic exact -> oblast -> nationwide fallback. Implementation/main SHA: `1559823776b633359cc8a47c6f847922b8d3d288`.
 - P1-06.1 pricing landing completed on branch `codex/P1-06.1-pricing-landing`: `/tseny` was rebuilt from the old table-based price page into a mobile-first SEO/commercial pricing landing with truthful "from" prices from existing service data, real service photography, links to all 6 service pages, cost-factor explanation, approximate-data guidance, branded final CTA and compact QuizForm presentation. Header now intentionally includes `Цены -> /tseny` after `Наши работы`. Implementation commit: `559b21a55ab9c6056ec7d7b03adbe553be49f1a1`; merge/main SHA before docs: `e3ca26e08892562e2a7ae887153c2b45355250c7`.
+- P1-06.2 homepage QuizForm compact refinement completed on branch `codex/P1-06.2-homepage-quiz-compact`: homepage calculator retained the existing visual design, reused approved `QuizForm presentation="compact"`, removed unnecessary empty height inside the form, kept question/answers/controls as one gathered flow, and split the approved explanatory copy into two paragraphs. `/tseny` was not changed and regression passed. Implementation commit: `ae739acbbf5854637ac234288730ef5196ba2ab6`; merge/main SHA before docs: `296157b27463df47c34ce6359614e9942836aa2c`.
 - TOOLING-01 completed on branch `codex/TOOLING-01-codex-workflow-cleanup`: root `AGENTS.md` created for Codex persistent instructions; `.cursorrules` remains historical/reference; roadmap remains the only roadmap source of truth; Knowledge Base remains architecture/project memory; future stage prompts should mostly contain goal, scope and acceptance instead of repeating stable repository rules; no MCP/plugins/dependencies/Skills were added. Implementation/main SHA: `edf728009c2d3b2199e3fc0334330e4a20a10a74`.
 
 ## OPEN ISSUES
@@ -273,7 +276,19 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Implementation commit: `559b21a55ab9c6056ec7d7b03adbe553be49f1a1`; merge/main SHA before docs: `e3ca26e08892562e2a7ae887153c2b45355250c7`.
    - Как проверить: `/` and `/tseny` return 200; Header order stable desktop/mobile; `/tseny` canonical is `https://www.masterzabor.by/tseny`; all 6 service links/images work; compact QuizForm visible; no horizontal overflow; no `Доставка и регион`; no `бесплатный замер`; Next/runtime/Vercel errors absent.
 
-7. `P1-07-product-jsonld-offer-urls`
+7. `P1-06.2-homepage-quiz-compact-refinement`
+   - Статус: DONE after visual + technical approval, merge to `main`, Production deployment and Production smoke.
+   - Что сделано: homepage calculator сохранил существующий visual design and section composition, but now reuses approved `QuizForm presentation="compact"`.
+   - Где: `app/page.tsx`.
+   - UX decision: убрана лишняя пустая высота внутри homepage QuizForm; question, answers and controls visually read as one gathered flow.
+   - Copy: explanatory copy обновлён и разбит на 2 paragraphs:
+     - `Ответьте на 6 вопросов — этого достаточно, чтобы понять, что вам нужно, и вернуться к вам с понятным ориентиром по цене.`
+     - `Уточним детали по телефону, чтобы вы могли сравнить варианты и спокойно принять решение.`
+   - Проверено: desktop Step 1, representative tall Step 3 and final Step 6; mobile 360/390/430; fixed mobile CTA does not cover QuizForm controls after scrolling; no horizontal overflow.
+   - Regression: `/tseny` не изменялась and pricing landing compact QuizForm still works.
+   - Implementation commit: `ae739acbbf5854637ac234288730ef5196ba2ab6`; merge/main SHA before docs: `296157b27463df47c34ce6359614e9942836aa2c`.
+
+8. `P1-07-product-jsonld-offer-urls`
    - Что сделать: Product JSON-LD Offer `url` привязать к конкретной service page, не к homepage.
    - Где: `lib/seo.ts`, `components/templates/ServicePage.tsx`, `app/tseny/page.tsx`.
    - Зачем: schema должна быть точнее для поисковиков.

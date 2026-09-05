@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production implementation/content baseline after P1-06.1: `e3ca26e08892562e2a7ae887153c2b45355250c7` (`Merge P1-06.1 pricing landing`).
+Latest production implementation/content baseline after P1-06.2: `296157b27463df47c34ce6359614e9942836aa2c` (`Merge P1-06.2 homepage quiz compact`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -233,7 +233,7 @@ Usage and risks:
 - `ServicePage`: good shared service template; has Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. Desktop hero pattern is `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; all six service pages have approved real-photo hero/gallery assets.
 - `CityPage`: universal city template for all city routes; unique city text is generated from city data. After P1-05.1 it uses the homepage hero photo direction, real service thumbnails, shared `BenefitTrustSection`, and truthful project proof from confirmed real records.
 - `BenefitTrustSection`: shared 8-card benefit/trust block used by homepage and CityPage. It is the single source for approved benefit titles, text and production icon paths.
-- `QuizForm`: main conversion form. Default presentation remains the larger homepage-style form unless a caller opts into `presentation="compact"`. P1-06.1 uses compact presentation on `/tseny` without changing steps, validation, API or analytics events.
+- `QuizForm`: main conversion form. Default presentation remains the larger form unless a caller opts into `presentation="compact"`. P1-06.1 uses compact presentation on `/tseny`; P1-06.2 uses the same compact presentation in the homepage calculator section. Neither stage changed steps, validation, API or analytics events.
 - `LeadForm`: simpler fallback form on homepage.
 - `ProjectCard`: reusable project card for portfolio surfaces. It must read category, city, title, service link, photos and optional facts from the project record; do not hardcode cities/materials/project titles in the component.
 - `PortfolioGallery`: useful client filter over the shared project dataset.
@@ -370,6 +370,33 @@ Superseded old P1-06 scope:
 P1-06.1 implementation commit: `559b21a55ab9c6056ec7d7b03adbe553be49f1a1`.
 
 P1-06.1 merge/main SHA before docs: `e3ca26e08892562e2a7ae887153c2b45355250c7`.
+
+## Homepage Calculator / QuizForm Decision
+
+Status: P1-06.2 homepage QuizForm compact refinement is DONE after visual + technical approval, merge to `main`, Production deployment and Production smoke.
+
+Implemented product decision:
+
+- The homepage calculator section keeps its existing visual design and composition: label/heading/copy on the left, QuizForm on the right.
+- Homepage now reuses approved `QuizForm presentation="compact"` instead of the larger default form presentation.
+- The change removes unnecessary empty height inside the homepage QuizForm so question, answers and controls read as one gathered flow.
+- QuizForm business logic is unchanged: steps, validation, API submission and analytics events were not changed.
+- `/tseny` was not changed in P1-06.2 and its pricing landing compact QuizForm regression passed.
+- Mobile 360/390/430 was checked; fixed mobile CTA does not cover homepage QuizForm controls after scrolling.
+
+Approved homepage calculator copy:
+
+Paragraph 1:
+
+`Ответьте на 6 вопросов — этого достаточно, чтобы понять, что вам нужно, и вернуться к вам с понятным ориентиром по цене.`
+
+Paragraph 2:
+
+`Уточним детали по телефону, чтобы вы могли сравнить варианты и спокойно принять решение.`
+
+P1-06.2 implementation commit: `ae739acbbf5854637ac234288730ef5196ba2ab6`.
+
+P1-06.2 merge/main SHA before docs: `296157b27463df47c34ce6359614e9942836aa2c`.
 
 ## Project Portfolio Foundation
 
@@ -570,7 +597,7 @@ Unverified source filenames: none for the six completed ServicePage sets based o
 ## Remaining Frontend / Mobile / CRO Notes
 
 - Floating CTA behavior: on homepage it should not cover the first viewport because header phone and hero CTAs are already visible; on deeper pages it can stay visible immediately as a conversion shortcut.
-- `QuizForm` основной канал заявок; keep default behavior stable and use `presentation="compact"` only where explicitly chosen by the page/section.
+- `QuizForm` основной канал заявок; keep default behavior stable and use `presentation="compact"` only where explicitly chosen by the page/section. Current intentional compact callsites are `/tseny` and the homepage calculator section.
 - `LeadForm` остаётся хорошим быстрым fallback.
 - Portfolio/reviews требуют реальных доказательств: фото, город, материал, срок, диапазон цены, внешний отзыв.
 - Placeholder graphics нельзя считать production portfolio.
