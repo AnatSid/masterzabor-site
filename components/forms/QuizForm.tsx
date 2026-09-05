@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { BelarusPhoneField } from "@/components/forms/BelarusPhoneField";
+import { QUIZ_TOTAL_STEPS } from "@/components/forms/quiz-form-config";
 import { trackQuizFunnel } from "@/lib/client-analytics";
 import { isValidBelarusPhone, normalizeBelarusPhone } from "@/lib/phone";
 
@@ -172,7 +173,7 @@ function sanitizeDefaultStep(step?: number) {
     return 1;
   }
 
-  return Math.min(6, Math.max(1, Math.trunc(step)));
+  return Math.min(QUIZ_TOTAL_STEPS, Math.max(1, Math.trunc(step)));
 }
 
 export function QuizForm({
@@ -248,7 +249,7 @@ export function QuizForm({
   }, [initialResetValues, initialStep, reset, source]);
 
   const values = watch();
-  const progress = (step / 6) * 100;
+  const progress = (step / QUIZ_TOTAL_STEPS) * 100;
 
   const trackQuizEventOnce = (
     type: "quiz_started" | "quiz_step_3_reached" | "quiz_contact_step_reached",
@@ -274,19 +275,19 @@ export function QuizForm({
       3: ["height"],
       4: ["gateType"],
       5: ["wicket"],
-      6: ["name", "phone"],
+      [QUIZ_TOTAL_STEPS]: ["name", "phone"],
     };
 
     const isValid = await trigger(fieldsByStep[step]);
 
     if (isValid) {
-      const next = Math.min(step + 1, 6);
+      const next = Math.min(step + 1, QUIZ_TOTAL_STEPS);
 
       if (next >= 3) {
         trackQuizEventOnce("quiz_step_3_reached");
       }
 
-      if (next >= 6) {
+      if (next >= QUIZ_TOTAL_STEPS) {
         trackQuizEventOnce("quiz_contact_step_reached");
       }
 
@@ -333,7 +334,7 @@ export function QuizForm({
     >
       <div className={isCompact ? "mb-6" : "mb-8"}>
         <div className="flex items-center justify-between text-sm font-semibold text-slate-600">
-          <span>Шаг {step} из 6</span>
+          <span>Шаг {step} из {QUIZ_TOTAL_STEPS}</span>
           <span>{Math.round(progress)}%</span>
         </div>
         <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200">
@@ -603,7 +604,7 @@ export function QuizForm({
           Назад
         </button>
 
-        {step < 6 ? (
+        {step < QUIZ_TOTAL_STEPS ? (
           <button
             className="rounded-xl bg-[#F59E0B] px-6 py-3 font-bold text-white transition hover:bg-amber-600"
             onClick={nextStep}
