@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: P1-05.1 implementation/main SHA `1559823776b633359cc8a47c6f847922b8d3d288`
+Текущая production точка отсчета: P1-06.1 implementation/main merge SHA `e3ca26e08892562e2a7ae887153c2b45355250c7`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production implementation/content baseline: `1559823776b633359cc8a47c6f847922b8d3d288` (`merge P1-05.1 city page visual parity`).
+- Последний production implementation/content baseline: `e3ca26e08892562e2a7ae887153c2b45355250c7` (`Merge P1-06.1 pricing landing`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -37,6 +37,8 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - CityPage visual parity foundation is complete after P1-05.1: all 40 city pages still use one universal `app/[city]/page.tsx -> components/templates/CityPage.tsx -> content/cities.ts` route/template, now with the homepage hero photo, real service images, shared 8-card `BenefitTrustSection`, and real `ProjectCard` proof.
 - City proof behavior is deterministic: confirmed `content/projects.ts` records whose `id` starts with `real-` are selected in exact city -> same oblast -> nationwide order; older starter/demo records are excluded from truthful local proof.
 - P1-05.1 reference behavior: `/slonim` uses exact-city proof heading `Наши работы в Слониме`; `/lida` uses oblast heading `Наши работы в Гродненской области`; `/gomel` uses nationwide fallback heading `Примеры наших работ по Беларуси`.
+- P1-06.1 pricing landing is complete: `/tseny` is now a focused SEO/commercial pricing landing, not a precise price list; it uses existing `content/services.ts` price data, real service photography, service links, cost-factor explanation, approximate-data guidance and a branded compact QuizForm CTA.
+- Header intentionally includes `Цены` after `Наши работы` because the pricing strategy is now defined. Final header order: `Профнастил -> Штакетник -> Сетка-рабица -> Ворота -> Наши работы -> Цены -> Контакты`.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
@@ -66,6 +68,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-02.1 homepage mobile first-screen density.
 - P1-02.2 brand visual foundation and benefit icons.
 - P1-02.2 LARGE icon size selection and production deploy.
+- P1-06.1 pricing landing strategy and Header pricing nav.
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
 
 ## AUDITS COMPLETED
@@ -95,6 +98,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-03.1 real project content completed on branch `codex/P1-03.1-real-project-content`: added 9 own real MasterZabor objects above the existing 8 starter projects; `/nashi-raboty` now has 17 project records.
 - P1-03.2 homepage real projects completed on branch `codex/P1-03.2-homepage-real-projects`: homepage "Наши работы" now features 5 stronger own real projects plus the retained old sliding-gate project.
 - P1-05.1 city page visual parity and real proof completed on branch `codex/P1-05.1-citypage-visual-parity`: city pages now reuse the homepage benefit/trust block, real service thumbnails and real project proof with deterministic exact -> oblast -> nationwide fallback. Implementation/main SHA: `1559823776b633359cc8a47c6f847922b8d3d288`.
+- P1-06.1 pricing landing completed on branch `codex/P1-06.1-pricing-landing`: `/tseny` was rebuilt from the old table-based price page into a mobile-first SEO/commercial pricing landing with truthful "from" prices from existing service data, real service photography, links to all 6 service pages, cost-factor explanation, approximate-data guidance, branded final CTA and compact QuizForm presentation. Header now intentionally includes `Цены -> /tseny` after `Наши работы`. Implementation commit: `559b21a55ab9c6056ec7d7b03adbe553be49f1a1`; merge/main SHA before docs: `e3ca26e08892562e2a7ae887153c2b45355250c7`.
 - TOOLING-01 completed on branch `codex/TOOLING-01-codex-workflow-cleanup`: root `AGENTS.md` created for Codex persistent instructions; `.cursorrules` remains historical/reference; roadmap remains the only roadmap source of truth; Knowledge Base remains architecture/project memory; future stage prompts should mostly contain goal, scope and acceptance instead of repeating stable repository rules; no MCP/plugins/dependencies/Skills were added. Implementation/main SHA: `edf728009c2d3b2199e3fc0334330e4a20a10a74`.
 
 ## OPEN ISSUES
@@ -104,7 +108,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - `content/blog-posts.ts` использует generated SVG covers.
 - `generateWebsiteJsonLd()` все еще содержит `SearchAction`, но реального поиска нет.
 - `generateProductJsonLd()` Offer `url` сейчас указывает на `SITE_URL`, не на конкретную service page.
-- `/tseny`, `/kontakty`, `/otzyvy` визуально слабее главной: более простые hero/sections, меньше brand visual system.
+- Старый P1-06 scope `commercial pages visual polish` superseded продуктовым решением P1-06.1: `/tseny` уже закрыта как pricing landing; `/otzyvy` и `/kontakty` не являются автоматическим хвостом P1-06.
 - `/otzyvy` содержит текстовые отзывы без внешнего proof: Google/Yandex screenshots, ссылки, фото объекта, город/тип работ.
 - City pages remain templated, but P1-05.1 reduced doorway/thin risk by adding truthful real proof blocks. Future work can add more confirmed local projects, but starter/demo records must not be used as local proof.
 - Dependencies still use several `latest` ranges in `package.json` (`tailwindcss`, `eslint`, `typescript`, types). Not urgent, but hurts reproducibility.
@@ -115,9 +119,9 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## REMAINING PAGES / UI WORK
 
 - `/nashi-raboty`: P1-03 foundation and P1-03.1 first real-project content are complete. Дальше не redesign, а постепенное расширение/замена starter records собственными подтвержденными объектами MasterZabor.
-- `/tseny`: рабочая, но простая. Не добавлять "Цены" в top nav без новой pricing strategy. Можно улучшить mobile price cards, пояснения "от чего зависит цена", CTA и ссылки на service pages.
-- `/otzyvy`: рабочая, но слабая как trust page. Нужны реальные отзывы/скриншоты/источники/объекты, иначе выглядит generic.
-- `/kontakty`: рабочая. Можно привести hero/card style к текущему brand direction, но не трогать webhook/domain.
+- `/tseny`: P1-06.1 DONE. Страница сохранена indexable с canonical `https://www.masterzabor.by/tseny`, использует no-slash links, service data prices, real service photography and compact QuizForm CTA. Header содержит `Цены -> /tseny`.
+- `/otzyvy`: не redesign сейчас. Откладывать до появления реальных review proof: screenshots, external sources, confirmed objects.
+- `/kontakty`: отдельный redesign сейчас не нужен; текущая функциональная страница остается как есть. Возможен мягкий polish позже только отдельным решением.
 - `/blog`: всего 3 статьи, covers placeholder SVG. Перед масштабированием нужен content model или хотя бы MDX/data decision.
 - Blog articles: полезны как база, но нужны реальные изображения, категории, related links, обновление под 2026 SEO.
 - City pages: P1-05.1 replaced hero/examples placeholders with the approved homepage photo direction, real service images and truthful project proof. Future improvements should add more confirmed local projects, not separate city templates.
@@ -186,7 +190,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 - Do not change Vercel domain settings without a new domain audit.
 - Do not change Telegram webhook/domain while doing UI/photo/content tasks.
 - Do not rewrite stable analytics architecture without a real bug.
-- Do not add "Цены" to header just because old audit mentioned it; user intentionally rejected this for now.
+- Keep final Header order stable unless a separate navigation task changes it: `Профнастил -> Штакетник -> Сетка-рабица -> Ворота -> Наши работы -> Цены -> Контакты`.
 - Do not overwrite approved benefit icons or redraw them.
 - Do not delete `_design-assets`; it is design reference/master fallback.
 - Do not commit `.cursor/`, `.tmp/`, `.env.local`, `.next/`, local browser profiles.
@@ -258,11 +262,16 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Implementation commit: `32c5b59216a756cb1d8f083086f834b567518208`; merge/main SHA before docs: `1559823776b633359cc8a47c6f847922b8d3d288`.
    - Как проверить: `/`, `/lida`, `/slonim`, `/gomel`, `/bobruysk`, `/zabory-iz-profnastila`, `/nashi-raboty` return 200; CityPage has real hero/service/project images, 8 benefits, no `data:image/svg`, no demo Lida proof, and mobile no horizontal overflow.
 
-6. `P1-06-commercial-pages-visual-polish`
-   - Что сделать: привести `/tseny`, `/otzyvy`, `/kontakty` к визуальному уровню главной: brand hero, аккуратные секции, реальные proof blocks.
-   - Где: `app/tseny/page.tsx`, `app/otzyvy/page.tsx`, `app/kontakty/page.tsx`.
-   - Зачем: эти страницы рабочие, но выглядят проще и менее убедительно.
-   - Как проверить: mobile/desktop screenshots, no overflow, CTA visible, contact links tracked, status `200`.
+6. `P1-06.1-pricing-landing`
+   - Статус: DONE after visual + technical approval, merge to `main`, Production deployment and Production smoke.
+   - Что сделано: `/tseny` перестроена из старого table-based price page подхода в полноценную SEO/commercial pricing landing.
+   - Где: `app/tseny/page.tsx`, `components/forms/QuizForm.tsx`, `components/layout/Header.tsx`.
+   - Product decision: цены остаются ориентировочными и берутся только из existing `content/services.ts`; точная стоимость считается под конкретный объект.
+   - UX/content: real service photography, links на все 6 service pages, объяснение факторов стоимости, блок примерных данных для расчёта, final branded CTA, compact QuizForm presentation только там, где включен `presentation="compact"`.
+   - Navigation: `Цены -> /tseny` намеренно добавлены в global Header, потому что pricing strategy сформирована. Финальный Header order: `Профнастил -> Штакетник -> Сетка-рабица -> Ворота -> Наши работы -> Цены -> Контакты`.
+   - Supersedes old P1-06 scope: `/otzyvy` не redesign без реальных review proof; `/kontakty` не требует отдельного redesign сейчас.
+   - Implementation commit: `559b21a55ab9c6056ec7d7b03adbe553be49f1a1`; merge/main SHA before docs: `e3ca26e08892562e2a7ae887153c2b45355250c7`.
+   - Как проверить: `/` and `/tseny` return 200; Header order stable desktop/mobile; `/tseny` canonical is `https://www.masterzabor.by/tseny`; all 6 service links/images work; compact QuizForm visible; no horizontal overflow; no `Доставка и регион`; no `бесплатный замер`; Next/runtime/Vercel errors absent.
 
 7. `P1-07-product-jsonld-offer-urls`
    - Что сделать: Product JSON-LD Offer `url` привязать к конкретной service page, не к homepage.

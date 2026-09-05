@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production implementation/content baseline after P1-05.1: `1559823776b633359cc8a47c6f847922b8d3d288` (`merge P1-05.1 city page visual parity`).
+Latest production implementation/content baseline after P1-06.1: `e3ca26e08892562e2a7ae887153c2b45355250c7` (`Merge P1-06.1 pricing landing`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -108,7 +108,7 @@ architecture changes without separate rationale and user decision.
 - In-memory rate limit слаб для serverless.
 - P0-03 moves new leads to atomic Redis list storage (`leads:v2:{date}` via `rpush`) while keeping legacy `leads:{date}` arrays readable for reports.
 - `SearchAction` в JSON-LD есть без реального поиска.
-- Header intentionally does not add a separate `Цены` item for now: pricing is variable by city, length, height and fence type, while service pages already show `от ... BYN/м.п.` ориентиры.
+- P1-06.1 сформировал pricing strategy: `/tseny` сохранена как indexable pricing landing, а Header теперь намеренно содержит `Цены -> /tseny` after `Наши работы`.
 - Нужны реальные фото вместо placeholder-графики.
 - P1-01 adds lightweight conversion events for contact clicks and minimal quiz funnel; submitted forms remain covered by lead stats.
 
@@ -226,14 +226,14 @@ Robots coverage: `/api/` is disallowed; public routes are allowed.
 
 Usage and risks:
 
-- `Header`: global navigation, phone and messengers. Do not add `Цены` as a quick header item without a separate pricing strategy.
+- `Header`: global navigation, phone and messengers. After P1-06.1 final order is `Профнастил -> Штакетник -> Сетка-рабица -> Ворота -> Наши работы -> Цены -> Контакты`; `Цены` points to no-slash `/tseny`.
 - `Footer`: has full nav including prices/blog/reviews, better coverage than header.
 - `FloatingButtons`: mobile conversion layer for calls and messengers.
 - `SiteContainer`: good shared layout primitive; should continue expanding to all sections.
 - `ServicePage`: good shared service template; has Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. Desktop hero pattern is `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; all six service pages have approved real-photo hero/gallery assets.
 - `CityPage`: universal city template for all city routes; unique city text is generated from city data. After P1-05.1 it uses the homepage hero photo direction, real service thumbnails, shared `BenefitTrustSection`, and truthful project proof from confirmed real records.
 - `BenefitTrustSection`: shared 8-card benefit/trust block used by homepage and CityPage. It is the single source for approved benefit titles, text and production icon paths.
-- `QuizForm`: main conversion form; good qualification flow, but multi-step friction on mobile.
+- `QuizForm`: main conversion form. Default presentation remains the larger homepage-style form unless a caller opts into `presentation="compact"`. P1-06.1 uses compact presentation on `/tseny` without changing steps, validation, API or analytics events.
 - `LeadForm`: simpler fallback form on homepage.
 - `ProjectCard`: reusable project card for portfolio surfaces. It must read category, city, title, service link, photos and optional facts from the project record; do not hardcode cities/materials/project titles in the component.
 - `PortfolioGallery`: useful client filter over the shared project dataset.
@@ -323,7 +323,7 @@ Future check protocol after `npm run dev`:
 
 ## Frontend / Mobile / CRO Notes
 
-- Header глобальный; `Цены` не добавлять в быстрый nav без отдельной pricing strategy, потому что цена зависит от параметров объекта.
+- Header глобальный; после P1-06.1 `Цены` намеренно добавлены в nav, потому что `/tseny` стала полноценной pricing landing. Keep final order stable unless a separate navigation task changes it: `Профнастил -> Штакетник -> Сетка-рабица -> Ворота -> Наши работы -> Цены -> Контакты`.
 - Mobile bottom CTA уже есть; body/bottom CTA должны учитывать `safe-area-inset-bottom`, чтобы не перекрывать контент на iPhone.
 - Мобильный phone+burger должен помещаться на 320-430 px без горизонтального overflow; номер телефона должен оставаться кликабельным и не переноситься абы как.
 - Mobile burger menu: компактный правый drawer, открывается только по нажатию, не рендерит offscreen-панель в закрытом состоянии, не сдвигает страницу и не оставляет пустой full-screen overlay. Внутри меню телефон отдельной full-width строкой, мессенджеры строкой ниже.
@@ -343,6 +343,33 @@ Future check protocol after `npm run dev`:
 - For square ServicePage hero, prefer a source composition prepared for 1:1 when the full object must stay visible. Keep important visual elements away from the source image edges; ordinary photos are still acceptable when `480x480 object-cover` looks good.
 - Service photo assets live in `public/images/services/{slug}/`. Large local PNG/JPEG sources do not need to be stored in repo; commit optimized production WebP copies. `content/services.ts` is the linking layer for hero/gallery assets.
 - P1-03 built the portfolio/project model on top of this. It does not replace the service photo library; project photos live separately in `public/images/projects/{project-id}/`.
+
+## Pricing / Commercial Pages Decision
+
+Status: P1-06.1 pricing landing is DONE after visual + technical approval, merge to `main`, Production deployment and Production smoke.
+
+Source of truth: `/tseny` uses existing `content/services.ts` price data and service image data. Do not invent fixed prices or ranges outside the service records.
+
+Implemented product decision:
+
+- `/tseny` stays indexable with canonical `https://www.masterzabor.by/tseny` and no-slash internal links.
+- The page is not a precise price list. It explains that prices are ориентировочные and that final cost is calculated for the concrete object.
+- The old table-based price-page approach was replaced with a mobile-first SEO/commercial pricing landing.
+- All six services are shown with real approved service photography, a short scan-friendly description, `от ...` price from `content/services.ts`, correct unit and a link to the matching service page.
+- Cost factors are truthful and do not include `Доставка и регион` as a standalone pricing factor.
+- The page includes approximate-data guidance for calculation and a branded final CTA.
+- `QuizForm` logic is unchanged; `/tseny` uses the compact presentation only as a visual/spacing variant.
+- Header now intentionally includes `Цены -> /tseny` after `Наши работы` because the pricing strategy is formed.
+
+Superseded old P1-06 scope:
+
+- The old stage idea `commercial pages visual polish` for `/tseny`, `/otzyvy`, `/kontakty` should not be treated as three automatically required redesigns anymore.
+- `/otzyvy` should not be redesigned now without real review proof: screenshots, external sources, confirmed objects.
+- `/kontakty` does not need a separate redesign now; the current functional page remains as is. A soft polish can be considered later only as a separate decision.
+
+P1-06.1 implementation commit: `559b21a55ab9c6056ec7d7b03adbe553be49f1a1`.
+
+P1-06.1 merge/main SHA before docs: `e3ca26e08892562e2a7ae887153c2b45355250c7`.
 
 ## Project Portfolio Foundation
 
@@ -543,11 +570,11 @@ Unverified source filenames: none for the six completed ServicePage sets based o
 ## Remaining Frontend / Mobile / CRO Notes
 
 - Floating CTA behavior: on homepage it should not cover the first viewport because header phone and hero CTAs are already visible; on deeper pages it can stay visible immediately as a conversion shortcut.
-- `QuizForm` основной канал заявок; добавить "Не знаю длину" и analytics по шагам.
+- `QuizForm` основной канал заявок; keep default behavior stable and use `presentation="compact"` only where explicitly chosen by the page/section.
 - `LeadForm` остаётся хорошим быстрым fallback.
 - Portfolio/reviews требуют реальных доказательств: фото, город, материал, срок, диапазон цены, внешний отзыв.
 - Placeholder graphics нельзя считать production portfolio.
-- Для таблиц цен на mobile лучше card view или явный горизонтальный scroll.
+- `/tseny` no longer depends on wide horizontal-scroll price tables for core UX after P1-06.1; future pricing changes should preserve the mobile-first card/landing approach.
 
 ## Performance Notes
 
