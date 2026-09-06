@@ -39,8 +39,10 @@ const productJsonLdList = services.map((service) =>
   generateProductJsonLd({
     name: service.title,
     description: service.description,
+    image: service.heroImage?.src ?? service.imageSrc,
     price: service.priceFrom,
     currency: "BYN",
+    url: `/${service.slug}`,
   }),
 );
 

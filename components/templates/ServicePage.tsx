@@ -175,8 +175,10 @@ export function ServicePage({ service }: ServicePageProps) {
   const productJsonLd = generateProductJsonLd({
     name: service.title,
     description: service.description,
+    image: heroImage.src,
     price: service.priceFrom,
     currency: "BYN",
+    url: `/${service.slug}`,
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbs);
   const faqJsonLd = generateFaqJsonLd(service.faq);
