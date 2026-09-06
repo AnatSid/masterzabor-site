@@ -449,6 +449,21 @@ export function ServicePage({ service }: ServicePageProps) {
 
       <section className="py-16">
         <SiteContainer>
+          <article className={serviceProseClassName}>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+            {service.title}: что важно знать
+          </h2>
+          <div className="mt-6 space-y-6">
+            {serviceSeoText(service).map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+          </article>
+        </SiteContainer>
+      </section>
+
+      <section className="py-16">
+        <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Частые вопросы
           </h2>
@@ -462,21 +477,6 @@ export function ServicePage({ service }: ServicePageProps) {
               </details>
             ))}
           </div>
-        </SiteContainer>
-      </section>
-
-      <section className="py-16">
-        <SiteContainer>
-          <article className={serviceProseClassName}>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-            {service.title}: что важно знать
-          </h2>
-          <div className="mt-6 space-y-6">
-            {serviceSeoText(service).map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-          </article>
         </SiteContainer>
       </section>
 

@@ -40,13 +40,13 @@ export const services: Service[] = [
     priceUnit: "BYN/м.п.",
     imageSrc: "/images/services/zabory-iz-profnastila/hero.jpeg",
     heroImage: {
-      src: "/images/services/zabory-iz-profnastila/hero-page-graphite-wicket.webp",
-      alt: "Светло-графитовый забор из профнастила с калиткой у частного дома",
+      src: "/images/services/zabory-iz-profnastila/hero-page.webp",
+      alt: "Забор из профнастила рядом с частным домом",
     },
     galleryImages: [
       {
-        src: "/images/services/zabory-iz-profnastila/gallery-01.webp",
-        alt: "Готовый забор из профнастила на участке",
+        src: "/images/services/zabory-iz-profnastila/gallery-00-graphite-wicket.webp",
+        alt: "Светло-графитовый забор из профнастила с калиткой у частного дома",
       },
       {
         src: "/images/services/zabory-iz-profnastila/gallery-02.webp",
@@ -74,7 +74,7 @@ export const services: Service[] = [
     features: [
       "Скрывает участок от улицы и соседей",
       "Быстро монтируется на винтовые или забивные столбы",
-      "Большой выбор цветов по каталогу RAL — можно подобрать под фасад, кровлю, ворота и калитку",
+      "Большой выбор цветов по каталогу RAL — можно подобрать под фасад, кровлю, ворота или калитку",
       "Подходит для частных домов, дач и промышленных территорий",
     ],
     faq: [
