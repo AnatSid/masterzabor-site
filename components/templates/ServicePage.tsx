@@ -248,25 +248,56 @@ export function ServicePage({ service }: ServicePageProps) {
         </SiteContainer>
       </section>
 
-      <section className="py-16">
+      <section className="py-12 sm:py-16">
+        <SiteContainer className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+          <div>
+            <p className="font-semibold uppercase tracking-wide text-[#0A5633]">
+              Почему выбирают
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Преимущества
+            </h2>
+          </div>
+          <ul className="grid gap-x-10 gap-y-5 sm:grid-cols-2">
+            {service.features.map((feature) => (
+              <li
+                className="flex gap-3 border-t border-slate-200 pt-4 text-sm font-semibold leading-6 text-slate-800 sm:text-base sm:leading-7"
+                key={feature}
+              >
+                <CheckIcon />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </SiteContainer>
+      </section>
+
+      <section className="bg-[#F5F5F5] py-12 sm:py-16">
         <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Преимущества
+            Галерея
           </h2>
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {service.features.map((feature, index) => (
-              <article className="rounded-2xl bg-[#F5F5F5] p-6" key={feature}>
-                <div className="flex size-11 items-center justify-center rounded-full bg-[#1B5E20] font-bold text-white">
-                  {index + 1}
-                </div>
-                <p className="mt-5 font-semibold leading-6">{feature}</p>
-              </article>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {galleryImages.map((image) => (
+              <div
+                className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-slate-100 shadow-sm"
+                key={image.src}
+              >
+                <Image
+                  alt={image.alt}
+                  className="object-cover"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  src={image.src}
+                  style={{ objectPosition: image.objectPosition ?? "center" }}
+                />
+              </div>
             ))}
           </div>
         </SiteContainer>
       </section>
 
-      <section className="bg-[#F5F5F5] py-12 sm:py-16">
+      <section className="py-12 sm:py-16">
         <SiteContainer className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <div className={sectionIntroClassName}>
             <p className="font-semibold uppercase tracking-wide text-[#0A5633]">
@@ -322,42 +353,86 @@ export function ServicePage({ service }: ServicePageProps) {
         </SiteContainer>
       </section>
 
-      <section className="py-16">
+      <section className="bg-[#F6F8F5] py-12 sm:py-16">
         <SiteContainer>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Этапы работы
-          </h2>
-          <div className="mt-10 grid gap-4 md:grid-cols-3 lg:grid-cols-6">
-            {stages.map((stage, index) => (
-              <article className="rounded-2xl border border-slate-200 p-5" key={stage}>
-                <div className="text-sm font-bold text-[#1B5E20]">
-                  0{index + 1}
-                </div>
-                <h3 className="mt-3 font-bold">{stage}</h3>
-              </article>
-            ))}
+          <div className={sectionIntroClassName}>
+            <p className="font-semibold uppercase tracking-wide text-[#0A5633]">
+              Как работаем
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Этапы работы
+            </h2>
+            <p className={sectionSubtitleClassName}>
+              После предварительного расчёта фиксируем договорённости и ведём
+              объект до готового монтажа.
+            </p>
           </div>
+          <ol className="mt-10 grid gap-0 md:grid-cols-3 md:gap-y-8 xl:grid-cols-6 xl:gap-y-0">
+            {stages.map((stage) => (
+              <li
+                className="relative border-l border-[#b9d7c6] pb-7 pl-6 last:border-l-0 last:pb-0 md:border-l-0 md:border-t md:pb-0 md:pl-0 md:pr-8 md:pt-6"
+                key={stage}
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[0.4375rem] top-0 size-3.5 rounded-full bg-[#0A5633] ring-4 ring-[#F6F8F5] md:-top-[0.4375rem] md:left-0"
+                />
+                <h3 className="font-bold leading-tight text-slate-950">
+                  {stage}
+                </h3>
+              </li>
+            ))}
+          </ol>
         </SiteContainer>
       </section>
 
-      <section className="bg-[#F5F5F5] py-16">
+      <section className="bg-[#F6F8F5] py-12 sm:py-16" id="lead-form">
         <SiteContainer>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Галерея
-          </h2>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {galleryImages.map((image) => (
-              <Image
-                alt={image.alt}
-                className="h-60 rounded-2xl object-cover shadow-sm"
-                height={420}
-                key={image.src}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                src={image.src}
-                style={{ objectPosition: image.objectPosition ?? "center" }}
-                width={620}
-              />
-            ))}
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-green-950/10">
+            <div className="grid lg:grid-cols-[minmax(0,0.34fr)_minmax(0,0.66fr)]">
+              <div className="relative flex flex-col justify-center overflow-hidden bg-[radial-gradient(circle_at_100%_100%,rgba(246,248,245,0.24)_0%,rgba(246,248,245,0.12)_30%,transparent_58%),linear-gradient(135deg,#0A5633_0%,#17652E_58%,#2D7D3C_100%)] p-5 text-white sm:p-8 lg:p-9">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-px bg-white/30"
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute -bottom-16 -right-16 size-44 rounded-full bg-white/10 blur-2xl"
+                />
+                <div className="relative max-w-sm">
+                  <p className="font-semibold uppercase tracking-wide text-amber-300">
+                    Бесплатный расчёт
+                  </p>
+                  <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                    Рассчитаем стоимость на {service.title.toLowerCase()}
+                  </h2>
+                  <p className="mt-4 text-sm leading-6 text-white/80 sm:text-base sm:leading-7">
+                    Ответьте на несколько вопросов — этого достаточно, чтобы
+                    понять параметры объекта и вернуться к вам с понятным
+                    ориентиром по цене.
+                  </p>
+                  <ul className="mt-5 space-y-2.5 text-sm font-medium leading-snug text-green-50/90 sm:text-[0.9375rem]">
+                    {[
+                      "Можно указать примерные размеры",
+                      "Детали уточним по телефону",
+                      "Получите понятный ориентир и спокойно примете решение",
+                    ].map((item) => (
+                      <li className="flex gap-2.5" key={item}>
+                        <CheckIcon tone="light" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="bg-white p-3 max-md:[&>form]:pb-24 sm:p-5">
+                <QuizForm
+                  presentation="compact"
+                  source={`service-${service.slug}`}
+                  {...quizDefaults}
+                />
+              </div>
+            </div>
           </div>
         </SiteContainer>
       </section>
@@ -374,6 +449,24 @@ export function ServicePage({ service }: ServicePageProps) {
             ))}
           </div>
           </article>
+        </SiteContainer>
+      </section>
+
+      <section className="py-16">
+        <SiteContainer>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Частые вопросы
+          </h2>
+          <div className="mt-8 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+            {service.faq.map((item) => (
+              <details className="group p-6" key={item.question}>
+                <summary className="cursor-pointer list-none font-semibold">
+                  {item.question}
+                </summary>
+                <p className="mt-3 leading-relaxed text-slate-600">{item.answer}</p>
+              </details>
+            ))}
+          </div>
         </SiteContainer>
       </section>
 
@@ -411,59 +504,6 @@ export function ServicePage({ service }: ServicePageProps) {
                 </Link>
               ))}
             </div>
-          </div>
-        </SiteContainer>
-      </section>
-
-      <section className="bg-[#F6F8F5] py-12 sm:py-16" id="lead-form">
-        <SiteContainer>
-          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-green-950/10">
-            <div className="grid gap-0 lg:grid-cols-[minmax(0,0.38fr)_minmax(0,0.62fr)]">
-              <div className="relative flex overflow-hidden bg-[#F6F8F5] p-6 sm:p-8 lg:items-center lg:p-9">
-                <div
-                  aria-hidden="true"
-                  className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#0A5633_0%,#2D7D3C_100%)]"
-                />
-                <div
-                  aria-hidden="true"
-                  className="absolute -bottom-16 -right-16 size-44 rounded-full bg-[#0A5633]/10 blur-2xl"
-                />
-                <div className="relative max-w-sm">
-                  <p className="font-semibold uppercase tracking-wide text-[#0A5633]">
-                    Получите расчёт по телефону
-                  </p>
-                  <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-                    Узнайте цену на {service.title.toLowerCase()}
-                  </h2>
-                  <p className="mt-5 text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
-                    Оставьте номер, примерную длину и пожелания. Перезвоним,
-                    рассчитаем стоимость за 5 минут и предложим подходящую
-                    комплектацию.
-                  </p>
-                </div>
-              </div>
-              <div className="bg-white p-3 max-md:[&>form]:pb-24 sm:p-5 lg:p-6">
-                <QuizForm source={`service-${service.slug}`} {...quizDefaults} />
-              </div>
-            </div>
-          </div>
-        </SiteContainer>
-      </section>
-
-      <section className="py-16">
-        <SiteContainer>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Частые вопросы
-          </h2>
-          <div className="mt-8 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
-            {service.faq.map((item) => (
-              <details className="group p-6" key={item.question}>
-                <summary className="cursor-pointer list-none font-semibold">
-                  {item.question}
-                </summary>
-                <p className="mt-3 leading-relaxed text-slate-600">{item.answer}</p>
-              </details>
-            ))}
           </div>
         </SiteContainer>
       </section>
