@@ -24,8 +24,10 @@ type PageMetadataInput = {
 type ProductJsonLdInput = {
   name: string;
   description: string;
+  image: string;
   price: number;
   currency: string;
+  url: string;
 };
 
 type FaqItem = {
@@ -207,14 +209,17 @@ export function generateWebsiteJsonLd() {
 export function generateProductJsonLd({
   name,
   description,
+  image,
   price,
   currency,
+  url,
 }: ProductJsonLdInput) {
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name,
     description,
+    image: absoluteUrl(image),
     brand: {
       "@type": "Brand",
       name: COMPANY_NAME,
@@ -224,7 +229,7 @@ export function generateProductJsonLd({
       price,
       priceCurrency: currency,
       availability: "https://schema.org/InStock",
-      url: SITE_URL,
+      url: canonicalUrl(url),
     },
   };
 }
