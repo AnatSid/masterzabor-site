@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production implementation/content baseline after P1-06.3: `7643b7fedd38585040092a7054e75dc8cb10d68c` (`Merge P1-06.3 citypage quiz compact`).
+Latest production implementation/content baseline after P1-06.4: `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d` (`Merge P1-06.4 service page visual parity`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -110,6 +110,7 @@ architecture changes without separate rationale and user decision.
 - `SearchAction` в JSON-LD есть без реального поиска.
 - P1-06.1 сформировал pricing strategy: `/tseny` сохранена как indexable pricing landing, а Header теперь намеренно содержит `Цены -> /tseny` after `Наши работы`.
 - P1-06.3 aligned CityPage calculator UX with the approved compact QuizForm flow while preserving one universal CityPage template and city/source lead context.
+- P1-06.4 aligned the shared ServicePage template with the approved homepage/`/tseny` commercial visual system and intentionally switched ServicePage to compact QuizForm presentation while preserving service routes, metadata/schema and lead behavior.
 - Нужны реальные фото вместо placeholder-графики.
 - P1-01 adds lightweight conversion events for contact clicks and minimal quiz funnel; submitted forms remain covered by lead stats.
 
@@ -231,10 +232,10 @@ Usage and risks:
 - `Footer`: has full nav including prices/blog/reviews, better coverage than header.
 - `FloatingButtons`: mobile conversion layer for calls and messengers.
 - `SiteContainer`: good shared layout primitive; should continue expanding to all sections.
-- `ServicePage`: good shared service template; has Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. Desktop hero pattern is `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; all six service pages have approved real-photo hero/gallery assets.
+- `ServicePage`: shared commercial service template with Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. After P1-06.4 it uses a homepage-aligned flow: light branded hero, compact inline hero price, service-specific benefits checklist, real-photo gallery before pricing, honest pricing block, 5-step process timeline, `/tseny`-like compact calculator, useful/SEO content before FAQ, and related links at the bottom. Desktop hero image pattern stays `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; all six service pages have approved real-photo hero/gallery assets.
 - `CityPage`: universal city template for all city routes; unique city text is generated from city data. After P1-05.1 it uses the homepage hero photo direction, real service thumbnails, shared `BenefitTrustSection`, and truthful project proof from confirmed real records. After P1-06.3 its calculator section uses a light homepage-like composition, dynamic city heading and compact QuizForm presentation.
 - `BenefitTrustSection`: shared 8-card benefit/trust block used by homepage and CityPage. It is the single source for approved benefit titles, text and production icon paths.
-- `QuizForm`: main conversion form. Default presentation remains the larger form unless a caller opts into `presentation="compact"`. P1-06.1 uses compact presentation on `/tseny`; P1-06.2 uses the same compact presentation in the homepage calculator section; P1-06.3 uses it in CityPage. These stages did not change validation, API submission or analytics events.
+- `QuizForm`: main conversion form. Default presentation remains the larger form unless a caller opts into `presentation="compact"`. P1-06.1 uses compact presentation on `/tseny`; P1-06.2 uses it in the homepage calculator section; P1-06.3 uses it in CityPage; P1-06.4 uses it in ServicePage. These stages did not change validation, API submission or analytics events.
 - `LeadForm`: simpler fallback form on homepage.
 - `ProjectCard`: reusable project card for portfolio surfaces. It must read category, city, title, service link, photos and optional facts from the project record; do not hardcode cities/materials/project titles in the component.
 - `PortfolioGallery`: useful client filter over the shared project dataset.
@@ -428,6 +429,24 @@ P1-06.3 implementation commit: `ea64bb8272fe0cd526a07d885b39beb749500ea6`.
 
 P1-06.3 merge/main SHA before docs: `7643b7fedd38585040092a7054e75dc8cb10d68c`.
 
+## ServicePage Visual Parity Decision
+
+Status: P1-06.4 ServicePage visual parity is DONE after visual + technical approval, Preview deployment, merge to `main`, Production deployment and Production smoke.
+
+Decision:
+
+- Shared `ServicePage` remains one template for all six service routes; no per-service layout forks were introduced.
+- Final flow is product and conversion first: hero -> service-specific benefits -> real-photo gallery -> pricing -> process -> calculator -> useful/SEO content -> FAQ -> related services/cities.
+- Service pages now use the approved homepage/`/tseny` design language: light branded hero, compact inline hero price, restrained green accents, service-specific benefits checklist, real-photo gallery before pricing, honest pricing, 5-step process timeline, and a `/tseny`-like split calculator card.
+- ServicePage `QuizForm` now intentionally uses `presentation="compact"`; validation, API submission, analytics events, `source` and service defaults were not changed.
+- Useful/SEO prose was not rewritten; it was moved after the calculator so long informational content does not block the primary conversion path.
+- Related service/city links stay at the bottom so they do not distract before the calculator CTA.
+- Approved real-photo system is preserved. For `/zabory-iz-profnastila`, the gallery has exactly 6 images; the first gallery image is the graphite+wicket photo, and the old brown first gallery photo was removed rather than retained as a seventh image.
+
+P1-06.4 implementation head: `4a2b8fc79b521bd50d49254569934f5378c6feda`.
+
+P1-06.4 merge/main SHA before docs: `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d`.
+
 ## Project Portfolio Foundation
 
 Status: P1-03 project photos foundation is DONE after approved local visual/technical review, Preview build, merge to `main`, Production deployment and Production smoke.
@@ -544,12 +563,13 @@ Gallery:
 ### `/zabory-iz-profnastila`
 
 Source folder: `C:\DiscD\проекты сайта\Фото типов забора\ПРОФНАСТИЛ`.
+Additional approved replacement source for the first gallery image: `C:\DiscD\проекты сайта\Фото типов забора\Фото реальных работ\7-пролист\_цвета\_графит+калитка(в черной окантовке или как правильно не знаю).jpg`.
 
 Hero: `Главная-2.png` -> `public/images/services/zabory-iz-profnastila/hero-page.webp` (`1200x800`) -> hero. Object position: default/center.
 
 Gallery:
 
-- `1.jpg` -> `gallery-01.webp` (`1200x900`) -> gallery.
+- `_графит+калитка(в черной окантовке или как правильно не знаю).jpg` -> `gallery-00-graphite-wicket.webp` (`1200x900`) -> first gallery image. Replaced the old brown first gallery photo; do not add it as a seventh image.
 - `2.jpg` -> `gallery-02.webp` (`1200x674`) -> gallery.
 - `3.jpeg` -> `gallery-03.webp` (`1000x750`) -> gallery.
 - `4.jpeg` -> `gallery-04.webp` (`1000x750`) -> gallery.
@@ -627,16 +647,16 @@ Unverified source filenames: none for the six completed ServicePage sets based o
 ## Remaining Frontend / Mobile / CRO Notes
 
 - Floating CTA behavior: on homepage it should not cover the first viewport because header phone and hero CTAs are already visible; on deeper pages it can stay visible immediately as a conversion shortcut.
-- `QuizForm` основной канал заявок; keep default behavior stable and use `presentation="compact"` only where explicitly chosen by the page/section. Current intentional compact callsites are homepage `/`, `/tseny` and CityPage.
-- QuizForm usage map after P1-06.3:
+- `QuizForm` основной канал заявок; keep default behavior stable and use `presentation="compact"` only where explicitly chosen by the page/section. Current intentional compact callsites are homepage `/`, `/tseny`, CityPage and ServicePage.
+- QuizForm usage map after P1-06.4:
   - Homepage `/`: `presentation="compact"`, source `home-quiz`, surrounding copy depends on `QUIZ_TOTAL_STEPS`.
   - `/tseny`: `presentation="compact"`, source `prices-page`, surrounding copy does not use a literal step count.
   - CityPage / all city routes: `presentation="compact"`, source `city-${city.slug}`, `cityName={city.name}`, surrounding copy depends on `QUIZ_TOTAL_STEPS`.
-  - ServicePage / all 6 service routes: default presentation, source `service-${slug}`, service defaults preserved.
+  - ServicePage / all 6 service routes: `presentation="compact"`, source `service-${slug}`, service defaults preserved.
   - `/kontakty`: default presentation, source `contacts-page`.
   - Blog posts: default presentation, source `blog-post-${post.slug}`.
 - If QuizForm ever changes from 6 to 7+ steps, check `QUIZ_TOTAL_STEPS`, QuizForm progress/validation/contact-step threshold, homepage copy, CityPage copy, all callsites and surrounding marketing copy.
-- Future content task: audit remaining default QuizForm surrounding copy in ServicePage, `/kontakty` and blog, especially old "за 5 минут" wording. This was intentionally not changed in P1-06.3.
+- Future content task: audit remaining default QuizForm surrounding copy in `/kontakty` and blog, especially old "за 5 минут" wording. ServicePage calculator copy was handled in P1-06.4.
 - `LeadForm` остаётся хорошим быстрым fallback.
 - Portfolio/reviews требуют реальных доказательств: фото, город, материал, срок, диапазон цены, внешний отзыв.
 - Placeholder graphics нельзя считать production portfolio.
