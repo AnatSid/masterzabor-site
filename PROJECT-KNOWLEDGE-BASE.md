@@ -706,7 +706,7 @@ Unverified source filenames: none for the six completed ServicePage sets based o
 - URL policy должна быть no-slash.
 - Sitemap/canonical/OpenGraph/JSON-LD/internal links должны совпадать с final 200 URL.
 - `SearchAction` удалить или реализовать поиск.
-- Product Offer URL должен быть URL конкретной услуги.
+- Product JSON-LD для услуг должен содержать реальный service hero `image`; Product Offer URL должен быть canonical URL конкретной услуги, не homepage и не `/tseny`.
 - City pages требуют уникальных proof-assets, иначе doorway/thin risk.
 - Blog должен перейти на MDX/CMS/data model перед ростом до 500+ статей.
 
@@ -728,6 +728,20 @@ Unverified source filenames: none for the six completed ServicePage sets based o
 - `normalizePath()` / `canonicalUrl()` helper should be the single source for sitemap, metadata, breadcrumbs, JSON-LD and reports.
 - Never point canonical to a redirecting URL.
 - Never set webhook to apex while apex redirects to www.
+
+### SEO-01 Product JSON-LD
+
+Status: DONE after merge to `main`, Production deployment and Google Search Console Live Test.
+
+Root cause: GSC showed a Product/Merchant structured-data issue on `/zabory-iz-profnastila`; code confirmed that Product JSON-LD missed `image`, while Product `offers.url` pointed to homepage via `SITE_URL`.
+
+Decision: `generateProductJsonLd()` accepts `image` and service `url`, converts image paths through the existing absolute/canonical URL helpers, and emits Offer URLs for the canonical service pages. Shared `ServicePage` passes the existing service hero image and service path, so all six service pages inherit the fix. `/tseny` is the second callsite and emits six Product objects with each service's own image and Offer URL.
+
+Verification: Production `/`, all six service pages and `/tseny` returned 200; each service Product has an absolute `https://www.masterzabor.by/images/...` image, canonical service Offer URL, and preserved price/BYN. `/tseny` has six Product JSON-LD objects with six unique service Offer URLs, none pointing to homepage or `/tseny`. GSC Live Test for `/zabory-iz-profnastila` reported one detected item without errors and saw the image and Offer URL `https://www.masterzabor.by/zabory-iz-profnastila`.
+
+Scope: no UI, copy, price, canonical/domain, sitemap, robots, analytics or Telegram changes. Optional Google warnings for `shippingDetails` and `hasMerchantReturnPolicy` remain intentionally because those business details must not be invented.
+
+Implementation commit: `919269f6739b2f7a3c31bf50f4e2c11195901fb5`; merge/main SHA: `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c`; Production deployment ID: `dpl_3MS2i5w6ZndyCx2KHkDUCHWCZjLp`.
 
 ### Content Model
 
@@ -835,7 +849,6 @@ Important:
 - Contact click and quiz funnel events.
 - Mobile layout/CRO cleanup: no page-level horizontal overflow, stable burger menu, safe-area-aware bottom CTA.
 - Quiz "Не знаю длину".
-- Product JSON-LD service URLs.
 - Pin dependencies and replace `next lint`.
 - Tests for sitemap/canonical/API.
 

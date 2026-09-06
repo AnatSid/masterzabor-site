@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: P1-06.5 implementation/main merge SHA `d2d838f4eab4f3891349daf4a15296fdc0fb827e`
+Текущая production точка отсчета: SEO-01 Product JSON-LD closure/main merge SHA `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production implementation/content baseline: `d2d838f4eab4f3891349daf4a15296fdc0fb827e` (`Merge P1-06.5 nationwide copy cleanup`).
+- Последний production implementation/content baseline: `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c` (`Merge SEO-01 product JSON-LD`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -44,6 +44,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.4 ServicePage visual parity is complete: all six service pages now use one shared homepage-aligned commercial flow with light branded hero, compact inline hero price, service-specific benefits checklist, real-photo gallery before pricing, honest pricing block, 5-step process timeline, `/tseny`-like compact calculator, useful/SEO content before FAQ, and related links at the bottom.
 - ServicePage QuizForm now intentionally uses `presentation="compact"`; validation, API submission, analytics and service defaults were not changed.
 - P1-06.5 nationwide copy cleanup is complete: homepage and shared ServicePage commercial copy now use neutral Belarus-wide wording instead of implying "we travel from Gomel"; legitimate Gomel-local context in city/contact/review surfaces is preserved.
+- SEO-01 Product JSON-LD is complete: all ServicePage Product schema now includes absolute service hero `image`, and Product `offers.url` points to the canonical service page instead of homepage. `/tseny` also emits six Product objects with each service's own image and Offer URL.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
@@ -78,6 +79,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.3 CityPage calculator compact parity and QuizForm step-count source.
 - P1-06.4 ServicePage visual parity and compact calculator.
 - P1-06.5 nationwide copy cleanup for homepage FAQ and shared ServicePage useful content.
+- SEO-01 Product JSON-LD image and service Offer URLs.
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
 
 ## AUDITS COMPLETED
@@ -112,6 +114,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.3 CityPage calculator compact parity completed on branch `codex/P1-06.3-citypage-quiz-compact`: all city routes now use the shared CityPage light calculator section with dynamic city heading, approved two-paragraph copy, `QuizForm presentation="compact"`, and centralized `QUIZ_TOTAL_STEPS` for step count display/copy. QuizForm validation, API submission and analytics events were not changed. Homepage and `/tseny` regression passed; ServicePage, `/kontakty` and blog QuizForm callsites were not redesigned. Implementation commit: `ea64bb8272fe0cd526a07d885b39beb749500ea6`; merge/main SHA before docs: `7643b7fedd38585040092a7054e75dc8cb10d68c`.
 - P1-06.4 ServicePage visual parity completed on branch `codex/P1-06.4-servicepage-visual-parity`: shared `ServicePage` was rebuilt into the approved homepage-like commercial flow while preserving the real-photo system, routes, metadata/canonical/schema, service data and lead behavior. It added light branded hero treatment, compact inline hero price, service-specific benefits checklist, real-photo gallery before pricing, honest pricing block, 5-step process timeline, `/tseny`-like compact calculator, useful/SEO content before FAQ, and related links at the bottom. ServicePage QuizForm now intentionally uses `presentation="compact"`. Implementation head: `4a2b8fc79b521bd50d49254569934f5378c6feda`; merge/main SHA before docs: `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d`.
 - P1-06.5 nationwide copy cleanup completed on branch `codex/P1-06.5-nationwide-copy-cleanup`: homepage FAQ and shared ServicePage useful content now present MasterZabor as working across Belarus without making geography feel like an automatic price/risk objection; the specialist visit is explicitly described as the next step after preliminary calculation and agreement. Implementation head: `f9739bc6238222ca13c56dfbfc0bc46bd1876d89`; merge/main SHA before docs: `d2d838f4eab4f3891349daf4a15296fdc0fb827e`.
+- SEO-01 Product JSON-LD completed on branch `codex/SEO-01-product-jsonld`: fixed Product structured data after GSC showed missing `Product.image` and code had Product `offers.url` pointing to homepage via `SITE_URL`. `generateProductJsonLd()` now accepts `image` and service `url`; `ServicePage` passes the existing hero image and canonical service path; `/tseny` emits six Product objects with each service's own image and Offer URL. Scope stayed limited to `lib/seo.ts`, `components/templates/ServicePage.tsx`, and the `/tseny` callsite; UI, copy, prices, canonical/domain, sitemap, robots, analytics and Telegram were not changed. Production verification passed on all six service pages and `/tseny`; GSC Live Test for `/zabory-iz-profnastila` reported one detected item without errors, saw `image`, and saw Offer URL `https://www.masterzabor.by/zabory-iz-profnastila`. Optional `shippingDetails` and `hasMerchantReturnPolicy` warnings remain intentionally. Implementation commit: `919269f6739b2f7a3c31bf50f4e2c11195901fb5`; merge/main SHA: `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c`; Production deployment ID: `dpl_3MS2i5w6ZndyCx2KHkDUCHWCZjLp`.
 - TOOLING-01 completed on branch `codex/TOOLING-01-codex-workflow-cleanup`: root `AGENTS.md` created for Codex persistent instructions; `.cursorrules` remains historical/reference; roadmap remains the only roadmap source of truth; Knowledge Base remains architecture/project memory; future stage prompts should mostly contain goal, scope and acceptance instead of repeating stable repository rules; no MCP/plugins/dependencies/Skills were added. Implementation/main SHA: `edf728009c2d3b2199e3fc0334330e4a20a10a74`.
 
 ## OPEN ISSUES
@@ -120,7 +123,6 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - `ServicePage` visual parity завершен: все 6 service pages имеют утвержденные hero/gallery из production assets and one shared homepage-aligned commercial layout.
 - `content/blog-posts.ts` использует generated SVG covers.
 - `generateWebsiteJsonLd()` все еще содержит `SearchAction`, но реального поиска нет.
-- `generateProductJsonLd()` Offer `url` сейчас указывает на `SITE_URL`, не на конкретную service page.
 - Старый P1-06 scope `commercial pages visual polish` superseded продуктовым решением P1-06.1: `/tseny` уже закрыта как pricing landing; `/otzyvy` и `/kontakty` не являются автоматическим хвостом P1-06.
 - `/otzyvy` содержит текстовые отзывы без внешнего proof: Google/Yandex screenshots, ссылки, фото объекта, город/тип работ.
 - City pages remain templated, but P1-05.1 reduced doorway/thin risk by adding truthful real proof blocks. Future work can add more confirmed local projects, but starter/demo records must not be used as local proof.
@@ -177,7 +179,6 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 - Keep no-slash URL style.
 - Keep sitemap/canonical/OG/JSON-LD aligned with final 200 URLs.
 - Remove or implement `SearchAction`.
-- Fix Product JSON-LD Offer URL to point to the service URL.
 - After real photos, consider image sitemap.
 - Check GA/Yandex production env if Telegram `/traffic_*` shows warning.
 - Do not duplicate submitted form success as analytics event; lead stats already count заявки.
@@ -189,7 +190,6 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 - Benefits icons true-vector migration: LOW priority cleanup only. Current `public/icons/benefits/*.svg` are SVG wrappers with embedded raster PNG. They are approved production visual source of truth. Future true-vector replacement must preserve look 1:1 and must not use `<image>`, base64, PNG/JPEG/WebP inside. If vector version looks worse, do not replace.
 - Placeholder SVG helpers remain in `content/blog-posts.ts`; CityPage, portfolio cards and the six ServicePage galleries now use real photo assets.
 - `SearchAction` without search.
-- Product JSON-LD Offer URLs.
 - Dependency ranges with `latest`.
 - No automated regression tests for sitemap/canonical/API/phone utils.
 - Local scratch `.tmp/` not ignored/cleaned yet due Chrome lock during deletion.
@@ -334,11 +334,11 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Remaining debt: CityPage and blog still contain older "за 5 минут" wording and should be handled only in a separate approved content stage.
    - Implementation head: `f9739bc6238222ca13c56dfbfc0bc46bd1876d89`; merge/main SHA before docs: `d2d838f4eab4f3891349daf4a15296fdc0fb827e`; Production deployment ID: `dpl_4dFcqkB18zhnoAW4HZUj37nCS5RY`.
 
-11. `P1-07-product-jsonld-offer-urls`
-   - Что сделать: Product JSON-LD Offer `url` привязать к конкретной service page, не к homepage.
+11. `SEO-01-product-jsonld`
+   - Статус: DONE after merge to `main`, Production deployment, Production smoke and GSC Live Test.
+   - Что сделано: Product JSON-LD теперь содержит service hero `image`, а Offer `url` ведёт на canonical конкретной услуги. `/tseny` также отдаёт шесть Product JSON-LD с собственными image/Offer URL по услугам.
    - Где: `lib/seo.ts`, `components/templates/ServicePage.tsx`, `app/tseny/page.tsx`.
-   - Зачем: schema должна быть точнее для поисковиков.
-   - Как проверить: JSON-LD на `/zabory-iz-profnastila` содержит Offer URL этой страницы; no redirect URL.
+   - Merge/main SHA: `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c`.
 
 ### P2 - улучшения позже
 
@@ -364,7 +364,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Что сделать: добавить небольшой deterministic regression script для sitemap/canonical/API/phone utils.
    - Где: `scripts/`, possibly package script if a separate task approves it.
    - Зачем: ловить SEO/API regressions до production.
-   - Как проверить: one command checks representative 200 pages, canonical host, no trailing slash policy, sitemap URLs without redirects, robots host, apex/duplicate host redirects, protected API unauthorized behavior, and later SearchAction absence / Product Offer URLs.
+   - Как проверить: one command checks representative 200 pages, canonical host, no trailing slash policy, sitemap URLs without redirects, robots host, apex/duplicate host redirects, protected API unauthorized behavior, SearchAction absence, and Product JSON-LD image/Offer URL regression coverage.
    - Tooling note: do not add a test framework if a plain Node script is enough.
 
 5. `P2-dependency-pin-cleanup`
@@ -377,7 +377,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 
 - `docs/PROGRESS.md`: historical log useful, but not current source of truth. Contains stale checkboxes and older "Next 15" history. Treat as archive.
 - `docs/PLAN.MD.md`: original build plan useful for context, but current project has moved beyond it. Contains checklist items that are partially outdated by P0/P1 fixes.
-- `AUDIT-MASTERZABOR-2026.md`: valuable audit, but several P0/P1 findings are now fixed. Still current for real photos, SearchAction, Product Offer URL, city thin risk, blog scale, tests.
+- `AUDIT-MASTERZABOR-2026.md`: valuable audit, but several P0/P1/SEO-01 findings are now fixed. Still current for real photos, SearchAction, city thin risk, blog scale, tests.
 - `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`: domain strategy remains valid. Some "docs drift" notes are historical because docs were later synchronized.
 - `docs/AUDIT-ANALYTICS-DOMAIN-CONSISTENCY.md`: still valid for GA server env/OAuth warning diagnosis.
 - `PROJECT-KNOWLEDGE-BASE.md`: mostly current, but benefit icon size line still may mention old `32/40`; new selected size is `44/52`.
