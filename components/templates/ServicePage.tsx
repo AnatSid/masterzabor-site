@@ -216,13 +216,14 @@ export function ServicePage({ service }: ServicePageProps) {
               </span>
             </h1>
             <ServiceHeroSubtitle service={service} />
-            <p className="mt-5 text-base font-semibold text-slate-700 sm:text-lg">
-              Цены{" "}
-              <span className="text-[#0A5633]">
+            <div className="mt-5" aria-label="Ориентировочная цена">
+              <p className="text-lg font-extrabold leading-tight text-[#0A5633] sm:text-2xl">
                 от {service.priceFrom} {service.priceUnit}
-              </span>{" "}
-              · ориентировочная стоимость
-            </p>
+              </p>
+              <p className="mt-1 text-sm font-medium leading-snug text-slate-500">
+                ориентировочно
+              </p>
+            </div>
             <div className="mt-6 grid gap-2 sm:mt-8 sm:flex sm:flex-row sm:gap-4">
               <a
                 className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#0A5633] px-4 py-2 text-xs font-bold leading-tight text-white shadow-lg shadow-green-950/10 transition hover:bg-[#06321F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2 sm:px-6 sm:py-3 sm:text-base"
@@ -364,11 +365,16 @@ export function ServicePage({ service }: ServicePageProps) {
             <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
               Как проходит работа
             </h2>
-            <p className={sectionSubtitleClassName}>
-              Сначала уточним параметры и назовём предварительный ориентир по
-              стоимости. Только после согласования деталей переходим к договору,
-              доставке и монтажу.
-            </p>
+            <div className={`${sectionSubtitleClassName} space-y-2`}>
+              <p>
+                Сначала уточним параметры и назовём предварительный ориентир по
+                стоимости.
+              </p>
+              <p>
+                Только после согласования деталей переходим к договору, доставке
+                и монтажу.
+              </p>
+            </div>
           </div>
           <ol className="mt-10 grid gap-0 md:grid-cols-3 md:gap-y-8 xl:grid-cols-5 xl:gap-y-0">
             {processStages.map((stage) => (
