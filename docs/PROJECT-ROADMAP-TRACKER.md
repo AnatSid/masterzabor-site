@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: P1-06.4 implementation/main merge SHA `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d`
+Текущая production точка отсчета: P1-06.5 implementation/main merge SHA `d2d838f4eab4f3891349daf4a15296fdc0fb827e`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production implementation/content baseline: `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d` (`Merge P1-06.4 service page visual parity`).
+- Последний production implementation/content baseline: `d2d838f4eab4f3891349daf4a15296fdc0fb827e` (`Merge P1-06.5 nationwide copy cleanup`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -43,6 +43,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.3 CityPage calculator compact parity is complete: every city route keeps one shared `CityPage` template, now with a homepage-like light calculator composition, dynamic city heading, approved two-paragraph copy and `QuizForm presentation="compact"` while preserving `cityName` and `source`.
 - P1-06.4 ServicePage visual parity is complete: all six service pages now use one shared homepage-aligned commercial flow with light branded hero, compact inline hero price, service-specific benefits checklist, real-photo gallery before pricing, honest pricing block, 5-step process timeline, `/tseny`-like compact calculator, useful/SEO content before FAQ, and related links at the bottom.
 - ServicePage QuizForm now intentionally uses `presentation="compact"`; validation, API submission, analytics and service defaults were not changed.
+- P1-06.5 nationwide copy cleanup is complete: homepage and shared ServicePage commercial copy now use neutral Belarus-wide wording instead of implying "we travel from Gomel"; legitimate Gomel-local context in city/contact/review surfaces is preserved.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
@@ -76,6 +77,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.2 homepage QuizForm compact refinement.
 - P1-06.3 CityPage calculator compact parity and QuizForm step-count source.
 - P1-06.4 ServicePage visual parity and compact calculator.
+- P1-06.5 nationwide copy cleanup for homepage FAQ and shared ServicePage useful content.
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
 
 ## AUDITS COMPLETED
@@ -109,6 +111,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.2 homepage QuizForm compact refinement completed on branch `codex/P1-06.2-homepage-quiz-compact`: homepage calculator retained the existing visual design, reused approved `QuizForm presentation="compact"`, removed unnecessary empty height inside the form, kept question/answers/controls as one gathered flow, and split the approved explanatory copy into two paragraphs. `/tseny` was not changed and regression passed. Implementation commit: `ae739acbbf5854637ac234288730ef5196ba2ab6`; merge/main SHA before docs: `296157b27463df47c34ce6359614e9942836aa2c`.
 - P1-06.3 CityPage calculator compact parity completed on branch `codex/P1-06.3-citypage-quiz-compact`: all city routes now use the shared CityPage light calculator section with dynamic city heading, approved two-paragraph copy, `QuizForm presentation="compact"`, and centralized `QUIZ_TOTAL_STEPS` for step count display/copy. QuizForm validation, API submission and analytics events were not changed. Homepage and `/tseny` regression passed; ServicePage, `/kontakty` and blog QuizForm callsites were not redesigned. Implementation commit: `ea64bb8272fe0cd526a07d885b39beb749500ea6`; merge/main SHA before docs: `7643b7fedd38585040092a7054e75dc8cb10d68c`.
 - P1-06.4 ServicePage visual parity completed on branch `codex/P1-06.4-servicepage-visual-parity`: shared `ServicePage` was rebuilt into the approved homepage-like commercial flow while preserving the real-photo system, routes, metadata/canonical/schema, service data and lead behavior. It added light branded hero treatment, compact inline hero price, service-specific benefits checklist, real-photo gallery before pricing, honest pricing block, 5-step process timeline, `/tseny`-like compact calculator, useful/SEO content before FAQ, and related links at the bottom. ServicePage QuizForm now intentionally uses `presentation="compact"`. Implementation head: `4a2b8fc79b521bd50d49254569934f5378c6feda`; merge/main SHA before docs: `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d`.
+- P1-06.5 nationwide copy cleanup completed on branch `codex/P1-06.5-nationwide-copy-cleanup`: homepage FAQ and shared ServicePage useful content now present MasterZabor as working across Belarus without making geography feel like an automatic price/risk objection; the specialist visit is explicitly described as the next step after preliminary calculation and agreement. Implementation head: `f9739bc6238222ca13c56dfbfc0bc46bd1876d89`; merge/main SHA before docs: `d2d838f4eab4f3891349daf4a15296fdc0fb827e`.
 - TOOLING-01 completed on branch `codex/TOOLING-01-codex-workflow-cleanup`: root `AGENTS.md` created for Codex persistent instructions; `.cursorrules` remains historical/reference; roadmap remains the only roadmap source of truth; Knowledge Base remains architecture/project memory; future stage prompts should mostly contain goal, scope and acceptance instead of repeating stable repository rules; no MCP/plugins/dependencies/Skills were added. Implementation/main SHA: `edf728009c2d3b2199e3fc0334330e4a20a10a74`.
 
 ## OPEN ISSUES
@@ -125,7 +128,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Known lint warning: `components/forms/QuizForm.tsx` React Hook Form `watch()` / React Compiler compatibility. Не blocker сейчас.
 - `.tmp/` local scratch is ignored in `.gitignore`; if it contains Chrome lock files, do not force-delete while Chrome/processes are running.
 - Root `PROJECT-ROADMAP-TRACKER.md` has been removed to avoid two competing roadmap sources; use `docs/PROJECT-ROADMAP-TRACKER.md`.
-- Future QuizForm copy audit: ServicePage, `/kontakty` and blog still use default QuizForm contexts and may contain older surrounding copy such as "за 5 минут"; audit/update only in a separate approved content stage.
+- Future copy audit: CityPage and blog still contain older "за 5 минут" wording. Audit/update only in a separate approved content stage.
 
 ## REMAINING PAGES / UI WORK
 
@@ -319,7 +322,19 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Verification: production `/`, `/tseny`, `/lida` and all six service pages returned 200; representative `/zabory-iz-profnastila` and `/vorota-otkatnye` passed desktop/mobile visual, no horizontal overflow, gallery/pricing/process/calculator/order checks, and canonical/Product/FAQ/Breadcrumb schema checks.
    - Implementation head: `4a2b8fc79b521bd50d49254569934f5378c6feda`; merge/main SHA before docs: `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d`.
 
-10. `P1-07-product-jsonld-offer-urls`
+10. `P1-06.5-nationwide-copy-cleanup`
+   - Статус: DONE after Preview approval, merge to `main`, Production deployment and Production smoke.
+   - Что сделано: homepage FAQ and shared ServicePage useful content cleaned up nationwide positioning so visitors do not read the site as "a Gomel company traveling far away" on core commercial pages.
+   - Где: `app/page.tsx`, `components/templates/ServicePage.tsx`.
+   - Homepage FAQ final question: `Работаете ли вы в небольших городах, посёлках и деревнях?`
+   - Homepage FAQ final answer: `Да. Работаем по всей Беларуси — в том числе в небольших городах, посёлках и деревнях. Для предварительного расчёта достаточно сообщить основные параметры объекта. После согласования деталей организуем выезд специалиста на объект для заключения договора и подготовки к работам.`
+   - ServicePage copy decision: first useful-content paragraph now ends with `После согласования условий организуем выезд специалиста на объект для заключения договора и подготовки к работам.`
+   - Product decision: use honest nationwide wording (`Работаем по всей Беларуси`) on homepage/service pages; do not invent local offices, local crews or guaranteed logistics claims; keep legitimate Gomel facts in `/gomel`, `/kontakty`, real reviews/projects and local datasets.
+   - Verification: production `/`, all six service pages, `/lida`, `/gomel` and `/kontakty` returned 200; homepage FAQ/FAQ JSON-LD contain the final wording; old Gomel-centric FAQ and old approved-scope "за 5 минут" wording are absent from homepage/service pages; legitimate Gomel contexts remain.
+   - Remaining debt: CityPage and blog still contain older "за 5 минут" wording and should be handled only in a separate approved content stage.
+   - Implementation head: `f9739bc6238222ca13c56dfbfc0bc46bd1876d89`; merge/main SHA before docs: `d2d838f4eab4f3891349daf4a15296fdc0fb827e`; Production deployment ID: `dpl_4dFcqkB18zhnoAW4HZUj37nCS5RY`.
+
+11. `P1-07-product-jsonld-offer-urls`
    - Что сделать: Product JSON-LD Offer `url` привязать к конкретной service page, не к homepage.
    - Где: `lib/seo.ts`, `components/templates/ServicePage.tsx`, `app/tseny/page.tsx`.
    - Зачем: schema должна быть точнее для поисковиков.

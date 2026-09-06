@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production implementation/content baseline after P1-06.4: `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d` (`Merge P1-06.4 service page visual parity`).
+Latest production implementation/content baseline after P1-06.5: `d2d838f4eab4f3891349daf4a15296fdc0fb827e` (`Merge P1-06.5 nationwide copy cleanup`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -111,6 +111,7 @@ architecture changes without separate rationale and user decision.
 - P1-06.1 сформировал pricing strategy: `/tseny` сохранена как indexable pricing landing, а Header теперь намеренно содержит `Цены -> /tseny` after `Наши работы`.
 - P1-06.3 aligned CityPage calculator UX with the approved compact QuizForm flow while preserving one universal CityPage template and city/source lead context.
 - P1-06.4 aligned the shared ServicePage template with the approved homepage/`/tseny` commercial visual system and intentionally switched ServicePage to compact QuizForm presentation while preserving service routes, metadata/schema and lead behavior.
+- P1-06.5 cleaned up homepage and shared ServicePage commercial copy so nationwide pages say `Работаем по всей Беларуси` without implying that the company is "traveling from Gomel"; legitimate Gomel-local contexts remain factual.
 - Нужны реальные фото вместо placeholder-графики.
 - P1-01 adds lightweight conversion events for contact clicks and minimal quiz funnel; submitted forms remain covered by lead stats.
 
@@ -232,7 +233,7 @@ Usage and risks:
 - `Footer`: has full nav including prices/blog/reviews, better coverage than header.
 - `FloatingButtons`: mobile conversion layer for calls and messengers.
 - `SiteContainer`: good shared layout primitive; should continue expanding to all sections.
-- `ServicePage`: shared commercial service template with Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. After P1-06.4 it uses a homepage-aligned flow: light branded hero, compact inline hero price, service-specific benefits checklist, real-photo gallery before pricing, honest pricing block, 5-step process timeline, `/tseny`-like compact calculator, useful/SEO content before FAQ, and related links at the bottom. Desktop hero image pattern stays `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; all six service pages have approved real-photo hero/gallery assets.
+- `ServicePage`: shared commercial service template with Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. After P1-06.4 it uses a homepage-aligned flow: light branded hero, compact inline hero price, service-specific benefits checklist, real-photo gallery before pricing, honest pricing block, 5-step process timeline, `/tseny`-like compact calculator, useful/SEO content before FAQ, and related links at the bottom. After P1-06.5 its shared useful-content copy uses neutral nationwide wording and clarifies that the specialist visit is for contract conclusion and preparation after preliminary agreement. Desktop hero image pattern stays `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; all six service pages have approved real-photo hero/gallery assets.
 - `CityPage`: universal city template for all city routes; unique city text is generated from city data. After P1-05.1 it uses the homepage hero photo direction, real service thumbnails, shared `BenefitTrustSection`, and truthful project proof from confirmed real records. After P1-06.3 its calculator section uses a light homepage-like composition, dynamic city heading and compact QuizForm presentation.
 - `BenefitTrustSection`: shared 8-card benefit/trust block used by homepage and CityPage. It is the single source for approved benefit titles, text and production icon paths.
 - `QuizForm`: main conversion form. Default presentation remains the larger form unless a caller opts into `presentation="compact"`. P1-06.1 uses compact presentation on `/tseny`; P1-06.2 uses it in the homepage calculator section; P1-06.3 uses it in CityPage; P1-06.4 uses it in ServicePage. These stages did not change validation, API submission or analytics events.
@@ -447,6 +448,32 @@ P1-06.4 implementation head: `4a2b8fc79b521bd50d49254569934f5378c6feda`.
 
 P1-06.4 merge/main SHA before docs: `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d`.
 
+## Nationwide Commercial Messaging Rule
+
+Status: P1-06.5 nationwide copy cleanup is DONE after Preview approval, merge to `main`, Production deployment and Production smoke.
+
+Decision:
+
+- Homepage and shared ServicePage commercial copy should present MasterZabor as working across Belarus without making geography feel like an automatic price/risk objection.
+- On nationwide commercial surfaces, prefer neutral wording such as `Работаем по всей Беларуси`.
+- Do not emphasize "from Gomel" on homepage/service pages unless a separate task has a specific reason.
+- Do not invent local offices, local crews, warehouses, regional branches or guaranteed logistics claims.
+- Legitimate Gomel context remains valid where it is factual: `/gomel`, `/kontakty` address/contact information, real review/project context, and city/location datasets.
+- After preliminary calculation and agreement, ServicePage copy may say that a specialist visit is organized for contract conclusion and preparation.
+
+Final homepage FAQ wording:
+
+- Question: `Работаете ли вы в небольших городах, посёлках и деревнях?`
+- Answer: `Да. Работаем по всей Беларуси — в том числе в небольших городах, посёлках и деревнях. Для предварительного расчёта достаточно сообщить основные параметры объекта. После согласования деталей организуем выезд специалиста на объект для заключения договора и подготовки к работам.`
+
+Remaining copy debt: CityPage and blog still contain older "за 5 минут" wording. Handle that only in a separate approved content stage.
+
+P1-06.5 implementation head: `f9739bc6238222ca13c56dfbfc0bc46bd1876d89`.
+
+P1-06.5 merge/main SHA before docs: `d2d838f4eab4f3891349daf4a15296fdc0fb827e`.
+
+P1-06.5 production deployment ID: `dpl_4dFcqkB18zhnoAW4HZUj37nCS5RY`.
+
 ## Project Portfolio Foundation
 
 Status: P1-03 project photos foundation is DONE after approved local visual/technical review, Preview build, merge to `main`, Production deployment and Production smoke.
@@ -648,7 +675,7 @@ Unverified source filenames: none for the six completed ServicePage sets based o
 
 - Floating CTA behavior: on homepage it should not cover the first viewport because header phone and hero CTAs are already visible; on deeper pages it can stay visible immediately as a conversion shortcut.
 - `QuizForm` основной канал заявок; keep default behavior stable and use `presentation="compact"` only where explicitly chosen by the page/section. Current intentional compact callsites are homepage `/`, `/tseny`, CityPage and ServicePage.
-- QuizForm usage map after P1-06.4:
+- QuizForm usage map after P1-06.5:
   - Homepage `/`: `presentation="compact"`, source `home-quiz`, surrounding copy depends on `QUIZ_TOTAL_STEPS`.
   - `/tseny`: `presentation="compact"`, source `prices-page`, surrounding copy does not use a literal step count.
   - CityPage / all city routes: `presentation="compact"`, source `city-${city.slug}`, `cityName={city.name}`, surrounding copy depends on `QUIZ_TOTAL_STEPS`.
@@ -656,7 +683,7 @@ Unverified source filenames: none for the six completed ServicePage sets based o
   - `/kontakty`: default presentation, source `contacts-page`.
   - Blog posts: default presentation, source `blog-post-${post.slug}`.
 - If QuizForm ever changes from 6 to 7+ steps, check `QUIZ_TOTAL_STEPS`, QuizForm progress/validation/contact-step threshold, homepage copy, CityPage copy, all callsites and surrounding marketing copy.
-- Future content task: audit remaining default QuizForm surrounding copy in `/kontakty` and blog, especially old "за 5 минут" wording. ServicePage calculator copy was handled in P1-06.4.
+- Future content task: audit remaining old "за 5 минут" copy in CityPage and blog. Homepage and ServicePage approved-scope copy was handled in P1-06.5.
 - `LeadForm` остаётся хорошим быстрым fallback.
 - Portfolio/reviews требуют реальных доказательств: фото, город, материал, срок, диапазон цены, внешний отзыв.
 - Placeholder graphics нельзя считать production portfolio.
