@@ -19,32 +19,22 @@ type ServicePageProps = {
   service: Service;
 };
 
-const stages = [
-  "Расчёт",
-  "Консультация",
+const processStages = [
+  "Заявка",
+  "Уточняем детали",
+  "Предварительный расчёт стоимости",
   "Договор",
-  "Доставка",
-  "Монтаж",
-  "Гарантия",
+  "Доставка и монтаж",
 ] as const;
 
-const priceMultipliers = [
-  {
-    name: "Эконом",
-    multiplier: 1,
-    description: "Базовое решение для дачи, временного ограждения или простого участка.",
-  },
-  {
-    name: "Стандарт",
-    multiplier: 1.25,
-    description: "Оптимальная комплектация для частного дома с усиленным каркасом.",
-  },
-  {
-    name: "Премиум",
-    multiplier: 1.55,
-    description: "Максимальная жёсткость, аккуратный внешний вид и расширенная комплектация.",
-  },
-] as const;
+const benefitsHeadings: Record<string, string> = {
+  "zabory-iz-profnastila": "Почему выбирают профнастил",
+  "zabory-iz-evroshtaketnika": "Почему выбирают евроштакетник",
+  "zabory-iz-setki-rabitsy": "Почему выбирают сетку-рабицу",
+  "vorota-raspashnye": "Почему выбирают распашные ворота",
+  "vorota-otkatnye": "Почему выбирают откатные ворота",
+  kalitki: "Почему выбирают калитки",
+};
 
 const priorityCities = cities.filter((city) =>
   [
@@ -58,6 +48,19 @@ const priorityCities = cities.filter((city) =>
     "bobruysk",
   ].includes(city.slug),
 );
+
+const pricingFactors = [
+  "материал и покрытие",
+  "размеры объекта",
+  "основание, столбы и особенности участка",
+  "ворота, калитка и комплектация",
+] as const;
+
+const sectionIntroClassName =
+  "w-full max-w-none lg:max-w-[70%] xl:max-w-[56rem]";
+
+const sectionSubtitleClassName =
+  "mt-4 text-pretty leading-relaxed text-slate-600 md:text-[1.0625rem] md:leading-[1.65]";
 
 function imagePlaceholder(title: string, index: number) {
   const colors = ["#1B5E20", "#2E7D32", "#F59E0B", "#475569", "#166534", "#92400E"];
@@ -115,10 +118,10 @@ function ServiceHeroSubtitle({ service }: { service: Service }) {
   if (service.heroSubtitle) {
     return (
       <div className="mt-6 min-w-0 max-w-2xl space-y-4">
-        <p className="text-lg leading-relaxed text-slate-200">
+        <p className="text-lg leading-relaxed text-slate-700">
           {service.heroSubtitle.lead}
         </p>
-        <p className="text-base font-medium leading-relaxed text-slate-300/85">
+        <p className="text-base font-medium leading-relaxed text-slate-600">
           {service.heroSubtitle.accent}
         </p>
       </div>
@@ -126,9 +129,28 @@ function ServiceHeroSubtitle({ service }: { service: Service }) {
   }
 
   return (
-    <p className="mt-6 min-w-0 max-w-2xl text-lg leading-relaxed text-slate-200">
+    <p className="mt-6 min-w-0 max-w-2xl text-lg leading-relaxed text-slate-700">
       {service.description}
     </p>
+  );
+}
+
+function getBenefitsHeading(service: Service) {
+  return benefitsHeadings[service.slug] ?? `Почему выбирают ${service.title.toLowerCase()}`;
+}
+
+function CheckIcon({ tone = "brand" }: { tone?: "brand" | "light" } = {}) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`mt-1 grid size-5 shrink-0 place-items-center rounded-full text-xs ${
+        tone === "light"
+          ? "bg-white/15 text-white ring-1 ring-white/25"
+          : "bg-[#0A5633] text-white"
+      }`}
+    >
+      ✓
+    </span>
   );
 }
 
@@ -171,40 +193,47 @@ export function ServicePage({ service }: ServicePageProps) {
         />
       ))}
 
-      <section className="bg-slate-950 text-white">
-        <SiteContainer className="grid gap-10 py-14 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,420px)] lg:items-start lg:py-20">
+      <section className="relative overflow-hidden bg-[#F6F8F5]">
+        <SiteContainer className="relative grid gap-8 pb-8 pt-6 sm:pb-12 sm:pt-16 lg:grid-cols-[minmax(0,1fr)_minmax(320px,480px)] lg:items-center lg:gap-12 lg:pb-16 lg:pt-20">
           <div className="min-w-0">
-            <nav aria-label="Хлебные крошки" className="text-sm text-slate-300">
+            <nav aria-label="Хлебные крошки" className="text-sm text-slate-500">
               <ol className="flex flex-wrap gap-2">
                 {breadcrumbs.map((item, index) => (
                   <li key={item.url}>
                     {index > 0 ? <span className="mr-2">/</span> : null}
-                    <Link className="hover:text-white" href={item.url}>
+                    <Link className="hover:text-[#0A5633]" href={item.url}>
                       {item.name}
                     </Link>
                   </li>
                 ))}
               </ol>
             </nav>
-            <h1 className="mt-6 text-balance text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
-              <span className="sm:whitespace-nowrap">{service.title}</span>
+            <h1 className="mt-8 text-balance text-[1.9rem] font-extrabold leading-[1.08] tracking-tight text-[#202020] sm:text-6xl lg:text-[3.25rem]">
+              <span>{service.title}</span>
               <br />
-              <span className="sm:whitespace-nowrap">в Беларуси под ключ</span>
+              <span>
+                в Беларуси <span className="text-[#0A5633]">под ключ</span>
+              </span>
             </h1>
             <ServiceHeroSubtitle service={service} />
-            <p className="mt-6 text-3xl font-bold text-amber-300">
-              от {service.priceFrom} {service.priceUnit}
-            </p>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-5" aria-label="Ориентировочная цена">
+              <p className="text-lg font-extrabold leading-tight text-[#0A5633] sm:text-2xl">
+                от {service.priceFrom} {service.priceUnit}
+              </p>
+              <p className="mt-1 text-sm font-medium leading-snug text-slate-500">
+                ориентировочно
+              </p>
+            </div>
+            <div className="mt-6 grid gap-2 sm:mt-8 sm:flex sm:flex-row sm:gap-4">
               <a
-                className="inline-flex justify-center rounded-xl bg-[#F59E0B] px-6 py-3 font-bold text-white transition hover:bg-amber-600"
+                className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#0A5633] px-4 py-2 text-xs font-bold leading-tight text-white shadow-lg shadow-green-950/10 transition hover:bg-[#06321F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2 sm:px-6 sm:py-3 sm:text-base"
                 href="#lead-form"
               >
                 Рассчитать стоимость
               </a>
               <TrackedContactLink
                 channel="click_call"
-                className="inline-flex justify-center rounded-xl bg-white px-6 py-3 font-bold text-[#1B5E20] transition hover:bg-slate-100"
+                className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg border border-[#b9d7c6] bg-white px-4 py-2 text-xs font-bold leading-tight text-[#0A5633] transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2 sm:px-6 sm:py-3 sm:text-base"
                 eventLocation="service_hero"
                 href={`tel:${PHONE}`}
                 source={`service-${service.slug}`}
@@ -214,7 +243,7 @@ export function ServicePage({ service }: ServicePageProps) {
             </div>
           </div>
 
-          <div className="service-hero-image-frame relative aspect-[4/3] min-h-64 w-full overflow-hidden rounded-3xl sm:min-h-72 lg:aspect-auto lg:min-h-[420px]">
+          <div className="service-hero-image-frame relative aspect-[4/3] min-h-64 w-full overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-xl shadow-green-950/10 sm:min-h-72 lg:aspect-square lg:min-h-0">
             <Image
               alt={heroImage.alt}
               className="object-cover"
@@ -228,97 +257,192 @@ export function ServicePage({ service }: ServicePageProps) {
         </SiteContainer>
       </section>
 
-      <section className="py-16">
+      <section className="py-12 sm:py-16">
         <SiteContainer>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Преимущества
-          </h2>
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {service.features.map((feature, index) => (
-              <article className="rounded-2xl bg-[#F5F5F5] p-6" key={feature}>
-                <div className="flex size-11 items-center justify-center rounded-full bg-[#1B5E20] font-bold text-white">
-                  {index + 1}
-                </div>
-                <p className="mt-5 font-semibold leading-6">{feature}</p>
-              </article>
+          <div className={sectionIntroClassName}>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              {getBenefitsHeading(service)}
+            </h2>
+          </div>
+          <ul className="mt-8 grid gap-x-10 gap-y-5 sm:grid-cols-2">
+            {service.features.map((feature) => (
+              <li
+                className="flex gap-3 border-t border-slate-200 pt-4 text-sm font-semibold leading-6 text-slate-800 sm:text-base sm:leading-7"
+                key={feature}
+              >
+                <CheckIcon />
+                <span>{feature}</span>
+              </li>
             ))}
-          </div>
+          </ul>
         </SiteContainer>
       </section>
 
-      <section className="bg-[#F5F5F5] py-16">
-        <SiteContainer>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Таблица цен
-          </h2>
-          <div className="mt-8 overflow-x-auto rounded-2xl border border-slate-200 bg-white [-webkit-overflow-scrolling:touch]">
-            <table className="w-full min-w-[680px] text-left">
-              <thead className="bg-slate-100 text-sm uppercase tracking-wide text-slate-600">
-                <tr>
-                  <th className="px-6 py-4">Комплектация</th>
-                  <th className="px-6 py-4">Цена от</th>
-                  <th className="px-6 py-4">Что входит</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {priceMultipliers.map((item) => (
-                  <tr key={item.name}>
-                    <td className="px-6 py-5 font-bold">{item.name}</td>
-                    <td className="px-6 py-5 text-[#1B5E20] font-bold">
-                      от {Math.round(service.priceFrom * item.multiplier)}{" "}
-                      {service.priceUnit}
-                    </td>
-                    <td className="px-6 py-5 text-slate-600">
-                      {item.description}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-4 text-sm text-slate-600">
-            Цены ориентировочные. Точный расчёт зависит от длины, высоты,
-            комплектации, доставки и особенностей участка.
-          </p>
-        </SiteContainer>
-      </section>
-
-      <section className="py-16">
-        <SiteContainer>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Этапы работы
-          </h2>
-          <div className="mt-10 grid gap-4 md:grid-cols-3 lg:grid-cols-6">
-            {stages.map((stage, index) => (
-              <article className="rounded-2xl border border-slate-200 p-5" key={stage}>
-                <div className="text-sm font-bold text-[#1B5E20]">
-                  0{index + 1}
-                </div>
-                <h3 className="mt-3 font-bold">{stage}</h3>
-              </article>
-            ))}
-          </div>
-        </SiteContainer>
-      </section>
-
-      <section className="bg-[#F5F5F5] py-16">
+      <section className="bg-[#F5F5F5] py-12 sm:py-16">
         <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Галерея
           </h2>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {galleryImages.map((image) => (
-              <Image
-                alt={image.alt}
-                className="h-60 rounded-2xl object-cover shadow-sm"
-                height={420}
+              <div
+                className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-slate-100 shadow-sm"
                 key={image.src}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                src={image.src}
-                style={{ objectPosition: image.objectPosition ?? "center" }}
-                width={620}
-              />
+              >
+                <Image
+                  alt={image.alt}
+                  className="object-cover"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  src={image.src}
+                  style={{ objectPosition: image.objectPosition ?? "center" }}
+                />
+              </div>
             ))}
+          </div>
+        </SiteContainer>
+      </section>
+
+      <section className="py-12 sm:py-16">
+        <SiteContainer className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div className={sectionIntroClassName}>
+            <p className="font-semibold uppercase tracking-wide text-[#0A5633]">
+              Стоимость услуги
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Ориентир по цене
+            </h2>
+            <p className={sectionSubtitleClassName}>
+              Цена на {service.title.toLowerCase()} начинается от указанного
+              ориентира. Итоговую стоимость считаем под конкретный объект после
+              уточнения параметров.
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <a
+                className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#0A5633] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-green-950/10 transition hover:bg-[#06321F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2"
+                href="#lead-form"
+              >
+                Получить расчёт
+              </a>
+              <Link
+                className="inline-flex min-h-11 items-center justify-center rounded-lg border border-[#b9d7c6] bg-white px-5 py-3 text-sm font-bold text-[#0A5633] transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2"
+                href="/tseny"
+              >
+                Смотреть все цены
+              </Link>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+              Базовый ориентир
+            </p>
+            <p className="mt-2 text-4xl font-extrabold leading-tight text-[#0A5633] sm:text-5xl">
+              от {service.priceFrom} {service.priceUnit}
+            </p>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">
+              Это не фиксированный прайс для любого участка. На расчёт влияют
+              параметры объекта и выбранная комплектация.
+            </p>
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              {pricingFactors.map((factor) => (
+                <li
+                  className="flex gap-3 text-sm font-semibold leading-6 text-slate-800"
+                  key={factor}
+                >
+                  <CheckIcon />
+                  <span>{factor}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </SiteContainer>
+      </section>
+
+      <section className="bg-[#F6F8F5] py-12 sm:py-16">
+        <SiteContainer>
+          <div className={sectionIntroClassName}>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Как проходит работа
+            </h2>
+            <div className={`${sectionSubtitleClassName} space-y-2`}>
+              <p>
+                Сначала уточним параметры и назовём предварительный ориентир по
+                стоимости.
+              </p>
+              <p>
+                Только после согласования деталей переходим к договору, доставке
+                и монтажу.
+              </p>
+            </div>
+          </div>
+          <ol className="mt-10 grid gap-0 md:grid-cols-3 md:gap-y-8 xl:grid-cols-5 xl:gap-y-0">
+            {processStages.map((stage) => (
+              <li
+                className="relative border-l border-[#b9d7c6] pb-7 pl-6 last:border-l-0 last:pb-0 md:border-l-0 md:border-t md:pb-0 md:pl-0 md:pr-8 md:pt-6"
+                key={stage}
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[0.4375rem] top-0 size-3.5 rounded-full bg-[#0A5633] ring-4 ring-[#F6F8F5] md:-top-[0.4375rem] md:left-0"
+                />
+                <h3 className="font-bold leading-tight text-slate-950">
+                  {stage}
+                </h3>
+              </li>
+            ))}
+          </ol>
+        </SiteContainer>
+      </section>
+
+      <section className="bg-[#F6F8F5] py-12 sm:py-16" id="lead-form">
+        <SiteContainer>
+          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-green-950/10">
+            <div className="grid lg:grid-cols-[minmax(0,0.34fr)_minmax(0,0.66fr)]">
+              <div className="relative flex flex-col justify-center overflow-hidden bg-[radial-gradient(circle_at_100%_100%,rgba(246,248,245,0.24)_0%,rgba(246,248,245,0.12)_30%,transparent_58%),linear-gradient(135deg,#0A5633_0%,#17652E_58%,#2D7D3C_100%)] p-5 text-white sm:p-8 lg:p-9">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-px bg-white/30"
+                />
+                <div
+                  aria-hidden="true"
+                  className="absolute -bottom-16 -right-16 size-44 rounded-full bg-white/10 blur-2xl"
+                />
+                <div className="relative max-w-sm">
+                  <p className="font-semibold uppercase tracking-wide text-amber-300">
+                    БЕСПЛАТНЫЙ РАСЧЁТ
+                  </p>
+                  <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                    Рассчитаем стоимость под ваш участок
+                  </h2>
+                  <p className="mt-4 text-sm leading-6 text-white/80 sm:text-base sm:leading-7">
+                    Ответьте на несколько вопросов — этого достаточно, чтобы
+                    понять, что вам нужно, и вернуться к вам с понятным
+                    ориентиром по цене.
+                  </p>
+                  <ul className="mt-5 space-y-2.5 text-sm font-medium leading-snug text-green-50/90 sm:text-[0.9375rem]">
+                    {[
+                      "Можно указать примерные размеры",
+                      "Детали уточним по телефону",
+                      "Узнаете стоимость и сможете сравнить варианты",
+                      "Получите понятный ориентир и спокойно примете решение",
+                    ].map((item) => (
+                      <li className="flex gap-2.5" key={item}>
+                        <CheckIcon tone="light" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="bg-white p-3 max-md:[&>form]:pb-24 sm:p-5">
+                <QuizForm
+                  presentation="compact"
+                  source={`service-${service.slug}`}
+                  {...quizDefaults}
+                />
+              </div>
+            </div>
           </div>
         </SiteContainer>
       </section>
@@ -335,6 +459,24 @@ export function ServicePage({ service }: ServicePageProps) {
             ))}
           </div>
           </article>
+        </SiteContainer>
+      </section>
+
+      <section className="py-16">
+        <SiteContainer>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Частые вопросы
+          </h2>
+          <div className="mt-8 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
+            {service.faq.map((item) => (
+              <details className="group p-6" key={item.question}>
+                <summary className="cursor-pointer list-none font-semibold">
+                  {item.question}
+                </summary>
+                <p className="mt-3 leading-relaxed text-slate-600">{item.answer}</p>
+              </details>
+            ))}
+          </div>
         </SiteContainer>
       </section>
 
@@ -372,43 +514,6 @@ export function ServicePage({ service }: ServicePageProps) {
                 </Link>
               ))}
             </div>
-          </div>
-        </SiteContainer>
-      </section>
-
-      <section className="bg-[#1B5E20] py-16" id="lead-form">
-        <SiteContainer className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="text-white">
-            <p className="font-semibold uppercase tracking-wide text-amber-300">
-              Получите расчёт по телефону
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              Узнайте цену на {service.title.toLowerCase()}
-            </h2>
-            <p className="mt-5 text-green-50">
-              Оставьте номер, примерную длину и пожелания. Перезвоним,
-              рассчитаем стоимость за 5 минут и предложим подходящую
-              комплектацию.
-            </p>
-          </div>
-          <QuizForm source={`service-${service.slug}`} {...quizDefaults} />
-        </SiteContainer>
-      </section>
-
-      <section className="py-16">
-        <SiteContainer>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Частые вопросы
-          </h2>
-          <div className="mt-8 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
-            {service.faq.map((item) => (
-              <details className="group p-6" key={item.question}>
-                <summary className="cursor-pointer list-none font-semibold">
-                  {item.question}
-                </summary>
-                <p className="mt-3 leading-relaxed text-slate-600">{item.answer}</p>
-              </details>
-            ))}
           </div>
         </SiteContainer>
       </section>
