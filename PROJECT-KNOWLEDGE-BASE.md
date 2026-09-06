@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production implementation/content baseline after P1-06.2: `296157b27463df47c34ce6359614e9942836aa2c` (`Merge P1-06.2 homepage quiz compact`).
+Latest production implementation/content baseline after P1-06.3: `7643b7fedd38585040092a7054e75dc8cb10d68c` (`Merge P1-06.3 citypage quiz compact`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -109,6 +109,7 @@ architecture changes without separate rationale and user decision.
 - P0-03 moves new leads to atomic Redis list storage (`leads:v2:{date}` via `rpush`) while keeping legacy `leads:{date}` arrays readable for reports.
 - `SearchAction` в JSON-LD есть без реального поиска.
 - P1-06.1 сформировал pricing strategy: `/tseny` сохранена как indexable pricing landing, а Header теперь намеренно содержит `Цены -> /tseny` after `Наши работы`.
+- P1-06.3 aligned CityPage calculator UX with the approved compact QuizForm flow while preserving one universal CityPage template and city/source lead context.
 - Нужны реальные фото вместо placeholder-графики.
 - P1-01 adds lightweight conversion events for contact clicks and minimal quiz funnel; submitted forms remain covered by lead stats.
 
@@ -231,9 +232,9 @@ Usage and risks:
 - `FloatingButtons`: mobile conversion layer for calls and messengers.
 - `SiteContainer`: good shared layout primitive; should continue expanding to all sections.
 - `ServicePage`: good shared service template; has Product/FAQ/Breadcrumb JSON-LD and approved real-photo system. Desktop hero pattern is `480x480`, `rounded-3xl`, `overflow-hidden`, `next/image fill + object-cover`; all six service pages have approved real-photo hero/gallery assets.
-- `CityPage`: universal city template for all city routes; unique city text is generated from city data. After P1-05.1 it uses the homepage hero photo direction, real service thumbnails, shared `BenefitTrustSection`, and truthful project proof from confirmed real records.
+- `CityPage`: universal city template for all city routes; unique city text is generated from city data. After P1-05.1 it uses the homepage hero photo direction, real service thumbnails, shared `BenefitTrustSection`, and truthful project proof from confirmed real records. After P1-06.3 its calculator section uses a light homepage-like composition, dynamic city heading and compact QuizForm presentation.
 - `BenefitTrustSection`: shared 8-card benefit/trust block used by homepage and CityPage. It is the single source for approved benefit titles, text and production icon paths.
-- `QuizForm`: main conversion form. Default presentation remains the larger form unless a caller opts into `presentation="compact"`. P1-06.1 uses compact presentation on `/tseny`; P1-06.2 uses the same compact presentation in the homepage calculator section. Neither stage changed steps, validation, API or analytics events.
+- `QuizForm`: main conversion form. Default presentation remains the larger form unless a caller opts into `presentation="compact"`. P1-06.1 uses compact presentation on `/tseny`; P1-06.2 uses the same compact presentation in the homepage calculator section; P1-06.3 uses it in CityPage. These stages did not change validation, API submission or analytics events.
 - `LeadForm`: simpler fallback form on homepage.
 - `ProjectCard`: reusable project card for portfolio surfaces. It must read category, city, title, service link, photos and optional facts from the project record; do not hardcode cities/materials/project titles in the component.
 - `PortfolioGallery`: useful client filter over the shared project dataset.
@@ -397,6 +398,35 @@ Paragraph 2:
 P1-06.2 implementation commit: `ae739acbbf5854637ac234288730ef5196ba2ab6`.
 
 P1-06.2 merge/main SHA before docs: `296157b27463df47c34ce6359614e9942836aa2c`.
+
+## CityPage Calculator / QuizForm Decision
+
+Status: P1-06.3 CityPage calculator compact parity is DONE after visual + architecture approval, merge to `main`, Production deployment and Production smoke.
+
+Implemented product decision:
+
+- CityPage keeps one shared template for all city routes; there are no per-city calculator forks.
+- The old full-width dark-green CityPage calculator treatment was replaced with a light homepage-like calculator composition.
+- CityPage now uses `QuizForm presentation="compact"` with the approved two-paragraph explanatory copy.
+- The city heading stays dynamic: `Рассчитайте стоимость забора в {city.namePrepositional}`.
+- Lead context is preserved: `cityName={city.name}` keeps the city prefilled in the contact step, and `source={city-${city.slug}}` remains the CityPage source passed to lead submission.
+- `QUIZ_TOTAL_STEPS` is the shared source of truth for the number of quiz steps. P1-06.3 centralized only the step-count source; it was not a broader QuizForm logic refactor.
+- QuizForm validation, API submission and analytics events were not changed.
+- Homepage and `/tseny` regression passed. ServicePage, `/kontakty` and blog QuizForm callsites were not redesigned in P1-06.3.
+
+Approved CityPage calculator copy:
+
+Paragraph 1:
+
+`Ответьте на 6 вопросов — этого достаточно, чтобы понять, что вам нужно, и вернуться к вам с понятным ориентиром по цене.`
+
+Paragraph 2:
+
+`Уточним детали по телефону, чтобы вы могли сравнить варианты и спокойно принять решение.`
+
+P1-06.3 implementation commit: `ea64bb8272fe0cd526a07d885b39beb749500ea6`.
+
+P1-06.3 merge/main SHA before docs: `7643b7fedd38585040092a7054e75dc8cb10d68c`.
 
 ## Project Portfolio Foundation
 
@@ -597,7 +627,16 @@ Unverified source filenames: none for the six completed ServicePage sets based o
 ## Remaining Frontend / Mobile / CRO Notes
 
 - Floating CTA behavior: on homepage it should not cover the first viewport because header phone and hero CTAs are already visible; on deeper pages it can stay visible immediately as a conversion shortcut.
-- `QuizForm` основной канал заявок; keep default behavior stable and use `presentation="compact"` only where explicitly chosen by the page/section. Current intentional compact callsites are `/tseny` and the homepage calculator section.
+- `QuizForm` основной канал заявок; keep default behavior stable and use `presentation="compact"` only where explicitly chosen by the page/section. Current intentional compact callsites are homepage `/`, `/tseny` and CityPage.
+- QuizForm usage map after P1-06.3:
+  - Homepage `/`: `presentation="compact"`, source `home-quiz`, surrounding copy depends on `QUIZ_TOTAL_STEPS`.
+  - `/tseny`: `presentation="compact"`, source `prices-page`, surrounding copy does not use a literal step count.
+  - CityPage / all city routes: `presentation="compact"`, source `city-${city.slug}`, `cityName={city.name}`, surrounding copy depends on `QUIZ_TOTAL_STEPS`.
+  - ServicePage / all 6 service routes: default presentation, source `service-${slug}`, service defaults preserved.
+  - `/kontakty`: default presentation, source `contacts-page`.
+  - Blog posts: default presentation, source `blog-post-${post.slug}`.
+- If QuizForm ever changes from 6 to 7+ steps, check `QUIZ_TOTAL_STEPS`, QuizForm progress/validation/contact-step threshold, homepage copy, CityPage copy, all callsites and surrounding marketing copy.
+- Future content task: audit remaining default QuizForm surrounding copy in ServicePage, `/kontakty` and blog, especially old "за 5 минут" wording. This was intentionally not changed in P1-06.3.
 - `LeadForm` остаётся хорошим быстрым fallback.
 - Portfolio/reviews требуют реальных доказательств: фото, город, материал, срок, диапазон цены, внешний отзыв.
 - Placeholder graphics нельзя считать production portfolio.
