@@ -19,14 +19,22 @@ type ServicePageProps = {
   service: Service;
 };
 
-const stages = [
-  "Расчёт",
-  "Консультация",
+const processStages = [
+  "Заявка",
+  "Уточняем детали",
+  "Предварительный расчёт стоимости",
   "Договор",
-  "Доставка",
-  "Монтаж",
-  "Гарантия",
+  "Доставка и монтаж",
 ] as const;
+
+const benefitsHeadings: Record<string, string> = {
+  "zabory-iz-profnastila": "Почему выбирают профнастил",
+  "zabory-iz-evroshtaketnika": "Почему выбирают евроштакетник",
+  "zabory-iz-setki-rabitsy": "Почему выбирают сетку-рабицу",
+  "vorota-raspashnye": "Почему выбирают распашные ворота",
+  "vorota-otkatnye": "Почему выбирают откатные ворота",
+  kalitki: "Почему выбирают калитки",
+};
 
 const priorityCities = cities.filter((city) =>
   [
@@ -127,6 +135,10 @@ function ServiceHeroSubtitle({ service }: { service: Service }) {
   );
 }
 
+function getBenefitsHeading(service: Service) {
+  return benefitsHeadings[service.slug] ?? `Почему выбирают ${service.title.toLowerCase()}`;
+}
+
 function CheckIcon({ tone = "brand" }: { tone?: "brand" | "light" } = {}) {
   return (
     <span
@@ -196,10 +208,7 @@ export function ServicePage({ service }: ServicePageProps) {
                 ))}
               </ol>
             </nav>
-            <p className="mt-8 text-sm font-semibold uppercase text-[#0A5633]">
-              Услуга под ключ
-            </p>
-            <h1 className="mt-4 text-balance text-[1.9rem] font-extrabold leading-[1.08] tracking-tight text-[#202020] sm:text-6xl lg:text-[3.25rem]">
+            <h1 className="mt-8 text-balance text-[1.9rem] font-extrabold leading-[1.08] tracking-tight text-[#202020] sm:text-6xl lg:text-[3.25rem]">
               <span>{service.title}</span>
               <br />
               <span>
@@ -207,14 +216,13 @@ export function ServicePage({ service }: ServicePageProps) {
               </span>
             </h1>
             <ServiceHeroSubtitle service={service} />
-            <div className="mt-6 inline-flex flex-col rounded-2xl border border-[#b9d7c6] bg-white px-5 py-4 shadow-lg shadow-green-950/10">
-              <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Ориентир по цене
-              </span>
-              <span className="mt-1 text-3xl font-extrabold leading-tight text-[#0A5633]">
+            <p className="mt-5 text-base font-semibold text-slate-700 sm:text-lg">
+              Цены{" "}
+              <span className="text-[#0A5633]">
                 от {service.priceFrom} {service.priceUnit}
-              </span>
-            </div>
+              </span>{" "}
+              · ориентировочная стоимость
+            </p>
             <div className="mt-6 grid gap-2 sm:mt-8 sm:flex sm:flex-row sm:gap-4">
               <a
                 className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#0A5633] px-4 py-2 text-xs font-bold leading-tight text-white shadow-lg shadow-green-950/10 transition hover:bg-[#06321F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2 sm:px-6 sm:py-3 sm:text-base"
@@ -249,16 +257,13 @@ export function ServicePage({ service }: ServicePageProps) {
       </section>
 
       <section className="py-12 sm:py-16">
-        <SiteContainer className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
-          <div>
-            <p className="font-semibold uppercase tracking-wide text-[#0A5633]">
-              Почему выбирают
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-              Преимущества
+        <SiteContainer>
+          <div className={sectionIntroClassName}>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              {getBenefitsHeading(service)}
             </h2>
           </div>
-          <ul className="grid gap-x-10 gap-y-5 sm:grid-cols-2">
+          <ul className="mt-8 grid gap-x-10 gap-y-5 sm:grid-cols-2">
             {service.features.map((feature) => (
               <li
                 className="flex gap-3 border-t border-slate-200 pt-4 text-sm font-semibold leading-6 text-slate-800 sm:text-base sm:leading-7"
@@ -356,19 +361,17 @@ export function ServicePage({ service }: ServicePageProps) {
       <section className="bg-[#F6F8F5] py-12 sm:py-16">
         <SiteContainer>
           <div className={sectionIntroClassName}>
-            <p className="font-semibold uppercase tracking-wide text-[#0A5633]">
-              Как работаем
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-              Этапы работы
+            <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+              Как проходит работа
             </h2>
             <p className={sectionSubtitleClassName}>
-              После предварительного расчёта фиксируем договорённости и ведём
-              объект до готового монтажа.
+              Сначала уточним параметры и назовём предварительный ориентир по
+              стоимости. Только после согласования деталей переходим к договору,
+              доставке и монтажу.
             </p>
           </div>
-          <ol className="mt-10 grid gap-0 md:grid-cols-3 md:gap-y-8 xl:grid-cols-6 xl:gap-y-0">
-            {stages.map((stage) => (
+          <ol className="mt-10 grid gap-0 md:grid-cols-3 md:gap-y-8 xl:grid-cols-5 xl:gap-y-0">
+            {processStages.map((stage) => (
               <li
                 className="relative border-l border-[#b9d7c6] pb-7 pl-6 last:border-l-0 last:pb-0 md:border-l-0 md:border-t md:pb-0 md:pl-0 md:pr-8 md:pt-6"
                 key={stage}
@@ -401,20 +404,21 @@ export function ServicePage({ service }: ServicePageProps) {
                 />
                 <div className="relative max-w-sm">
                   <p className="font-semibold uppercase tracking-wide text-amber-300">
-                    Бесплатный расчёт
+                    БЕСПЛАТНЫЙ РАСЧЁТ
                   </p>
                   <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-                    Рассчитаем стоимость на {service.title.toLowerCase()}
+                    Рассчитаем стоимость под ваш участок
                   </h2>
                   <p className="mt-4 text-sm leading-6 text-white/80 sm:text-base sm:leading-7">
                     Ответьте на несколько вопросов — этого достаточно, чтобы
-                    понять параметры объекта и вернуться к вам с понятным
+                    понять, что вам нужно, и вернуться к вам с понятным
                     ориентиром по цене.
                   </p>
                   <ul className="mt-5 space-y-2.5 text-sm font-medium leading-snug text-green-50/90 sm:text-[0.9375rem]">
                     {[
                       "Можно указать примерные размеры",
                       "Детали уточним по телефону",
+                      "Узнаете стоимость и сможете сравнить варианты",
                       "Получите понятный ориентир и спокойно примете решение",
                     ].map((item) => (
                       <li className="flex gap-2.5" key={item}>
@@ -439,21 +443,6 @@ export function ServicePage({ service }: ServicePageProps) {
 
       <section className="py-16">
         <SiteContainer>
-          <article className={serviceProseClassName}>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-            {service.title}: что важно знать
-          </h2>
-          <div className="mt-6 space-y-6">
-            {serviceSeoText(service).map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-          </article>
-        </SiteContainer>
-      </section>
-
-      <section className="py-16">
-        <SiteContainer>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Частые вопросы
           </h2>
@@ -467,6 +456,21 @@ export function ServicePage({ service }: ServicePageProps) {
               </details>
             ))}
           </div>
+        </SiteContainer>
+      </section>
+
+      <section className="py-16">
+        <SiteContainer>
+          <article className={serviceProseClassName}>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+            {service.title}: что важно знать
+          </h2>
+          <div className="mt-6 space-y-6">
+            {serviceSeoText(service).map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+          </article>
         </SiteContainer>
       </section>
 
