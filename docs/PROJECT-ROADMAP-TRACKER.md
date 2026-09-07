@@ -351,6 +351,29 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Scope note: this improves crawl freshness signal quality; it is not a proven fix for GSC `Discovered, currently not indexed`.
    - Commits: implementation `62e333688fcd4a9abf00ea34cbdcab29e94e6f83`; validation `a8c699b1b7791b7e9855cbb81e45601f8a0b7b93`; merge/main `f3b61a958f68dfdeb854ced90f1209b61f9b3ab1`; Production `dpl_54khu2MiAcZWDZC6CaJDAMhwUxEL`.
 
+13. `SEO-03-google-discovery-audit`
+   - Статус: DONE. Read-only audit; application code, content, routes and Production were not changed.
+   - Вывод: общий technical indexability blocker для 55 canonical URL не найден. Подтверждены data-order-biased internal-link asymmetry, высокая схожесть city pages, слабый local proof и слабая contextual discovery из blog content.
+   - Детали: 28/40 city pages используют nationwide project fallback; `/petrikov` имеет только один incoming city source. `SearchAction` остаётся отдельной schema issue, но не объясняет discovery state.
+   - Граница вывода: точная Google-side причина не доказана без current GSC URL Inspection/Page Indexing data, Crawl Stats и Googlebot logs.
+   - Audit artifact: [`docs/SEO-03-GOOGLE-DISCOVERY-AUDIT.md`](./SEO-03-GOOGLE-DISCOVERY-AUDIT.md).
+
+14. `SEO-04-city-internal-link-coverage`
+   - Статус: NEXT / NOT STARTED.
+   - Цель: заменить data-order-biased related-city selection на deterministic, balanced, region-relevant policy, не зависящую от array order; каждый из 40 city URL должен получать несколько peer links. Текущий clearest near-orphan: `/petrikov`, один incoming city source.
+   - Protected scope: сохранить все 40 URL; не добавлять новые населённые пункты и не менять copy, design, canonical, sitemap, robots, domain, schema, Header/Footer, analytics и Telegram.
+   - Expected impact: устранение подтверждённого internal-link defect; это не гарантированный indexing fix.
+
+15. `LOCAL-SEO-01-regional-low-frequency-expansion-discovery`
+   - Статус: FUTURE / NOT STARTED. Только discovery; не создавать city pages до отдельного решения по результатам исследования.
+   - Гипотеза: небольшие города, посёлки и активные населённые пункты Гродненской, Витебской и Минской областей могут иметь коммерческий спрос на монтаж заборов при более слабой локальной конкуренции и реалистичной логистике для MasterZabor.
+   - Candidate set: собрать примерно 40-60 населённых пунктов, но отбирать их не по одному порогу населения. Population является только одним signal наряду с типом населённого пункта, частным сектором, коттеджной/дачной активностью, логистикой, installation competition, отличием продажи материалов от монтажа под ключ, локальными SERP и наличием подтверждённого MasterZabor proof.
+   - Discovery output: оценить запросы `забор + населённый пункт`, `установка забора + населённый пункт`, `забор под ключ + населённый пункт`; выбрать примерно 15-25 Tier A кандидатов, где сочетаются commercial demand, private-sector relevance, слабая конкуренция по монтажу, пригодная логистика и возможность сделать полезную локальную landing page.
+   - Quality gate: учитывать выводы SEO-03 по сходству и internal-link architecture текущих 40 city pages. Не расширять географию, если новая страница будет отличаться только названием; при выявленной CityPage-слабости сначала закрыть её.
+   - Architecture: сохранить один shared `CityPage` и data-driven routes. Future discovery может предложить расширение city content model для честной локальной уникальности; отдельные шаблоны для каждого населённого пункта не создавать. Приоритет у мест с exact-city/районным/сильным regional project proof.
+   - Rollout if validated: pilot 10-20 новых населённых пунктов -> deploy/index -> наблюдение за crawl, indexation и impressions -> решение о следующем batch. Не запускать сразу 50-100 страниц.
+   - Non-goals сейчас: не проводить SERP research, не создавать кандидатов/страницы, не менять code/content/canonical/sitemap/robots и не начинать implementation.
+
 ### P2 - улучшения позже
 
 1. `P2-blog-content-system`

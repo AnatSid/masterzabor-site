@@ -710,6 +710,27 @@ Unverified source filenames: none for the six completed ServicePage sets based o
 - City pages требуют уникальных proof-assets, иначе doorway/thin risk.
 - Blog должен перейти на MDX/CMS/data model перед ростом до 500+ статей.
 
+### Google Discovery Audit
+
+SEO-03 confirmed that all 55 canonical URLs are technically indexable and found no
+common technical blocker. The strongest quality weakness is city-page similarity and
+limited local proof: 28/40 city pages use nationwide project fallback. The related-city
+graph is asymmetric; `/petrikov` is the clearest near-orphan with one incoming city
+source. Blog URLs are discoverable from Footer navigation, but article content provides
+weak contextual discovery for commercial and city pages. Google's actual crawl/indexing
+decision remains unknown without current GSC/API data and Googlebot evidence.
+
+### Future Local SEO Expansion Direction
+
+`LOCAL-SEO-01-regional-low-frequency-expansion-discovery` принят как future / not
+started направление для Гродненской, Витебской и Минской областей. До создания новых
+city pages нужно исследовать 40-60 небольших городов/посёлков по совокупности спроса,
+частного сектора, логистики, installation competition, SERP и доступного подтверждённого
+MasterZabor proof, затем выбрать только 15-25 Tier A кандидатов. Population не является
+самостоятельным порогом. Расширение допустимо только через общий data-driven `CityPage`,
+после учёта SEO-03 weaknesses и pilot batch 10-20 URL; doorway-like страницы, которые
+отличаются только названием населённого пункта, не создавать.
+
 ## Target Architecture
 
 ### Keep
