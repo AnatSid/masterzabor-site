@@ -11,7 +11,7 @@ export const metadata = generatePageMetadata({
 });
 
 const posts = [...blogPosts].sort((a, b) =>
-  b.date.localeCompare(a.date, "ru"),
+  b.publishedAt.localeCompare(a.publishedAt, "ru"),
 );
 
 export default function BlogPage() {
@@ -57,7 +57,7 @@ export default function BlogPage() {
               </Link>
               <div className="flex grow flex-col p-6">
                 <p className="text-sm text-slate-500">
-                  {new Date(post.date).toLocaleDateString("ru-RU")}
+                  {new Date(post.publishedAt).toLocaleDateString("ru-RU")}
                 </p>
                 <h2 className="mt-3 text-xl font-bold leading-tight">
                   <Link

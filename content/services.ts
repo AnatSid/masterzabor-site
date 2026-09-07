@@ -1,3 +1,5 @@
+import type { IsoDate } from "@/lib/sitemap-freshness";
+
 export type Service = {
   slug: string;
   title: string;
@@ -27,6 +29,7 @@ export type Service = {
     question: string;
     answer: string;
   }[];
+  detailUpdatedAt?: IsoDate;
 };
 
 export const services: Service[] = [

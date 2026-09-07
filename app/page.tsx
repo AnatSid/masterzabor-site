@@ -8,7 +8,7 @@ import { QUIZ_TOTAL_STEPS } from "@/components/forms/quiz-form-config";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
 import { BenefitTrustSection } from "@/components/sections/BenefitTrustSection";
 import { cities } from "@/content/cities";
-import { featuredProjects } from "@/content/projects";
+import { homepageFeaturedProjects } from "@/content/projects";
 import { services } from "@/content/services";
 import { PHONE, PHONE_DISPLAY } from "@/lib/constants";
 import { generateFaqJsonLd, generatePageMetadata } from "@/lib/seo";
@@ -255,7 +255,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredProjects.slice(0, 6).map((project) => (
+            {homepageFeaturedProjects.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>

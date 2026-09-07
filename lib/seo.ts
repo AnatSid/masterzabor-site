@@ -43,7 +43,8 @@ type BreadcrumbItem = {
 type ArticleJsonLdInput = {
   title: string;
   description: string;
-  date: string;
+  publishedAt: string;
+  updatedAt?: string;
   url: string;
 };
 
@@ -265,7 +266,8 @@ export function generateBreadcrumbJsonLd(items: ReadonlyArray<BreadcrumbItem>) {
 export function generateArticleJsonLd({
   title,
   description,
-  date,
+  publishedAt,
+  updatedAt,
   url,
 }: ArticleJsonLdInput) {
   return {
@@ -273,8 +275,8 @@ export function generateArticleJsonLd({
     "@type": "Article",
     headline: title,
     description,
-    datePublished: date,
-    dateModified: date,
+    datePublished: publishedAt,
+    dateModified: updatedAt ?? publishedAt,
     mainEntityOfPage: canonicalUrl(url),
     author: {
       "@type": "Organization",

@@ -1,4 +1,5 @@
 import type { City } from "@/content/cities";
+import type { IsoDate } from "@/lib/sitemap-freshness";
 
 export const projectFilters = [
   { value: "all", label: "Все" },
@@ -44,6 +45,7 @@ export type Project = {
   height?: string;
   priceRange?: string;
   completedAt?: string;
+  updatedAt?: IsoDate;
   mainPhoto: ProjectPhoto;
   photos?: ProjectPhoto[];
   review?: string;
@@ -586,6 +588,8 @@ export const projects: Project[] = [
 export const featuredProjects = projects.filter(
   (project) => project.isFeatured === true,
 );
+
+export const homepageFeaturedProjects = featuredProjects.slice(0, 6);
 
 export function getProjectsByServiceSlug(serviceSlug: ProjectServiceSlug) {
   return projects.filter((project) => project.serviceSlug === serviceSlug);
