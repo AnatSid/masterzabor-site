@@ -743,6 +743,26 @@ Scope: no UI, copy, price, canonical/domain, sitemap, robots, analytics or Teleg
 
 Implementation commit: `919269f6739b2f7a3c31bf50f4e2c11195901fb5`; merge/main SHA: `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c`; Production deployment ID: `dpl_3MS2i5w6ZndyCx2KHkDUCHWCZjLp`.
 
+### Sitemap semantic freshness
+
+`app/sitemap.ts` publishes semantic, deterministic `lastmod` values; build, deploy,
+commit, filesystem, and current time are never freshness sources. Accuracy is more
+important than coverage, so a missing trustworthy date means omitting `lastmod`.
+
+Freshness ownership is explicit: Service `detailUpdatedAt`, City/Project `updatedAt`,
+BlogPost `publishedAt` plus optional `updatedAt`, and the group/template/static values
+in `lib/sitemap-freshness.ts`. Fan-out applies only when a meaningful
+crawler-visible content, schema, or link change affects the rendered surface of each
+dependent URL. Shared service cards and `/tseny` Product data have separate group
+dates; CSS, layout polish without meaning changes, refactors, tooling, builds, and
+deploys do not bump them.
+
+For blog articles, `datePublished = publishedAt`, while Article `dateModified` and
+sitemap lastmod use `updatedAt ?? publishedAt`. Future Codex content stages must
+check the matching freshness owner in the same task and must not bump dates "just in
+case". When dependencies are unclear, identify the rendered consumers before
+changing any timestamp.
+
 ### Content Model
 
 Short term:

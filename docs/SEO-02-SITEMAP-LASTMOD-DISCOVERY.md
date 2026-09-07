@@ -1,9 +1,23 @@
 # SEO-02: Sitemap lastmod and discovery
 
-**Status:** discovery finalized; implementation approved on the dedicated SEO-02
-stage branch, pending Preview and user review.
+**Status:** implemented, merged, and Production verified.
 **Repository baseline:** main / origin/main at 6e2651d when this report was prepared.
 **Purpose:** self-contained handoff for reviewing the proposed sitemap freshness architecture in another chat.
+The discovery text below is preserved as the pre-implementation design record; the
+closure block records the current state.
+
+## Implementation closure
+
+The final surface-aware design below was implemented without changing sitemap URL
+membership, canonical/domain policy, `changeFrequency`, or `priority`. Implementation
+commit: `62e333688fcd4a9abf00ea34cbdcab29e94e6f83`; defensive strict-date validation:
+`a8c699b1b7791b7e9855cbb81e45601f8a0b7b93`; merge/main:
+`f3b61a958f68dfdeb854ced90f1209b61f9b3ab1`.
+
+Production deployment `dpl_54khu2MiAcZWDZC6CaJDAMhwUxEL` was Ready and verified on
+`https://www.masterzabor.by`. Initial honest coverage is 4/55 URLs: `/blog` and the
+three blog articles use `2026-05-18`; the other 51 omit lastmod intentionally because
+no trustworthy historical semantic date is available.
 
 ## Executive Summary
 

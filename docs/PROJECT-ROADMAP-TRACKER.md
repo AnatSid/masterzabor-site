@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: SEO-01 Product JSON-LD closure/main merge SHA `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c`
+Текущая production точка отсчета: SEO-02 semantic sitemap freshness merge SHA `f3b61a958f68dfdeb854ced90f1209b61f9b3ab1`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production implementation/content baseline: `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c` (`Merge SEO-01 product JSON-LD`).
+- Последний production implementation/content baseline: `f3b61a958f68dfdeb854ced90f1209b61f9b3ab1` (`Merge branch 'codex/SEO-02-sitemap-lastmod'`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -45,6 +45,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - ServicePage QuizForm now intentionally uses `presentation="compact"`; validation, API submission, analytics and service defaults were not changed.
 - P1-06.5 nationwide copy cleanup is complete: homepage and shared ServicePage commercial copy now use neutral Belarus-wide wording instead of implying "we travel from Gomel"; legitimate Gomel-local context in city/contact/review surfaces is preserved.
 - SEO-01 Product JSON-LD is complete: all ServicePage Product schema now includes absolute service hero `image`, and Product `offers.url` points to the canonical service page instead of homepage. `/tseny` also emits six Product objects with each service's own image and Offer URL.
+- SEO-02 semantic sitemap freshness is complete: sitemap dates now come only from explicit semantic record/group/template/static sources, unknown dates are omitted, and strict calendar-valid `YYYY-MM-DD` validation fails loudly. Production has 55 unchanged canonical URLs; `/blog` and three articles have honest `2026-05-18` lastmod values, while the other 51 intentionally omit lastmod.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
@@ -80,6 +81,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.4 ServicePage visual parity and compact calculator.
 - P1-06.5 nationwide copy cleanup for homepage FAQ and shared ServicePage useful content.
 - SEO-01 Product JSON-LD image and service Offer URLs.
+- SEO-02 semantic deterministic sitemap freshness and Article date semantics.
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
 
 ## AUDITS COMPLETED
@@ -115,6 +117,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.4 ServicePage visual parity completed on branch `codex/P1-06.4-servicepage-visual-parity`: shared `ServicePage` was rebuilt into the approved homepage-like commercial flow while preserving the real-photo system, routes, metadata/canonical/schema, service data and lead behavior. It added light branded hero treatment, compact inline hero price, service-specific benefits checklist, real-photo gallery before pricing, honest pricing block, 5-step process timeline, `/tseny`-like compact calculator, useful/SEO content before FAQ, and related links at the bottom. ServicePage QuizForm now intentionally uses `presentation="compact"`. Implementation head: `4a2b8fc79b521bd50d49254569934f5378c6feda`; merge/main SHA before docs: `5cd79a099e2adcf0dc677864dda0eb9f0da2d31d`.
 - P1-06.5 nationwide copy cleanup completed on branch `codex/P1-06.5-nationwide-copy-cleanup`: homepage FAQ and shared ServicePage useful content now present MasterZabor as working across Belarus without making geography feel like an automatic price/risk objection; the specialist visit is explicitly described as the next step after preliminary calculation and agreement. Implementation head: `f9739bc6238222ca13c56dfbfc0bc46bd1876d89`; merge/main SHA before docs: `d2d838f4eab4f3891349daf4a15296fdc0fb827e`.
 - SEO-01 Product JSON-LD completed on branch `codex/SEO-01-product-jsonld`: fixed Product structured data after GSC showed missing `Product.image` and code had Product `offers.url` pointing to homepage via `SITE_URL`. `generateProductJsonLd()` now accepts `image` and service `url`; `ServicePage` passes the existing hero image and canonical service path; `/tseny` emits six Product objects with each service's own image and Offer URL. Scope stayed limited to `lib/seo.ts`, `components/templates/ServicePage.tsx`, and the `/tseny` callsite; UI, copy, prices, canonical/domain, sitemap, robots, analytics and Telegram were not changed. Production verification passed on all six service pages and `/tseny`; GSC Live Test for `/zabory-iz-profnastila` reported one detected item without errors, saw `image`, and saw Offer URL `https://www.masterzabor.by/zabory-iz-profnastila`. Optional `shippingDetails` and `hasMerchantReturnPolicy` warnings remain intentionally. Implementation commit: `919269f6739b2f7a3c31bf50f4e2c11195901fb5`; merge/main SHA: `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c`; Production deployment ID: `dpl_3MS2i5w6ZndyCx2KHkDUCHWCZjLp`.
+- SEO-02 sitemap lastmod completed on branch `codex/SEO-02-sitemap-lastmod`. Before: `app/sitemap.ts` assigned one `new Date()` value to all 55 URLs, so build/render time was published as false freshness. After: deterministic semantic dates come from optional Service/City/Project fields, BlogPost `publishedAt`/`updatedAt`, and shared group/template/static registry values; unknown dates are omitted and strict real-calendar `YYYY-MM-DD` validation rejects bad inputs. Sitemap URL membership, `www`/no-slash policy, `changeFrequency`, and `priority` did not change. Production verification: 55 unique URLs; lastmod only for `/blog` plus three articles, all `2026-05-18`; 51 intentionally omitted; Article JSON-LD keeps `datePublished = dateModified = 2026-05-18` until a real update exists. SEO-02 improves crawl freshness signal quality but is not a proven fix for GSC `Discovered, currently not indexed`. Implementation commit: `62e333688fcd4a9abf00ea34cbdcab29e94e6f83`; defensive validation commit: `a8c699b1b7791b7e9855cbb81e45601f8a0b7b93`; merge/main SHA: `f3b61a958f68dfdeb854ced90f1209b61f9b3ab1`; Production deployment ID: `dpl_54khu2MiAcZWDZC6CaJDAMhwUxEL`.
 - TOOLING-01 completed on branch `codex/TOOLING-01-codex-workflow-cleanup`: root `AGENTS.md` created for Codex persistent instructions; `.cursorrules` remains historical/reference; roadmap remains the only roadmap source of truth; Knowledge Base remains architecture/project memory; future stage prompts should mostly contain goal, scope and acceptance instead of repeating stable repository rules; no MCP/plugins/dependencies/Skills were added. Implementation/main SHA: `edf728009c2d3b2199e3fc0334330e4a20a10a74`.
 
 ## OPEN ISSUES
@@ -339,6 +342,14 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Что сделано: Product JSON-LD теперь содержит service hero `image`, а Offer `url` ведёт на canonical конкретной услуги. `/tseny` также отдаёт шесть Product JSON-LD с собственными image/Offer URL по услугам.
    - Где: `lib/seo.ts`, `components/templates/ServicePage.tsx`, `app/tseny/page.tsx`.
    - Merge/main SHA: `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c`.
+
+12. `SEO-02-sitemap-lastmod`
+   - Статус: DONE after implementation/validation review, Preview approval, merge to `main`, Production deployment and live verification.
+   - Before/after: one generated `new Date()` for all 55 URLs was replaced with semantic deterministic freshness; unknown legacy dates are omitted instead of invented.
+   - Architecture: optional Service/City/Project dates, BlogPost `publishedAt`/`updatedAt`, and `lib/sitemap-freshness.ts` group/template/static ownership with strict calendar-valid `YYYY-MM-DD` validation.
+   - Production: sitemap membership and canonical/changeFrequency/priority policy are unchanged; 4/55 URLs have honest `2026-05-18` lastmod values and 51 intentionally omit lastmod.
+   - Scope note: this improves crawl freshness signal quality; it is not a proven fix for GSC `Discovered, currently not indexed`.
+   - Commits: implementation `62e333688fcd4a9abf00ea34cbdcab29e94e6f83`; validation `a8c699b1b7791b7e9855cbb81e45601f8a0b7b93`; merge/main `f3b61a958f68dfdeb854ced90f1209b61f9b3ab1`; Production `dpl_54khu2MiAcZWDZC6CaJDAMhwUxEL`.
 
 ### P2 - улучшения позже
 

@@ -79,6 +79,9 @@ Verification must be proportional to risk.
 - Routing/config/framework changes: run `npm run build`.
 - UI changes: browser check plus relevant mobile viewport.
 - SEO/canonical changes: curl/HTTP/HTML/schema checks.
+- When a task materially changes crawler-visible content, schema, or links, update
+  the corresponding semantic sitemap freshness source in the same stage. Do not
+  bump freshness for CSS, refactors, builds, deploys, or unrelated changes.
 - Next runtime issues: use Next DevTools MCP, especially `get_errors`,
   `get_routes`, `get_project_metadata`, and logs when needed.
 - Production-impacting stages: local checks, Vercel Preview checks, user approval,
