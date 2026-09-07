@@ -27,6 +27,7 @@ export const cities: City[] = [
     coords: { lat: 52.4345, lng: 30.9754 },
     districts: ["Центральный", "Советский", "Железнодорожный", "Новобелицкий"],
     population: 501000,
+    updatedAt: "2026-09-07",
   },
   {
     slug: "mozyr",
@@ -37,6 +38,7 @@ export const cities: City[] = [
     oblastGenitive: "Гомельской области",
     coords: { lat: 52.0495, lng: 29.2456 },
     population: 108000,
+    updatedAt: "2026-09-07",
   },
   {
     slug: "zhlobin",
@@ -47,6 +49,7 @@ export const cities: City[] = [
     oblastGenitive: "Гомельской области",
     coords: { lat: 52.8926, lng: 30.024 },
     population: 75000,
+    updatedAt: "2026-09-07",
   },
   {
     slug: "svetlogorsk",
@@ -57,6 +60,7 @@ export const cities: City[] = [
     oblastGenitive: "Гомельской области",
     coords: { lat: 52.6333, lng: 29.7333 },
     population: 64000,
+    updatedAt: "2026-09-07",
   },
   {
     slug: "rechitsa",
@@ -77,6 +81,7 @@ export const cities: City[] = [
     oblastGenitive: "Гомельской области",
     coords: { lat: 52.1323, lng: 29.3257 },
     population: 36000,
+    updatedAt: "2026-09-07",
   },
   {
     slug: "rogachev",
@@ -87,6 +92,7 @@ export const cities: City[] = [
     oblastGenitive: "Гомельской области",
     coords: { lat: 53.0934, lng: 30.0495 },
     population: 34000,
+    updatedAt: "2026-09-07",
   },
   {
     slug: "dobrush",
@@ -97,6 +103,7 @@ export const cities: City[] = [
     oblastGenitive: "Гомельской области",
     coords: { lat: 52.4089, lng: 31.3237 },
     population: 18000,
+    updatedAt: "2026-09-07",
   },
   {
     slug: "khoyniki",
@@ -107,6 +114,7 @@ export const cities: City[] = [
     oblastGenitive: "Гомельской области",
     coords: { lat: 51.8914, lng: 29.9552 },
     population: 14000,
+    updatedAt: "2026-09-07",
   },
   {
     slug: "petrikov",
@@ -117,6 +125,7 @@ export const cities: City[] = [
     oblastGenitive: "Гомельской области",
     coords: { lat: 52.1286, lng: 28.4927 },
     population: 10000,
+    updatedAt: "2026-09-07",
   },
   {
     slug: "minsk",
