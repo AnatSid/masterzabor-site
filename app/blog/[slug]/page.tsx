@@ -54,7 +54,8 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
   const articleJsonLd = generateArticleJsonLd({
     title: post.title,
     description: post.metaDescription,
-    date: post.date,
+    publishedAt: post.publishedAt,
+    updatedAt: post.updatedAt,
     url: `/blog/${post.slug}`,
   });
 
@@ -102,7 +103,7 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
           <article className="min-w-0">
             <header>
               <p className="text-sm text-slate-500">
-                {new Date(post.date).toLocaleDateString("ru-RU")}
+                {new Date(post.publishedAt).toLocaleDateString("ru-RU")}
               </p>
               <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
                 {post.title}

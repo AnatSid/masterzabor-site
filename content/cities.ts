@@ -1,3 +1,5 @@
+import type { IsoDate } from "@/lib/sitemap-freshness";
+
 export type City = {
   slug: string;
   name: string;
@@ -11,6 +13,7 @@ export type City = {
   };
   districts?: string[];
   population?: number;
+  updatedAt?: IsoDate;
 };
 
 export const cities: City[] = [

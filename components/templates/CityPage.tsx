@@ -8,8 +8,13 @@ import { SiteContainer } from "@/components/layout/SiteContainer";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
 import { BenefitTrustSection } from "@/components/sections/BenefitTrustSection";
 import { cities, type City } from "@/content/cities";
-import { projects, type Project } from "@/content/projects";
+import { projects } from "@/content/projects";
 import { services } from "@/content/services";
+import {
+  CITY_PROOF_LIMIT,
+  getCityProjectProof,
+  normalizeOblastGroup,
+} from "@/lib/city-project-proof";
 import {
   ADDRESS,
   COMPANY_NAME,
@@ -27,14 +32,10 @@ type CityPageProps = {
 
 const fenceServices = services.slice(0, 3);
 const gateServices = services.slice(3);
-const CITY_PROOF_LIMIT = 3;
 const cityHeroImage = {
   src: "/images/hero/homepage-fence-with-logo.jpeg",
   alt: "Забор из профнастила на участке в Беларуси",
 };
-
-const normalizeOblastGroup = (oblast: string) =>
-  oblast === "Минская область" ? "Минск и Минская область" : oblast;
 
 const sectionIntroClassName =
   "w-full max-w-none lg:max-w-[70%] xl:max-w-[56rem]";
@@ -54,68 +55,6 @@ function getRelatedCities(city: City) {
         normalizeOblastGroup(item.oblast) === currentGroup,
     )
     .slice(0, 8);
-}
-
-function byFeaturedThenSourceOrder(left: Project, right: Project) {
-  if (left.isFeatured === right.isFeatured) {
-    return 0;
-  }
-
-  return left.isFeatured ? -1 : 1;
-}
-
-function getConfirmedProjects() {
-  return projects.filter((project) => project.id.startsWith("real-"));
-}
-
-function getCityProjectProof(city: City) {
-  const currentGroup = normalizeOblastGroup(city.oblast);
-  const confirmedProjects = getConfirmedProjects();
-  const exactProjects = confirmedProjects
-    .filter((project) => project.city.slug === city.slug)
-    .sort(byFeaturedThenSourceOrder);
-  const sameOblastProjects = confirmedProjects
-    .filter(
-      (project) =>
-        project.city.slug !== city.slug &&
-        normalizeOblastGroup(project.city.oblast) === currentGroup,
-    )
-    .sort(byFeaturedThenSourceOrder);
-  const nationwideProjects = confirmedProjects
-    .filter(
-      (project) =>
-        project.city.slug !== city.slug &&
-        normalizeOblastGroup(project.city.oblast) !== currentGroup,
-    )
-    .sort(byFeaturedThenSourceOrder);
-  const selectedProjects: Project[] = [];
-
-  for (const project of [
-    ...exactProjects,
-    ...sameOblastProjects,
-    ...nationwideProjects,
-  ]) {
-    if (
-      selectedProjects.length < CITY_PROOF_LIMIT &&
-      !selectedProjects.some((item) => item.id === project.id)
-    ) {
-      selectedProjects.push(project);
-    }
-  }
-
-  const regionalCount = exactProjects.length + sameOblastProjects.length;
-  const mode =
-    exactProjects.length > 0
-      ? "exact"
-      : sameOblastProjects.length > 0
-        ? "oblast"
-        : "nationwide";
-
-  return {
-    mode,
-    projects: selectedProjects,
-    regionalCount,
-  };
 }
 
 function getProofHeading(city: City, mode: ReturnType<typeof getCityProjectProof>["mode"]) {
@@ -192,7 +131,7 @@ function generateCityLocalBusinessJsonLd(city: City) {
 
 export function CityPage({ city }: CityPageProps) {
   const relatedCities = getRelatedCities(city);
-  const cityProof = getCityProjectProof(city);
+  const cityProof = getCityProjectProof(city, projects);
   const proofHeading = getProofHeading(city, cityProof.mode);
   const proofDescription = getProofDescription(city, cityProof);
   const breadcrumbs = [
