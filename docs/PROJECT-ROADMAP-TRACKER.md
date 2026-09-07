@@ -359,10 +359,13 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Audit artifact: [`docs/SEO-03-GOOGLE-DISCOVERY-AUDIT.md`](./SEO-03-GOOGLE-DISCOVERY-AUDIT.md).
 
 14. `SEO-04-city-internal-link-coverage`
-   - Статус: NEXT / NOT STARTED.
-   - Цель: заменить data-order-biased related-city selection на deterministic, balanced, region-relevant policy, не зависящую от array order; каждый из 40 city URL должен получать несколько peer links. Текущий clearest near-orphan: `/petrikov`, один incoming city source.
-   - Protected scope: сохранить все 40 URL; не добавлять новые населённые пункты и не менять copy, design, canonical, sitemap, robots, domain, schema, Header/Footer, analytics и Telegram.
-   - Expected impact: устранение подтверждённого internal-link defect; это не гарантированный indexing fix.
+   - Статус: DONE after implementation review, Preview approval, merge to `main`, Production deployment and full 40-city graph verification.
+   - Root cause / solution: related-city selection depended on source array order and `.slice(0, 8)`; it now uses a deterministic, array-order-independent balanced regional ring. Shared normalized oblast grouping lives in `lib/city-groups.ts` and is reused by related-city and city-proof logic.
+   - Graph result: peer-city incoming coverage changed from min `0`, max `9`, `/petrikov` `0` to min `5`, max `8`, `/petrikov` `8`; no URL has 0-1 peer sources. All links stay within the same normalized region, with no self links, duplicates or cross-region links and at most eight outgoing peers.
+   - Scope preserved: all 40 city routes remain; no cities, content, schema, domain or canonical policy were added or changed. This closes a confirmed internal-link architecture defect, not a guaranteed Google indexing fix.
+   - Semantic freshness: only `/gomel`, `/mozyr`, `/zhlobin`, `/svetlogorsk`, `/kalinkovichi`, `/rogachev`, `/dobrush`, `/khoyniki` and `/petrikov` received truthful `updatedAt: 2026-09-07` because their related-city membership changed. `/rechitsa` membership did not change and received no new lastmod.
+   - Production sitemap: membership remains 55 URLs; 13 URLs have lastmod: the nine city routes above use `2026-09-07`, while `/blog` and its three articles retain `2026-05-18`.
+   - Commits: implementation `91c53636763e86aa1bdffd243099d6ab5689a01b`; merge/main `39d40365fa061b0dce21a7b5f718208b549fc243`; Production `dpl_HaVPZw4bcYJ16ekxbUaFfZVr7taH` (`Ready`).
 
 15. `LOCAL-SEO-01-regional-low-frequency-expansion-discovery`
    - Статус: FUTURE / NOT STARTED. Только discovery; не создавать city pages до отдельного решения по результатам исследования.

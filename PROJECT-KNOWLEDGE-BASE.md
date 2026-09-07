@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production implementation/content baseline after P1-06.5: `d2d838f4eab4f3891349daf4a15296fdc0fb827e` (`Merge P1-06.5 nationwide copy cleanup`).
+Latest production implementation/content baseline after SEO-04: `39d40365fa061b0dce21a7b5f718208b549fc243` (`Merge SEO-04 city internal link coverage`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -719,6 +719,16 @@ graph is asymmetric; `/petrikov` is the clearest near-orphan with one incoming c
 source. Blog URLs are discoverable from Footer navigation, but article content provides
 weak contextual discovery for commercial and city pages. Google's actual crawl/indexing
 decision remains unknown without current GSC/API data and Googlebot evidence.
+
+### Balanced city internal linking
+
+City related links use the shared `lib/city-groups.ts` helper. Normalized oblast
+grouping is the shared source for related-city selection and city-project proof.
+Selection is deterministic and independent of `content/cities.ts` array order: groups
+with up to nine cities naturally link every peer, while larger groups use a bounded
+ring with at most eight peers per page. Do not restore the former
+`.filter(...).slice(0, 8)` array-order behavior. Future LOCAL-SEO expansion must retain
+balanced peer coverage as the city dataset grows.
 
 ### Future Local SEO Expansion Direction
 
