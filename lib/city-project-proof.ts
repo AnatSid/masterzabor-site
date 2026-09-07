@@ -1,10 +1,8 @@
 import type { City } from "@/content/cities";
 import type { Project } from "@/content/projects";
+import { normalizeOblastGroup } from "@/lib/city-groups";
 
 export const CITY_PROOF_LIMIT = 3;
-
-export const normalizeOblastGroup = (oblast: string) =>
-  oblast === "Минская область" ? "Минск и Минская область" : oblast;
 
 function byFeaturedThenSourceOrder(left: Project, right: Project) {
   if (left.isFeatured === right.isFeatured) {

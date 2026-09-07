@@ -10,10 +10,10 @@ import { BenefitTrustSection } from "@/components/sections/BenefitTrustSection";
 import { cities, type City } from "@/content/cities";
 import { projects } from "@/content/projects";
 import { services } from "@/content/services";
+import { getRelatedCities } from "@/lib/city-groups";
 import {
   CITY_PROOF_LIMIT,
   getCityProjectProof,
-  normalizeOblastGroup,
 } from "@/lib/city-project-proof";
 import {
   ADDRESS,
@@ -44,18 +44,6 @@ const sectionIntroFlexClassName = `${sectionIntroClassName} min-w-0 flex-1`;
 
 const sectionSubtitleClassName =
   "mt-4 text-pretty leading-relaxed text-slate-600 md:text-[1.0625rem] md:leading-[1.65]";
-
-function getRelatedCities(city: City) {
-  const currentGroup = normalizeOblastGroup(city.oblast);
-
-  return cities
-    .filter(
-      (item) =>
-        item.slug !== city.slug &&
-        normalizeOblastGroup(item.oblast) === currentGroup,
-    )
-    .slice(0, 8);
-}
 
 function getProofHeading(city: City, mode: ReturnType<typeof getCityProjectProof>["mode"]) {
   if (mode === "exact") {
@@ -130,7 +118,7 @@ function generateCityLocalBusinessJsonLd(city: City) {
 }
 
 export function CityPage({ city }: CityPageProps) {
-  const relatedCities = getRelatedCities(city);
+  const relatedCities = getRelatedCities(city, cities);
   const cityProof = getCityProjectProof(city, projects);
   const proofHeading = getProofHeading(city, cityProof.mode);
   const proofDescription = getProofDescription(city, cityProof);
