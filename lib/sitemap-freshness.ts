@@ -31,11 +31,48 @@ export const sitemapFreshness: SitemapFreshnessRegistry = {
   static: {},
 };
 
+const STRICT_ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+function assertValidSemanticDate(date: string): asserts date is IsoDate {
+  if (date.length !== 10 || !STRICT_ISO_DATE_PATTERN.test(date)) {
+    throw new Error(
+      'Invalid semantic date "' +
+        date +
+        '": expected strict YYYY-MM-DD format.',
+    );
+  }
+
+  const [year, month, day] = date.split("-").map(Number);
+  const parsedDate = new Date(date + "T00:00:00.000Z");
+
+  if (
+    Number.isNaN(parsedDate.getTime()) ||
+    parsedDate.getUTCFullYear() !== year ||
+    parsedDate.getUTCMonth() + 1 !== month ||
+    parsedDate.getUTCDate() !== day
+  ) {
+    throw new Error(
+      'Invalid semantic date "' + date + '": date does not exist in the calendar.',
+    );
+  }
+}
+
 export function latestMeaningfulDate(
   ...dates: ReadonlyArray<IsoDate | undefined>
 ): IsoDate | undefined {
-  return dates.reduce<IsoDate | undefined>(
-    (latest, date) => (!latest || (date && date > latest) ? date : latest),
-    undefined,
-  );
+  let latest: IsoDate | undefined;
+
+  for (const date of dates) {
+    if (date === undefined) {
+      continue;
+    }
+
+    assertValidSemanticDate(date);
+
+    if (!latest || date > latest) {
+      latest = date;
+    }
+  }
+
+  return latest;
 }
