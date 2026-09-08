@@ -119,6 +119,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - SEO-01 Product JSON-LD completed on branch `codex/SEO-01-product-jsonld`: fixed Product structured data after GSC showed missing `Product.image` and code had Product `offers.url` pointing to homepage via `SITE_URL`. `generateProductJsonLd()` now accepts `image` and service `url`; `ServicePage` passes the existing hero image and canonical service path; `/tseny` emits six Product objects with each service's own image and Offer URL. Scope stayed limited to `lib/seo.ts`, `components/templates/ServicePage.tsx`, and the `/tseny` callsite; UI, copy, prices, canonical/domain, sitemap, robots, analytics and Telegram were not changed. Production verification passed on all six service pages and `/tseny`; GSC Live Test for `/zabory-iz-profnastila` reported one detected item without errors, saw `image`, and saw Offer URL `https://www.masterzabor.by/zabory-iz-profnastila`. Optional `shippingDetails` and `hasMerchantReturnPolicy` warnings remain intentionally. Implementation commit: `919269f6739b2f7a3c31bf50f4e2c11195901fb5`; merge/main SHA: `3e6782d8d8ee49c681a635f17a3661b2bdee5d9c`; Production deployment ID: `dpl_3MS2i5w6ZndyCx2KHkDUCHWCZjLp`.
 - SEO-02 sitemap lastmod completed on branch `codex/SEO-02-sitemap-lastmod`. Before: `app/sitemap.ts` assigned one `new Date()` value to all 55 URLs, so build/render time was published as false freshness. After: deterministic semantic dates come from optional Service/City/Project fields, BlogPost `publishedAt`/`updatedAt`, and shared group/template/static registry values; unknown dates are omitted and strict real-calendar `YYYY-MM-DD` validation rejects bad inputs. Sitemap URL membership, `www`/no-slash policy, `changeFrequency`, and `priority` did not change. Production verification: 55 unique URLs; lastmod only for `/blog` plus three articles, all `2026-05-18`; 51 intentionally omitted; Article JSON-LD keeps `datePublished = dateModified = 2026-05-18` until a real update exists. SEO-02 improves crawl freshness signal quality but is not a proven fix for GSC `Discovered, currently not indexed`. Implementation commit: `62e333688fcd4a9abf00ea34cbdcab29e94e6f83`; defensive validation commit: `a8c699b1b7791b7e9855cbb81e45601f8a0b7b93`; merge/main SHA: `f3b61a958f68dfdeb854ced90f1209b61f9b3ab1`; Production deployment ID: `dpl_54khu2MiAcZWDZC6CaJDAMhwUxEL`.
 - TOOLING-01 completed on branch `codex/TOOLING-01-codex-workflow-cleanup`: root `AGENTS.md` created for Codex persistent instructions; `.cursorrules` remains historical/reference; roadmap remains the only roadmap source of truth; Knowledge Base remains architecture/project memory; future stage prompts should mostly contain goal, scope and acceptance instead of repeating stable repository rules; no MCP/plugins/dependencies/Skills were added. Implementation/main SHA: `edf728009c2d3b2199e3fc0334330e4a20a10a74`.
+- TOOLING-02 — DONE on branch `codex/TOOLING-02-seo-content-skills`: installed project-level Codex skills `product-marketing`, `content-strategy`, `content-and-copy`, `copy-editing`, `humanizer`, `seo-audit`, and `schema`; added required `docs/EDITORIAL-WRITING-GUIDE.md`.
 
 ## OPEN ISSUES
 
@@ -213,6 +214,12 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 - Do not commit `.cursor/`, `.tmp/`, `.env.local`, `.next/`, local browser profiles.
 
 ## NEXT PRIORITIES
+
+### TOOLING / FUTURE / deferred
+
+- `ai-seo`: revisit when there is a stable flow of articles and a clear need for separate AI search / answer-engine optimization.
+- `programmatic-seo`: revisit before another scale-up of city, service, or location pages.
+- `editorial-qa`: add only if real articles show that the current `copy-editing` + `humanizer` + `seo-audit` workflow is insufficient.
 
 ### P0 - обязательно
 
