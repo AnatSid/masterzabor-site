@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "content-and-copy": {
+      "source": "rampstackco/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/content-and-copy/SKILL.md",
+      "computedHash": "435f33e6cd526b9cce61b516e98ce0150b907626921ea340f630a5893355fa86"
+    },
     "content-strategy": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
