@@ -26,6 +26,11 @@ Use this priority order:
 For stage work, read the roadmap first. Read only the relevant Knowledge Base
 sections unless the task genuinely needs full historical context.
 
+- When creating or substantially editing articles or SEO content, use all relevant
+  installed content/SEO skills; a specialized writing/content skill is the primary
+  workflow. Read and follow `docs/EDITORIAL-WRITING-GUIDE.md`: it adds mandatory
+  editorial constraints and does not replace a specialized skill's methodology.
+
 ## Production and Domain Invariants
 
 - Production/canonical runtime host is `https://www.masterzabor.by`.
