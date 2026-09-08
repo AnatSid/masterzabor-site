@@ -13,6 +13,12 @@
       "skillPath": "skills/copy-editing/SKILL.md",
       "computedHash": "b70d360d6d7e49adf84d595c62103583787008e16acb7b4b4b9c449dbbb768d9"
     },
+    "humanizer": {
+      "source": "Aboudjem/humanizer-skill",
+      "sourceType": "github",
+      "skillPath": "skills/humanizer/SKILL.md",
+      "computedHash": "2597ab5a78b9413db36c569d0b0364ea1ff78be3dd565f033773c067ff8b72de"
+    },
     "product-marketing": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
