@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "content-strategy": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/content-strategy/SKILL.md",
+      "computedHash": "4271d06ab1b6669bb39774128e6c0f71fa7f1d5ed4b15efa9353e3b8d8624bce"
+    },
+    "copy-editing": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/copy-editing/SKILL.md",
+      "computedHash": "b70d360d6d7e49adf84d595c62103583787008e16acb7b4b4b9c449dbbb768d9"
+    },
+    "product-marketing": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/product-marketing/SKILL.md",
+      "computedHash": "709145cb3cd36bab03d5dfe4ecd41af3120ed5a9d293c7ba9d7d9648c39f34b9"
+    },
+    "schema": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/schema/SKILL.md",
+      "computedHash": "13693bae311fd444da31a82b3aa46003e12a21220aae98c77ee479fe34116067"
+    },
+    "seo-audit": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/seo-audit/SKILL.md",
+      "computedHash": "71435fbaf3622f1a6b16e20fda15f19aa8e285c9914fdeb92ac0a7612d6317bb"
+    }
+  }
+}
