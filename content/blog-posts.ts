@@ -10,6 +10,7 @@ export type BlogPost = {
   publishedAt: IsoDate;
   updatedAt?: IsoDate;
   image: string;
+  imageAlt?: string;
   tags: string[];
 };
 
@@ -110,7 +111,8 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Разбираемся, когда забор можно установить без отдельного разрешения и в каких случаях сначала нужно проверить проект, границы, красные линии или сети.",
     publishedAt: "2026-05-18",
-    image: blogImage("Разрешение на забор в РБ", "#F59E0B"),
+    image: "/images/blog/razreshenie-na-zabor-v-belarusi.webp",
+    imageAlt: "Забор на частном участке и схема границ перед установкой в Беларуси",
     tags: ["разрешение на забор", "документы", "границы участка", "Беларусь"],
     content: `
       <h2>Короткий ответ: нужно ли отдельное разрешение</h2>
