@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import styles from "./page.module.css";
 import { QuizForm } from "@/components/forms/QuizForm";
 import { blogPosts, getBlogPostBySlug } from "@/content/blog-posts";
 import {
@@ -131,7 +132,7 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
             />
 
             <section
-              className="prose prose-slate mt-8 max-w-none prose-headings:text-slate-900 prose-a:text-[#1B5E20]"
+              className={styles.articleContent}
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </article>
