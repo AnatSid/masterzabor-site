@@ -137,30 +137,30 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
             />
           </article>
 
-          <aside className="space-y-6">
-            <section className="rounded-2xl border border-slate-200 bg-[#F5F5F5] p-6">
-              <h2 className="text-xl font-bold text-slate-950">
+          <aside className="space-y-5">
+            <section className="rounded-2xl border border-[#D7E7D8] bg-[#F3F8F3] p-6 shadow-sm">
+              <h2 className="text-xl font-bold leading-snug text-slate-950 text-balance">
                 Бесплатный расчёт стоимости
               </h2>
-              <p className="mt-3 text-sm text-slate-600">
-                Назовите длину забора и материал — рассчитаем стоимость по
-                телефону и подберём лучший вариант под ваш бюджет.
+              <p className="mt-3 text-sm leading-6 text-slate-600">
+                Назовите длину забора и материал. Рассчитаем ориентировочную
+                стоимость и подберём подходящий вариант.
               </p>
               <a
-                className="mt-5 inline-flex w-full justify-center rounded-xl bg-[#F59E0B] px-4 py-3 text-sm font-bold text-white transition hover:bg-amber-600"
+                className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-[#F59E0B] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-amber-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F3F8F3]"
                 href="#blog-lead-form"
               >
                 Получить расчёт
               </a>
             </section>
 
-            <section className="rounded-2xl border border-slate-200 bg-white p-6">
+            <section className="rounded-2xl border border-[#D7E7D8] bg-white p-6 shadow-sm">
               <h2 className="text-lg font-bold text-slate-950">Другие статьи</h2>
-              <ul className="mt-4 space-y-4">
+              <ul className="mt-3 divide-y divide-slate-200">
                 {relatedPosts.map((item) => (
                   <li key={item.slug}>
                     <Link
-                      className="font-medium text-slate-800 transition hover:text-[#1B5E20]"
+                      className="-mx-3 block rounded-lg px-3 py-3 text-sm font-semibold leading-5 text-slate-800 transition-colors hover:bg-green-50 hover:text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
                       href={`/blog/${item.slug}`}
                     >
                       {item.title}
