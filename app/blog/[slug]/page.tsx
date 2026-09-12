@@ -39,6 +39,7 @@ export async function generateMetadata({ params }: BlogRouteProps) {
     description: post.metaDescription,
     path: `/blog/${post.slug}`,
     image: post.image,
+    imageAlt: post.imageAlt,
   });
 }
 
@@ -58,6 +59,7 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
     publishedAt: post.publishedAt,
     updatedAt: post.updatedAt,
     url: `/blog/${post.slug}`,
+    image: post.image.startsWith("/") ? post.image : undefined,
   });
 
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
@@ -110,16 +112,6 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
                 {post.title}
               </h1>
               <p className="mt-4 text-lg text-slate-600">{post.excerpt}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <span
-                    className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
-                    key={tag}
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
             </header>
 
             <Image

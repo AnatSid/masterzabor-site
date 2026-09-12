@@ -18,6 +18,7 @@ type PageMetadataInput = {
   description: string;
   path: string;
   image?: string;
+  imageAlt?: string;
   keywords?: string[];
 };
 
@@ -46,6 +47,7 @@ type ArticleJsonLdInput = {
   publishedAt: string;
   updatedAt?: string;
   url: string;
+  image?: string;
 };
 
 const DEFAULT_IMAGE = "/images/og-masterzabor.jpg";
@@ -64,6 +66,7 @@ export function generatePageMetadata({
   description,
   path,
   image = DEFAULT_IMAGE,
+  imageAlt = `${COMPANY_NAME} — установка заборов в Беларуси`,
   keywords = [],
 }: PageMetadataInput): Metadata {
   const url = absoluteUrl(path);
@@ -123,7 +126,7 @@ export function generatePageMetadata({
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: `${COMPANY_NAME} — установка заборов в Беларуси`,
+          alt: imageAlt,
         },
       ],
     },
@@ -269,6 +272,7 @@ export function generateArticleJsonLd({
   publishedAt,
   updatedAt,
   url,
+  image,
 }: ArticleJsonLdInput) {
   return {
     "@context": "https://schema.org",
@@ -278,6 +282,7 @@ export function generateArticleJsonLd({
     datePublished: publishedAt,
     dateModified: updatedAt ?? publishedAt,
     mainEntityOfPage: canonicalUrl(url),
+    ...(image ? { image: absoluteUrl(image) } : {}),
     author: {
       "@type": "Organization",
       name: COMPANY_NAME,

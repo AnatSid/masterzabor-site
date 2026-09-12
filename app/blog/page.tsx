@@ -48,7 +48,7 @@ export default function BlogPage() {
             >
               <Link href={`/blog/${post.slug}`}>
                 <Image
-                  alt={post.title}
+                  alt={post.imageAlt ?? post.title}
                   className="h-52 w-full object-cover"
                   height={420}
                   src={post.image}
@@ -68,18 +68,8 @@ export default function BlogPage() {
                   </Link>
                 </h2>
                 <p className="mt-3 grow text-slate-600">{post.excerpt}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <span
-                      className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
-                      key={tag}
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
                 <Link
-                  className="mt-5 inline-flex font-semibold text-[#1B5E20] hover:text-green-800"
+                  className="mt-5 inline-flex min-h-11 self-start items-center justify-center rounded-lg border border-[#B7D5BA] bg-[#F3F8F3] px-4 py-2.5 font-semibold text-[#1B5E20] transition-colors hover:border-[#8DBE92] hover:bg-green-100 hover:text-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
                   href={`/blog/${post.slug}`}
                 >
                   Читать статью →
