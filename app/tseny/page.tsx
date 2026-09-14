@@ -127,7 +127,7 @@ function ServicePriceCard({
           {copy.text}
         </p>
         <Link
-          className="mt-5 inline-flex min-h-9 items-center font-semibold text-[#1B5E20] transition hover:text-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A5633] focus-visible:ring-offset-2"
+          className="mt-5 inline-flex min-h-11 self-start items-center justify-center rounded-lg border border-[#B7D5BA] bg-[#F3F8F3] px-4 py-2.5 font-semibold text-[#1B5E20] transition-colors hover:border-[#8DBE92] hover:bg-green-100 hover:text-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2"
           href={`/${service.slug}`}
         >
           {copy.linkLabel} →
