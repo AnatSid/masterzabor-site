@@ -13,6 +13,7 @@ export const CONTACT_EVENT_TYPES = [
 export const QUIZ_FUNNEL_EVENT_TYPES = [
   "quiz_started",
   "quiz_step_3_reached",
+  "quiz_payment_step_reached",
   "quiz_contact_step_reached",
 ] as const;
 
@@ -38,6 +39,7 @@ export type ConversionEventSummary = {
   quizFunnel: {
     started: number;
     step3Reached: number;
+    paymentStepReached: number;
     contactStepReached: number;
   };
 };
@@ -53,6 +55,7 @@ const emptySummary = (): ConversionEventSummary => ({
   quizFunnel: {
     started: 0,
     step3Reached: 0,
+    paymentStepReached: 0,
     contactStepReached: 0,
   },
 });
@@ -137,6 +140,9 @@ function addSummary(
   summary.quizFunnel.started += numberFromHash(hash["type:quiz_started"]);
   summary.quizFunnel.step3Reached += numberFromHash(
     hash["type:quiz_step_3_reached"],
+  );
+  summary.quizFunnel.paymentStepReached += numberFromHash(
+    hash["type:quiz_payment_step_reached"],
   );
   summary.quizFunnel.contactStepReached += numberFromHash(
     hash["type:quiz_contact_step_reached"],

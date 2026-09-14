@@ -3,8 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { BelarusPhoneField } from "@/components/forms/BelarusPhoneField";
-import { QUIZ_TOTAL_STEPS } from "@/components/forms/quiz-form-config";
+import {
+  PAYMENT_METHODS,
+  QUIZ_STEPS,
+  QUIZ_TOTAL_STEPS,
+  type PaymentMethod,
+} from "@/components/forms/quiz-form-config";
 import { trackQuizFunnel } from "@/lib/client-analytics";
+import type { QuizFunnelEventType } from "@/lib/conversion-events";
 import { isValidBelarusPhone, normalizeBelarusPhone } from "@/lib/phone";
 
 type QuizFormValues = {
@@ -13,6 +19,7 @@ type QuizFormValues = {
   height: string;
   gateType: string;
   wicket: string;
+  paymentMethod: PaymentMethod | "";
   name: string;
   phone: string;
   city?: string;
@@ -24,11 +31,7 @@ type SubmitStatus = "idle" | "loading" | "success" | "error";
 const fenceTypes = ["Профнастил", "Евроштакетник", "Сетка-рабица"] as const;
 const heights = ["1.5 м", "1.8 м", "2.0 м", "2.5 м"] as const;
 const gateTypes = ["Распашные", "Откатные", "Не нужны"] as const;
-const wicketTypes = [
-  "Калитка с замком",
-  "Калитка без замка",
-  "Калитка не нужна",
-] as const;
+const wicketTypes = ["Да, нужна", "Нет, не нужна"] as const;
 
 function FenceOptionPreview({ label }: { label: string }) {
   const tone =
@@ -137,18 +140,8 @@ function GateIcon({ type }: { type: string }) {
 }
 
 function WicketIcon({ type }: { type: string }) {
-  if (type === "Калитка не нужна") {
+  if (type === "Нет, не нужна") {
     return null;
-  }
-
-  if (type === "Калитка с замком") {
-    return (
-      <svg className="mb-3 h-16 w-full" viewBox="0 0 140 64">
-        <rect x="44" y="10" width="52" height="44" fill="none" stroke="#334155" />
-        <rect x="88" y="26" width="8" height="8" fill="none" stroke="#334155" />
-        <path d="M88 26c0-4 2-6 4-6s4 2 4 6" fill="none" stroke="#334155" />
-      </svg>
-    );
   }
 
   return (
@@ -194,7 +187,7 @@ export function QuizForm({
     : "Не нужны";
   const initialWicketType = wicketTypes.includes(defaultWicketType as (typeof wicketTypes)[number])
     ? defaultWicketType
-    : "Калитка не нужна";
+    : "Нет, не нужна";
   const initialStep = sanitizeDefaultStep(defaultStep);
   const trackedQuizEvents = useRef(new Set<string>());
   const initialResetValues = useMemo(
@@ -203,6 +196,7 @@ export function QuizForm({
       height: "1.8 м",
       gateType: initialGateType,
       wicket: initialWicketType,
+      paymentMethod: "" as const,
       length: "",
       name: "",
       phone: "",
@@ -231,6 +225,7 @@ export function QuizForm({
       height: "1.8 м",
       gateType: initialGateType,
       wicket: initialWicketType,
+      paymentMethod: "",
       city: cityName ?? "",
     },
   });
@@ -250,10 +245,9 @@ export function QuizForm({
 
   const values = watch();
   const progress = (step / QUIZ_TOTAL_STEPS) * 100;
+  const currentStep = QUIZ_STEPS[step - 1];
 
-  const trackQuizEventOnce = (
-    type: "quiz_started" | "quiz_step_3_reached" | "quiz_contact_step_reached",
-  ) => {
+  const trackQuizEventOnce = (type: QuizFunnelEventType) => {
     if (trackedQuizEvents.current.has(type)) {
       return;
     }
@@ -269,25 +263,22 @@ export function QuizForm({
   const nextStep = async () => {
     trackQuizEventOnce("quiz_started");
 
-    const fieldsByStep: Record<number, (keyof QuizFormValues)[]> = {
-      1: ["fenceType"],
-      2: ["length"],
-      3: ["height"],
-      4: ["gateType"],
-      5: ["wicket"],
-      [QUIZ_TOTAL_STEPS]: ["name", "phone"],
-    };
-
-    const isValid = await trigger(fieldsByStep[step]);
+    const fields = [...currentStep.fields] as (keyof QuizFormValues)[];
+    const isValid = await trigger(fields);
 
     if (isValid) {
       const next = Math.min(step + 1, QUIZ_TOTAL_STEPS);
+      const nextStepId = QUIZ_STEPS[next - 1]?.id;
 
-      if (next >= 3) {
+      if (nextStepId === "height") {
         trackQuizEventOnce("quiz_step_3_reached");
       }
 
-      if (next >= QUIZ_TOTAL_STEPS) {
+      if (nextStepId === "paymentMethod") {
+        trackQuizEventOnce("quiz_payment_step_reached");
+      }
+
+      if (nextStepId === "contact") {
         trackQuizEventOnce("quiz_contact_step_reached");
       }
 
@@ -347,7 +338,7 @@ export function QuizForm({
 
       <div className={isCompact ? "min-h-0 lg:min-h-[260px]" : "min-h-[520px]"}>
         <div className="h-full animate-[fadeIn_220ms_ease-out]" key={step}>
-        {step === 1 ? (
+        {currentStep.id === "fenceType" ? (
           <fieldset>
             <legend className="text-2xl font-bold text-slate-950">
               Выберите тип забора
@@ -379,10 +370,10 @@ export function QuizForm({
           </fieldset>
         ) : null}
 
-        {step === 2 ? (
+        {currentStep.id === "length" ? (
           <label className="block">
             <span className="text-2xl font-bold text-slate-950">
-              Укажите длину забора
+              Укажите примерную длину
             </span>
             <span className="mt-3 block text-sm text-slate-600">
               Можно примерно, например 35 метров. Этого достаточно, чтобы
@@ -404,7 +395,7 @@ export function QuizForm({
           </label>
         ) : null}
 
-        {step === 3 ? (
+        {currentStep.id === "height" ? (
           <fieldset>
             <legend className="text-2xl font-bold text-slate-950">
               Выберите высоту
@@ -455,7 +446,7 @@ export function QuizForm({
           </fieldset>
         ) : null}
 
-        {step === 4 ? (
+        {currentStep.id === "gateType" ? (
           <fieldset>
             <legend className="text-2xl font-bold text-slate-950">
               Нужны ворота?
@@ -483,10 +474,10 @@ export function QuizForm({
           </fieldset>
         ) : null}
 
-        {step === 5 ? (
+        {currentStep.id === "wicket" ? (
           <fieldset>
             <legend className="text-2xl font-bold text-slate-950">
-              Какая калитка нужна?
+              Нужна калитка?
             </legend>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {wicketTypes.map((type) => (
@@ -511,7 +502,47 @@ export function QuizForm({
           </fieldset>
         ) : null}
 
-        {step === 6 ? (
+        {currentStep.id === "paymentMethod" ? (
+          <fieldset>
+            <legend className="text-2xl font-bold text-slate-950">
+              Какой вариант оплаты рассматриваете?
+            </legend>
+            <span className="mt-3 block text-sm text-slate-600">
+              Это поможет подобрать подходящий вариант расчёта.
+            </span>
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {PAYMENT_METHODS.map((method) => (
+                <button
+                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${
+                    values.paymentMethod === method
+                      ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
+                      : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
+                  }`}
+                  key={method}
+                  onClick={() =>
+                    setValue("paymentMethod", method, { shouldValidate: true })
+                  }
+                  type="button"
+                >
+                  {method}
+                </button>
+              ))}
+            </div>
+            <input
+              type="hidden"
+              {...register("paymentMethod", {
+                required: "Выберите вариант оплаты",
+              })}
+            />
+            {errors.paymentMethod ? (
+              <span className="mt-2 block text-sm text-red-600">
+                {errors.paymentMethod.message}
+              </span>
+            ) : null}
+          </fieldset>
+        ) : null}
+
+        {currentStep.id === "contact" ? (
           <div>
             <h3 className="text-2xl font-bold text-slate-950">
               Как с вами связаться?

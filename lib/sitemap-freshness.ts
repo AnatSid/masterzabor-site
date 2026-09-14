@@ -27,8 +27,16 @@ type SitemapFreshnessRegistry = {
  */
 export const sitemapFreshness: SitemapFreshnessRegistry = {
   groups: {},
-  templates: {},
-  static: {},
+  templates: {
+    homepage: "2026-09-14",
+    servicePage: "2026-09-14",
+    cityPage: "2026-09-14",
+    pricesPage: "2026-09-14",
+    blogArticle: "2026-09-14",
+  },
+  static: {
+    "/kontakty": "2026-09-14",
+  },
 };
 
 const STRICT_ISO_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;

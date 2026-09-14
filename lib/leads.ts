@@ -20,6 +20,12 @@ export type StoredLead = {
   city: string;
   source: string;
   fenceType: string;
+  length: string;
+  height: string;
+  gateType: string;
+  wicket: string;
+  paymentMethod: string;
+  comment: string;
   time: string;
   status: LeadDeliveryStatus;
 };
@@ -73,6 +79,12 @@ function normalizeStoredLead(lead: LeadData): StoredLead {
     city: lead.city?.trim() || "Не указан",
     source: lead.source,
     fenceType: lead.fenceType?.trim() || "Не указан",
+    length: lead.length?.trim() || "",
+    height: lead.height?.trim() || "",
+    gateType: lead.gateType?.trim() || "",
+    wicket: lead.wicket?.trim() || "",
+    paymentMethod: lead.paymentMethod?.trim() || "",
+    comment: lead.comment?.trim() || "",
     time: new Date().toISOString(),
     status: "pending_delivery",
   };
@@ -110,6 +122,12 @@ function normalizeLegacyLead(lead: Partial<StoredLead> & Partial<LeadData>): Sto
     city: lead.city?.trim() || "Не указан",
     source: lead.source || "unknown",
     fenceType: lead.fenceType?.trim() || "Не указан",
+    length: lead.length?.trim() || "",
+    height: lead.height?.trim() || "",
+    gateType: lead.gateType?.trim() || "",
+    wicket: lead.wicket?.trim() || "",
+    paymentMethod: lead.paymentMethod?.trim() || "",
+    comment: lead.comment?.trim() || "",
     time: lead.time || new Date().toISOString(),
     status: lead.status || "legacy",
   };
