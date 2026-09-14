@@ -1,10 +1,10 @@
 # PROJECT ROADMAP TRACKER / HANDOFF: MASTERZABOR
 
-Дата handoff: 2026-08-26
+Дата handoff: 2026-09-14
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: SEO-02 semantic sitemap freshness merge SHA `f3b61a958f68dfdeb854ced90f1209b61f9b3ab1`
+Текущая production точка отсчета: PRICING-UI-01 merge SHA `529acfccd39bbecdeb928983940beb0cc442d06a`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production implementation/content baseline: `f3b61a958f68dfdeb854ced90f1209b61f9b3ab1` (`Merge branch 'codex/SEO-02-sitemap-lastmod'`).
+- Последний production implementation/UI baseline: `529acfccd39bbecdeb928983940beb0cc442d06a` (`Merge PRICING-UI-01 secondary CTA`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -45,7 +45,11 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - ServicePage QuizForm now intentionally uses `presentation="compact"`; validation, API submission, analytics and service defaults were not changed.
 - P1-06.5 nationwide copy cleanup is complete: homepage and shared ServicePage commercial copy now use neutral Belarus-wide wording instead of implying "we travel from Gomel"; legitimate Gomel-local context in city/contact/review surfaces is preserved.
 - SEO-01 Product JSON-LD is complete: all ServicePage Product schema now includes absolute service hero `image`, and Product `offers.url` points to the canonical service page instead of homepage. `/tseny` also emits six Product objects with each service's own image and Offer URL.
-- SEO-02 semantic sitemap freshness is complete: sitemap dates now come only from explicit semantic record/group/template/static sources, unknown dates are omitted, and strict calendar-valid `YYYY-MM-DD` validation fails loudly. Production has 55 unchanged canonical URLs; `/blog` and three articles have honest `2026-05-18` lastmod values, while the other 51 intentionally omit lastmod.
+- SEO-02 semantic sitemap freshness remains active: sitemap dates come only from explicit semantic record/group/template/static sources, unknown dates are omitted, and strict calendar-valid `YYYY-MM-DD` validation fails loudly. After Page B publication, `/blog`, Page A and Page B use honest `2026-09-12` lastmod values; the two older articles retain `2026-05-18`.
+- BLOG-SEO-01B is complete: Page A remains the permission/documentation pillar at `/blog/nuzhno-li-razreshenie-na-ustanovku-zabora-v-rb` and uses an approved real hero asset.
+- BLOG-SEO-01C is complete and in Production: Page B covers height/neighbour intent at `/blog/vysota-zabora-mezhdu-sosedyami-v-belarusi` and uses an approved real hero asset.
+- Page A and Page B share the current article presentation and `1200×630` WebP hero convention. The same image field supplies article hero, `/blog` card, Open Graph, Twitter and Article JSON-LD.
+- BLOG-DOCS-01 adds `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md` as the permanent editorial and asset workflow for future articles.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
@@ -83,6 +87,9 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - SEO-01 Product JSON-LD image and service Offer URLs.
 - SEO-02 semantic deterministic sitemap freshness and Article date semantics.
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
+- BLOG-SEO-01B permission pillar update and real Page A hero.
+- BLOG-SEO-01C height/neighbour Page B with real hero, metadata, schema and contextual links.
+- BLOG-DOCS-01 permanent blog editorial and asset workflow.
 
 ## AUDITS COMPLETED
 
@@ -125,7 +132,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 
 - P1-03.1 added the first 9 own real MasterZabor project records. The older 8 starter/demo records remain below them and should be gradually replaced or expanded as more confirmed real objects are prepared.
 - `ServicePage` visual parity завершен: все 6 service pages имеют утвержденные hero/gallery из production assets and one shared homepage-aligned commercial layout.
-- `content/blog-posts.ts` использует generated SVG covers.
+- `content/blog-posts.ts` содержит два legacy generated SVG cover и два approved real WebP hero для Page A/Page B.
 - `generateWebsiteJsonLd()` все еще содержит `SearchAction`, но реального поиска нет.
 - Старый P1-06 scope `commercial pages visual polish` superseded продуктовым решением P1-06.1: `/tseny` уже закрыта как pricing landing; `/otzyvy` и `/kontakty` не являются автоматическим хвостом P1-06.
 - `/otzyvy` содержит текстовые отзывы без внешнего proof: Google/Yandex screenshots, ссылки, фото объекта, город/тип работ.
@@ -142,8 +149,8 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - `/tseny`: P1-06.1 DONE. Страница сохранена indexable с canonical `https://www.masterzabor.by/tseny`, использует no-slash links, service data prices, real service photography and compact QuizForm CTA. Header содержит `Цены -> /tseny`.
 - `/otzyvy`: не redesign сейчас. Откладывать до появления реальных review proof: screenshots, external sources, confirmed objects.
 - `/kontakty`: отдельный redesign сейчас не нужен; текущая функциональная страница остается как есть. Возможен мягкий polish позже только отдельным решением.
-- `/blog`: всего 3 статьи, covers placeholder SVG. Перед масштабированием нужен content model или хотя бы MDX/data decision.
-- Blog articles: полезны как база, но нужны реальные изображения, категории, related links, обновление под 2026 SEO.
+- `/blog`: всего 4 статьи. Page A/Page B используют реальные WebP hero; две ранние статьи сохраняют inline SVG data URI. Перед масштабированием нужен отдельный MDX/CMS/data decision.
+- Blog articles: Page A/Page B и их контекстные связи актуализированы. Categories/tag archives пока не создаются; related block остаётся механическим и перед масштабированием требует отдельного решения.
 - City pages: P1-05.1 replaced hero/examples placeholders with the approved homepage photo direction, real service images and truthful project proof. P1-06.3 aligned the CityPage calculator with the compact homepage-like flow. Future improvements should add more confirmed local projects, not separate city templates.
 - Service pages: P1-04 завершен; общий hero/gallery photo pattern утвержден на всех 6 услугах.
 - Mobile: основные overflow/menu/CTA проблемы закрыты; следующие проверки делать после каждого визуального изменения на 360/390/430 px и iPhone safe-area.
@@ -192,7 +199,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 ## TECHNICAL DEBT
 
 - Benefits icons true-vector migration: LOW priority cleanup only. Current `public/icons/benefits/*.svg` are SVG wrappers with embedded raster PNG. They are approved production visual source of truth. Future true-vector replacement must preserve look 1:1 and must not use `<image>`, base64, PNG/JPEG/WebP inside. If vector version looks worse, do not replace.
-- Placeholder SVG helpers remain in `content/blog-posts.ts`; CityPage, portfolio cards and the six ServicePage galleries now use real photo assets.
+- Placeholder SVG helper remains only for two legacy records in `content/blog-posts.ts`; Page A/Page B, CityPage, portfolio cards and the six ServicePage galleries use repository image assets.
 - `SearchAction` without search.
 - Dependency ranges with `latest`.
 - No automated regression tests for sitemap/canonical/API/phone utils.
@@ -389,7 +396,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 1. `P2-blog-content-system`
    - Что сделать: выбрать MDX/CMS/data-source для роста блога, категории и related content.
    - Где: `content/blog-posts.ts`, `app/blog/*`.
-   - Зачем: текущие 3 TS-string статьи не масштабируются до 500+.
+   - Зачем: текущие 4 TS-string статьи не масштабируются до 500+.
    - Как проверить: новые статьи добавляются без копирования page code; sitemap обновляется.
 
 2. `P2-image-sitemap-and-performance`

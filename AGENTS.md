@@ -28,8 +28,10 @@ sections unless the task genuinely needs full historical context.
 
 - When creating or substantially editing articles or SEO content, use all relevant
   installed content/SEO skills; a specialized writing/content skill is the primary
-  workflow. Read and follow `docs/EDITORIAL-WRITING-GUIDE.md`: it adds mandatory
-  editorial constraints and does not replace a specialized skill's methodology.
+  workflow. Read and follow `docs/EDITORIAL-WRITING-GUIDE.md` and
+  `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md`: they define the mandatory writing
+  standard and the durable article/asset workflow without replacing a specialized
+  skill's methodology.
 
 ## Production and Domain Invariants
 
