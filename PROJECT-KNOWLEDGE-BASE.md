@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production implementation/content baseline after SEO-04: `39d40365fa061b0dce21a7b5f718208b549fc243` (`Merge SEO-04 city internal link coverage`).
+Latest production implementation/UI baseline after PRICING-UI-01: `529acfccd39bbecdeb928983940beb0cc442d06a` (`Merge PRICING-UI-01 secondary CTA`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -163,7 +163,7 @@ architecture changes without separate rationale and user decision.
 - `app/page.tsx` - homepage, hero, trust, services, works, quiz, reviews, geography, lead form, FAQ.
 - `app/[city]/page.tsx` - 40 city pages from `content/cities.ts`; `dynamicParams = false`.
 - `app/blog/page.tsx` - blog index.
-- `app/blog/[slug]/page.tsx` - 3 статей from `content/blog-posts.ts`; Article/Breadcrumb JSON-LD.
+- `app/blog/[slug]/page.tsx` - 4 статьи from `content/blog-posts.ts`; Article/Breadcrumb JSON-LD.
 - `app/sitemap.ts` - generated sitemap; P0-01 normalizes all loc URLs to no-slash canonical URLs.
 - `app/robots.ts` - generated robots; correct host/sitemap.
 - `app/api/*` - lead, stats, Telegram webhook, daily reports, analytics reports.
@@ -177,6 +177,16 @@ architecture changes without separate rationale and user decision.
 - `public/` - icons, manifest, logo, OG image.
 - `docs/` - project history and runbooks.
 - `scripts/` - Telegram operational script.
+
+### Blog editorial and asset workflow
+
+`docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md` is the permanent detailed source of truth for article creation, editing, visual approval, production asset preparation, verification and publication. `docs/EDITORIAL-WRITING-GUIDE.md` remains the mandatory writing standard and is not duplicated there.
+
+The current blog is data-driven: four `BlogPost` records with HTML `content` live in `content/blog-posts.ts`; `app/blog/page.tsx` renders the index; `app/blog/[slug]/page.tsx` generates static article routes, metadata, Article/Breadcrumb JSON-LD, hero, related links and CTA; scoped prose styles live in `app/blog/[slug]/page.module.css`. The related block currently excludes the active slug and takes the first three remaining records; it does not use `tags`.
+
+Page A and Page B are the approved real-image article references. Their production hero assets live directly in `public/images/blog/` as slug-oriented WebP files, use `1200×630` sRGB images and feed the article hero, `/blog` card, Open Graph, Twitter and Article JSON-LD through the existing `BlogPost.image` field. This `1200×630` WebP shape is the current editorial convention, not a permanent framework constant. The two older articles still use generated inline SVG data URIs; do not describe every blog cover as a real repository asset.
+
+Article text and hero creation are separate approval steps. External masters may remain outside Git, while the optimized production copy belongs in `public/images/blog/`. Known and unknown source provenance, current image usage and the full lifecycle are recorded in the workflow document.
 
 ## Route Map
 
@@ -321,7 +331,7 @@ Future check protocol after `npm run dev`:
 - Главный duplicate-риск P0-02 закрыт кодом: `next.config.ts` redirects `masterzabor-site.vercel.app` to `https://www.masterzabor.by`; production `308` проверен.
 - Главный lead-риск P0-03 снижен: новые заявки пишутся атомарно, имеют `leadId` и delivery status; legacy data remains readable.
 - Главный security-риск P0-03 снижен: cron/stats/webhook secrets fail-closed in Vercel Production; production stats/cron without token return `401`.
-- Главный CRO-риск снижен по P1 pages: homepage, portfolio, services and CityPage now use real/project/service visual proof instead of generated placeholders. Blog covers still use generated SVG.
+- Главный CRO-риск снижен по P1 pages: homepage, portfolio, services and CityPage use real/project/service visual proof. Page A and Page B now use approved real WebP hero assets; two older blog articles still use generated SVG data URIs.
 - Главный scale-риск для city pages снижен P1-05.1 за счет real proof fallback, но будущие city-local improvements должны добавлять подтвержденные проекты, а не размножать шаблоны.
 
 ## Frontend / Mobile / CRO Notes
