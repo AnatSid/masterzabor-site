@@ -131,7 +131,7 @@ export function Header() {
         hasShadow ? "shadow-md" : "shadow-none"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:gap-4 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-1.5 px-2 py-3 min-[390px]:gap-3 min-[390px]:px-4 sm:px-6 lg:gap-4 lg:px-8">
         <Link
           className="flex min-w-0 flex-1 items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-4 lg:flex-none lg:gap-2"
           href="/"
@@ -146,7 +146,7 @@ export function Header() {
             width={48}
           />
           <span className="min-w-0">
-            <span className="block whitespace-nowrap text-[13px] font-extrabold leading-tight tracking-tight text-[#0A5633] min-[390px]:text-sm sm:text-xl lg:text-base xl:text-xl">
+            <span className="block whitespace-nowrap text-[11px] font-extrabold leading-tight tracking-tight text-[#0A5633] min-[390px]:text-sm sm:text-xl lg:text-base xl:text-xl">
               {COMPANY_NAME}
             </span>
             <span className="hidden text-[9px] font-semibold leading-tight text-slate-500 min-[390px]:block sm:text-[10px] lg:text-[9px] xl:text-[10px]">
@@ -200,7 +200,7 @@ export function Header() {
         <div className="hidden shrink-0 items-center gap-2 lg:flex xl:gap-3">
           <TrackedContactLink
             channel="click_call"
-            className="whitespace-nowrap text-sm font-semibold text-[#1B5E20] transition hover:text-green-800 xl:text-base"
+            className="inline-flex min-h-10 shrink-0 touch-manipulation items-center justify-center whitespace-nowrap rounded-full border border-green-200 bg-green-50 px-2 text-[13px] font-semibold text-[#14532D] transition-colors duration-200 hover:border-green-300 hover:bg-green-100 hover:text-[#0A5633] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 active:bg-green-200 motion-reduce:transition-none xl:min-h-11 xl:px-3.5 xl:text-base"
             eventLocation="header_desktop"
             href={`tel:${PHONE}`}
           >
@@ -231,7 +231,7 @@ export function Header() {
         <div className="flex shrink-0 items-center gap-2 lg:hidden">
           <TrackedContactLink
             channel="click_call"
-            className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg border border-green-100 px-2 text-xs font-semibold text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 min-[390px]:px-3 min-[390px]:text-sm"
+            className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg border border-green-100 px-1 text-[11px] font-semibold text-[#1B5E20] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 min-[390px]:px-3 min-[390px]:text-sm"
             eventLocation="header_mobile"
             href={`tel:${PHONE}`}
           >
