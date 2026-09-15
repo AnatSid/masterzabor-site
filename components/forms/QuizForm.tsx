@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { BelarusPhoneField } from "@/components/forms/BelarusPhoneField";
@@ -32,31 +33,33 @@ const fenceTypes = ["Профнастил", "Евроштакетник", "Се�
 const heights = ["1.5 м", "1.8 м", "2.0 м", "2.5 м"] as const;
 const gateTypes = ["Распашные", "Откатные", "Не нужны"] as const;
 const wicketTypes = ["Да, нужна", "Нет, не нужна"] as const;
+const fenceTypeImages: Record<(typeof fenceTypes)[number], string> = {
+  "Профнастил": "/icons/quiz/quiz-fence-profnastil.webp",
+  "Евроштакетник": "/icons/quiz/quiz-fence-evroshtaketnik.webp",
+  "Сетка-рабица": "/icons/quiz/quiz-fence-rabitsa.webp",
+};
 const STEP_FOCUS_DELAY_MS = 50;
 const optionFocusClass =
   "touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 motion-reduce:transition-none";
 
-function FenceOptionPreview({ label }: { label: string }) {
-  const tone =
-    label === "Профнастил"
-      ? "from-slate-200 to-slate-300"
-      : label === "Евроштакетник"
-        ? "from-amber-100 to-amber-200"
-        : "from-green-100 to-green-200";
-  const icon = label === "Профнастил" ? "▦" : label === "Евроштакетник" ? "|||": "#";
-
+function FenceOptionPreview({
+  label,
+}: {
+  label: (typeof fenceTypes)[number];
+}) {
   return (
     <div
       aria-hidden="true"
-      className={`mb-3 flex h-20 w-full items-center justify-center rounded-lg bg-gradient-to-br sm:h-[120px] ${tone}`}
+      className="flex h-[120px] w-[120px] shrink-0 items-center justify-center sm:mb-3 sm:w-full"
     >
-      {/* TODO: заменить на фото */}
-      <div className="text-center">
-        <div className="text-3xl font-bold text-slate-700">{icon}</div>
-        <div className="mt-2 text-xs font-semibold uppercase tracking-wide text-slate-600">
-          {label}
-        </div>
-      </div>
+      <Image
+        alt=""
+        className="h-full w-auto max-w-full object-contain"
+        height={512}
+        src={fenceTypeImages[label]}
+        unoptimized
+        width={512}
+      />
     </div>
   );
 }
@@ -406,7 +409,7 @@ export function QuizForm({
               {fenceTypes.map((type) => (
                 <button
                   aria-pressed={values.fenceType === type}
-                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${optionFocusClass} ${
+                  className={`flex items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition sm:block sm:py-4 ${optionFocusClass} ${
                     values.fenceType === type
                       ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
