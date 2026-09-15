@@ -32,6 +32,9 @@ const fenceTypes = ["Профнастил", "Евроштакетник", "Се�
 const heights = ["1.5 м", "1.8 м", "2.0 м", "2.5 м"] as const;
 const gateTypes = ["Распашные", "Откатные", "Не нужны"] as const;
 const wicketTypes = ["Да, нужна", "Нет, не нужна"] as const;
+const STEP_FOCUS_DELAY_MS = 50;
+const optionFocusClass =
+  "touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 motion-reduce:transition-none";
 
 function FenceOptionPreview({ label }: { label: string }) {
   const tone =
@@ -43,7 +46,10 @@ function FenceOptionPreview({ label }: { label: string }) {
   const icon = label === "Профнастил" ? "▦" : label === "Евроштакетник" ? "|||": "#";
 
   return (
-    <div className={`mb-3 flex h-[120px] w-full items-center justify-center rounded-lg bg-gradient-to-br ${tone}`}>
+    <div
+      aria-hidden="true"
+      className={`mb-3 flex h-20 w-full items-center justify-center rounded-lg bg-gradient-to-br sm:h-[120px] ${tone}`}
+    >
       {/* TODO: заменить на фото */}
       <div className="text-center">
         <div className="text-3xl font-bold text-slate-700">{icon}</div>
@@ -58,7 +64,9 @@ function FenceOptionPreview({ label }: { label: string }) {
 function LengthScheme() {
   return (
     <svg
+      aria-hidden="true"
       className="mt-4 h-40 w-full rounded-xl border border-slate-200 bg-slate-50 p-3"
+      focusable="false"
       viewBox="0 0 360 150"
     >
       {/* Лёгкая имитация секций забора вместо пунктира */}
@@ -94,7 +102,9 @@ function LengthScheme() {
 function HeightScheme() {
   return (
     <svg
+      aria-hidden="true"
       className="mt-4 h-44 w-full rounded-xl border border-slate-200 bg-white p-3 sm:h-48"
+      focusable="false"
       viewBox="0 0 360 180"
     >
       <line x1="24" y1="152" x2="336" y2="152" stroke="#111827" strokeWidth="2.4" />
@@ -121,7 +131,7 @@ function GateIcon({ type }: { type: string }) {
 
   if (type === "Распашные") {
     return (
-      <svg className="mb-3 h-16 w-full" viewBox="0 0 140 64">
+      <svg aria-hidden="true" className="mb-3 h-16 w-full" focusable="false" viewBox="0 0 140 64">
         <rect x="30" y="12" width="32" height="40" fill="none" stroke="#334155" />
         <rect x="78" y="12" width="32" height="40" fill="none" stroke="#334155" />
         <line x1="62" y1="32" x2="50" y2="22" stroke="#334155" />
@@ -131,7 +141,7 @@ function GateIcon({ type }: { type: string }) {
   }
 
   return (
-    <svg className="mb-3 h-16 w-full" viewBox="0 0 140 64">
+    <svg aria-hidden="true" className="mb-3 h-16 w-full" focusable="false" viewBox="0 0 140 64">
       <rect x="30" y="12" width="68" height="40" fill="none" stroke="#334155" />
       <line x1="100" y1="32" x2="116" y2="32" stroke="#334155" strokeWidth="2" />
       <polygon points="116,32 108,27 108,37" fill="#334155" />
@@ -145,7 +155,7 @@ function WicketIcon({ type }: { type: string }) {
   }
 
   return (
-    <svg className="mb-3 h-16 w-full" viewBox="0 0 140 64">
+    <svg aria-hidden="true" className="mb-3 h-16 w-full" focusable="false" viewBox="0 0 140 64">
       <rect x="44" y="10" width="52" height="44" fill="none" stroke="#334155" />
     </svg>
   );
@@ -190,6 +200,9 @@ export function QuizForm({
     : "Нет, не нужна";
   const initialStep = sanitizeDefaultStep(defaultStep);
   const trackedQuizEvents = useRef(new Set<string>());
+  const formRef = useRef<HTMLFormElement>(null);
+  const stepHeadingRef = useRef<HTMLElement>(null);
+  const previousStepRef = useRef(initialStep);
   const initialResetValues = useMemo(
     () => ({
       fenceType: initialFenceType,
@@ -215,6 +228,7 @@ export function QuizForm({
     setValue,
     watch,
     trigger,
+    clearErrors,
     reset,
     formState: { errors },
   } = useForm<QuizFormValues>({
@@ -246,6 +260,26 @@ export function QuizForm({
   const values = watch();
   const progress = (step / QUIZ_TOTAL_STEPS) * 100;
   const currentStep = QUIZ_STEPS[step - 1];
+  const isContactStep = currentStep.id === "contact";
+
+  useEffect(() => {
+    if (previousStepRef.current === step) {
+      return;
+    }
+
+    previousStepRef.current = step;
+
+    if (status === "success") {
+      return;
+    }
+
+    const focusTimer = window.setTimeout(() => {
+      stepHeadingRef.current?.focus({ preventScroll: true });
+      formRef.current?.scrollIntoView({ block: "start" });
+    }, STEP_FOCUS_DELAY_MS);
+
+    return () => window.clearTimeout(focusTimer);
+  }, [status, step]);
 
   const trackQuizEventOnce = (type: QuizFunnelEventType) => {
     if (trackedQuizEvents.current.has(type)) {
@@ -279,6 +313,7 @@ export function QuizForm({
       }
 
       if (nextStepId === "contact") {
+        clearErrors(["name", "phone"]);
         trackQuizEventOnce("quiz_contact_step_reached");
       }
 
@@ -318,35 +353,60 @@ export function QuizForm({
     <form
       className={
         isCompact
-          ? "rounded-2xl bg-white p-5 shadow-lg shadow-slate-950/5 ring-1 ring-slate-200 sm:p-6"
-          : "rounded-3xl bg-white p-6 shadow-xl ring-1 ring-slate-200 sm:p-8"
+          ? "grid scroll-mt-20 grid-rows-[auto_minmax(0,1fr)_auto_auto] rounded-2xl bg-white p-5 shadow-lg shadow-slate-950/5 ring-1 ring-slate-200 sm:p-6 lg:scroll-mt-24"
+          : "grid scroll-mt-20 grid-rows-[auto_minmax(0,1fr)_auto_auto] rounded-3xl bg-white p-6 shadow-xl ring-1 ring-slate-200 sm:p-8 lg:scroll-mt-24"
       }
+      aria-label="Калькулятор стоимости забора"
       onSubmit={onSubmit}
+      ref={formRef}
     >
       <div className={isCompact ? "mb-6" : "mb-8"}>
         <div className="flex items-center justify-between text-sm font-semibold text-slate-600">
           <span>Шаг {step} из {QUIZ_TOTAL_STEPS}</span>
           <span>{Math.round(progress)}%</span>
         </div>
-        <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200">
+        <div
+          aria-label={`Шаг ${step} из ${QUIZ_TOTAL_STEPS}`}
+          aria-valuemax={QUIZ_TOTAL_STEPS}
+          aria-valuemin={1}
+          aria-valuenow={step}
+          className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200"
+          role="progressbar"
+        >
           <div
-            className="h-full rounded-full bg-[#1B5E20] transition-all"
+            className="h-full rounded-full bg-[#1B5E20] transition-[width] duration-300 motion-reduce:transition-none"
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
 
-      <div className={isCompact ? "min-h-0 lg:min-h-[260px]" : "min-h-[520px]"}>
-        <div className="h-full animate-[fadeIn_220ms_ease-out]" key={step}>
+      <div
+        className={
+          isContactStep
+            ? "min-w-0"
+            : "min-h-[34rem] min-w-0 sm:min-h-[25rem]"
+        }
+      >
+        <div
+          className="h-full animate-[fadeIn_220ms_ease-out] motion-reduce:animate-none"
+          key={step}
+        >
         {currentStep.id === "fenceType" ? (
           <fieldset>
-            <legend className="text-2xl font-bold text-slate-950">
+            <legend
+              className="scroll-mt-24 text-2xl font-bold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1B5E20]"
+              ref={(node) => {
+                stepHeadingRef.current = node;
+              }}
+              tabIndex={-1}
+            >
               Выберите тип забора
             </legend>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {fenceTypes.map((type) => (
                 <button
-                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${
+                  aria-pressed={values.fenceType === type}
+                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${optionFocusClass} ${
                     values.fenceType === type
                       ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
@@ -372,7 +432,15 @@ export function QuizForm({
 
         {currentStep.id === "length" ? (
           <label className="block">
-            <span className="text-2xl font-bold text-slate-950">
+            <span
+              aria-level={3}
+              className="scroll-mt-24 text-2xl font-bold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1B5E20]"
+              ref={(node) => {
+                stepHeadingRef.current = node;
+              }}
+              role="heading"
+              tabIndex={-1}
+            >
               Укажите примерную длину
             </span>
             <span className="mt-3 block text-sm text-slate-600">
@@ -381,14 +449,23 @@ export function QuizForm({
             </span>
             <LengthScheme />
             <input
+              aria-describedby={errors.length ? "quiz-length-error" : undefined}
+              aria-invalid={Boolean(errors.length)}
+              aria-label="Примерная длина забора"
+              autoComplete="off"
               className="mt-5 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-[#1B5E20] focus:ring-2 focus:ring-[#1B5E20]/20"
+              inputMode="decimal"
               placeholder="Например, 40 м"
               {...register("length", {
                 required: "Введите примерную длину",
               })}
             />
             {errors.length ? (
-              <span className="mt-2 block text-sm text-red-600">
+              <span
+                className="mt-2 block text-sm text-red-600"
+                id="quiz-length-error"
+                role="alert"
+              >
                 {errors.length.message}
               </span>
             ) : null}
@@ -397,7 +474,13 @@ export function QuizForm({
 
         {currentStep.id === "height" ? (
           <fieldset>
-            <legend className="text-2xl font-bold text-slate-950">
+            <legend
+              className="scroll-mt-24 text-2xl font-bold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1B5E20]"
+              ref={(node) => {
+                stepHeadingRef.current = node;
+              }}
+              tabIndex={-1}
+            >
               Выберите высоту
             </legend>
             <span className="mt-3 block text-sm text-slate-600">
@@ -408,7 +491,8 @@ export function QuizForm({
             <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
               {heights.map((height) => (
                 <button
-                  className={`rounded-xl border px-4 py-4 font-semibold transition ${
+                  aria-pressed={values.height === height}
+                  className={`rounded-xl border px-4 py-4 font-semibold transition ${optionFocusClass} ${
                     values.height === height
                       ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
@@ -423,7 +507,8 @@ export function QuizForm({
                 </button>
               ))}
               <button
-                className={`col-span-2 flex min-h-[88px] w-full items-center justify-center rounded-xl border border-dashed px-4 py-4 text-center text-sm leading-tight whitespace-normal font-semibold transition sm:col-span-1 ${
+                aria-pressed={values.height === "Нужна консультация"}
+                className={`col-span-2 flex min-h-[88px] w-full items-center justify-center rounded-xl border border-dashed px-4 py-4 text-center text-sm leading-tight whitespace-normal font-semibold transition sm:col-span-1 ${optionFocusClass} ${
                   values.height === "Нужна консультация"
                     ? "border-slate-500 bg-slate-200 text-slate-900"
                     : "border-slate-300 bg-slate-100 text-slate-700 hover:border-slate-500"
@@ -448,13 +533,20 @@ export function QuizForm({
 
         {currentStep.id === "gateType" ? (
           <fieldset>
-            <legend className="text-2xl font-bold text-slate-950">
+            <legend
+              className="scroll-mt-24 text-2xl font-bold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1B5E20]"
+              ref={(node) => {
+                stepHeadingRef.current = node;
+              }}
+              tabIndex={-1}
+            >
               Нужны ворота?
             </legend>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {gateTypes.map((type) => (
                 <button
-                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${
+                  aria-pressed={values.gateType === type}
+                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${optionFocusClass} ${
                     values.gateType === type
                       ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
@@ -476,13 +568,20 @@ export function QuizForm({
 
         {currentStep.id === "wicket" ? (
           <fieldset>
-            <legend className="text-2xl font-bold text-slate-950">
+            <legend
+              className="scroll-mt-24 text-2xl font-bold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1B5E20]"
+              ref={(node) => {
+                stepHeadingRef.current = node;
+              }}
+              tabIndex={-1}
+            >
               Нужна калитка?
             </legend>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {wicketTypes.map((type) => (
                 <button
-                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${
+                  aria-pressed={values.wicket === type}
+                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${optionFocusClass} ${
                     values.wicket === type
                       ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
@@ -504,7 +603,13 @@ export function QuizForm({
 
         {currentStep.id === "paymentMethod" ? (
           <fieldset>
-            <legend className="text-2xl font-bold text-slate-950">
+            <legend
+              className="scroll-mt-24 text-2xl font-bold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1B5E20]"
+              ref={(node) => {
+                stepHeadingRef.current = node;
+              }}
+              tabIndex={-1}
+            >
               Какой вариант оплаты рассматриваете?
             </legend>
             <span className="mt-3 block text-sm text-slate-600">
@@ -513,7 +618,8 @@ export function QuizForm({
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
               {PAYMENT_METHODS.map((method) => (
                 <button
-                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${
+                  aria-pressed={values.paymentMethod === method}
+                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${optionFocusClass} ${
                     values.paymentMethod === method
                       ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
@@ -535,7 +641,7 @@ export function QuizForm({
               })}
             />
             {errors.paymentMethod ? (
-              <span className="mt-2 block text-sm text-red-600">
+              <span className="mt-2 block text-sm text-red-600" role="alert">
                 {errors.paymentMethod.message}
               </span>
             ) : null}
@@ -544,7 +650,13 @@ export function QuizForm({
 
         {currentStep.id === "contact" ? (
           <div>
-            <h3 className="text-2xl font-bold text-slate-950">
+            <h3
+              className="scroll-mt-24 text-2xl font-bold text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1B5E20]"
+              ref={(node) => {
+                stepHeadingRef.current = node;
+              }}
+              tabIndex={-1}
+            >
               Как с вами связаться?
             </h3>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -553,12 +665,19 @@ export function QuizForm({
                   Имя
                 </span>
                 <input
+                  aria-describedby={errors.name ? "quiz-name-error" : undefined}
+                  aria-invalid={Boolean(errors.name)}
+                  autoComplete="name"
                   className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-[#1B5E20] focus:ring-2 focus:ring-[#1B5E20]/20"
                   placeholder="Ваше имя"
                   {...register("name", { required: "Введите имя" })}
                 />
                 {errors.name ? (
-                  <span className="mt-2 block text-sm text-red-600">
+                  <span
+                    className="mt-2 block text-sm text-red-600"
+                    id="quiz-name-error"
+                    role="alert"
+                  >
                     {errors.name.message}
                   </span>
                 ) : null}
@@ -578,6 +697,8 @@ export function QuizForm({
                   }}
                   render={({ field }) => (
                     <BelarusPhoneField
+                      ariaDescribedBy={errors.phone ? "quiz-phone-error" : undefined}
+                      ariaInvalid={Boolean(errors.phone)}
                       id="quiz-phone"
                       onBlur={field.onBlur}
                       onChange={field.onChange}
@@ -586,7 +707,11 @@ export function QuizForm({
                   )}
                 />
                 {errors.phone ? (
-                  <span className="mt-2 block text-sm text-red-600">
+                  <span
+                    className="mt-2 block text-sm text-red-600"
+                    id="quiz-phone-error"
+                    role="alert"
+                  >
                     {String(errors.phone.message)}
                   </span>
                 ) : null}
@@ -597,6 +722,7 @@ export function QuizForm({
                   Населённый пункт
                 </span>
                 <input
+                  autoComplete="address-level2"
                   className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-[#1B5E20] focus:ring-2 focus:ring-[#1B5E20]/20"
                   placeholder="Город, деревня или посёлок"
                   {...register("city")}
@@ -614,6 +740,7 @@ export function QuizForm({
                   Комментарий
                 </span>
                 <textarea
+                  autoComplete="off"
                   className="mt-2 min-h-28 w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-[#1B5E20] focus:ring-2 focus:ring-[#1B5E20]/20"
                   placeholder=""
                   {...register("comment")}
@@ -625,9 +752,9 @@ export function QuizForm({
         </div>
       </div>
 
-      <div className={`${isCompact ? "mt-6" : "mt-8"} flex flex-col gap-3 sm:flex-row sm:justify-between`}>
+      <div className={`${isCompact ? "mt-6" : "mt-8"} grid grid-cols-2 gap-3`}>
         <button
-          className="rounded-xl border border-slate-300 px-6 py-3 font-semibold text-slate-800 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-12 touch-manipulation rounded-xl border border-slate-300 px-3 py-3 font-semibold text-slate-800 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none sm:px-6"
           disabled={step === 1 || status === "loading"}
           onClick={() => setStep((current) => Math.max(current - 1, 1))}
           type="button"
@@ -637,7 +764,7 @@ export function QuizForm({
 
         {step < QUIZ_TOTAL_STEPS ? (
           <button
-            className="rounded-xl bg-[#F59E0B] px-6 py-3 font-bold text-white transition hover:bg-amber-600"
+            className="min-h-12 touch-manipulation rounded-xl bg-[#F59E0B] px-3 py-3 font-bold text-white transition-colors hover:bg-amber-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 motion-reduce:transition-none sm:px-6"
             onClick={nextStep}
             type="button"
           >
@@ -645,7 +772,7 @@ export function QuizForm({
           </button>
         ) : (
           <button
-            className="rounded-xl bg-[#F59E0B] px-6 py-3 font-bold text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-70"
+            className="min-h-12 touch-manipulation rounded-xl bg-[#F59E0B] px-3 py-3 font-bold text-white transition-colors hover:bg-amber-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70 motion-reduce:transition-none sm:px-6"
             disabled={status === "loading"}
             type="submit"
           >
@@ -654,17 +781,19 @@ export function QuizForm({
         )}
       </div>
 
-      {status === "success" ? (
-        <p className="mt-4 text-sm font-semibold text-[#1B5E20]">
-          Заявка отправлена! Перезвоним в течение рабочего дня.
-        </p>
-      ) : null}
-      {status === "error" ? (
-        <p className="mt-4 text-sm font-semibold text-red-600">
-          Пока заявка не отправилась. Позвоните нам или повторите попытку после
-          настройки API.
-        </p>
-      ) : null}
+      <div aria-atomic="true" aria-live="polite">
+        {status === "success" ? (
+          <p className="mt-4 text-sm font-semibold text-[#1B5E20]">
+            Заявка отправлена! Перезвоним в течение рабочего дня.
+          </p>
+        ) : null}
+        {status === "error" ? (
+          <p className="mt-4 text-sm font-semibold text-red-600">
+            Пока заявка не отправилась. Позвоните нам или повторите попытку после
+            настройки API.
+          </p>
+        ) : null}
+      </div>
     </form>
   );
 }
