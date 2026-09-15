@@ -133,7 +133,7 @@ export function Header() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-1.5 px-2 py-3 min-[390px]:gap-3 min-[390px]:px-4 sm:px-6 lg:gap-4 lg:px-8">
         <Link
-          className="flex min-w-0 flex-1 items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-4 min-[390px]:gap-1.5 lg:flex-none lg:gap-2"
+          className="flex min-w-0 flex-1 items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-4 lg:flex-none lg:gap-2"
           href="/"
           onClick={closeMobileMenu}
         >
