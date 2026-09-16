@@ -51,6 +51,8 @@ const paymentMethodImages: Record<PaymentMethod, string> = {
 const STEP_FOCUS_DELAY_MS = 50;
 const optionFocusClass =
   "touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 motion-reduce:transition-none";
+const visualOptionSelectedClass =
+  "border-[#1B5E20] bg-white text-[#1B5E20] shadow-[0_0_0_1px_rgba(27,94,32,0.28),0_4px_12px_rgba(27,94,32,0.10)]";
 
 function FenceOptionPreview({
   label,
@@ -60,7 +62,7 @@ function FenceOptionPreview({
   return (
     <div
       aria-hidden="true"
-      className="flex h-[120px] w-[120px] shrink-0 items-center justify-center sm:mb-3 sm:w-full"
+      className="flex h-[146px] w-[146px] shrink-0 items-center justify-center max-[340px]:h-[132px] max-[340px]:w-[132px] sm:mb-3 sm:h-[164px] sm:w-full"
     >
       <Image
         alt=""
@@ -397,9 +399,9 @@ export function QuizForm({
               {fenceTypes.map((type) => (
                 <button
                   aria-pressed={values.fenceType === type}
-                  className={`flex items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition sm:block sm:py-4 ${optionFocusClass} ${
+                  className={`flex items-center gap-3 rounded-xl border px-3 py-1 text-left font-semibold transition-colors sm:block sm:px-4 sm:py-4 ${optionFocusClass} ${
                     values.fenceType === type
-                      ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
+                      ? visualOptionSelectedClass
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
                   }`}
                   key={type}
@@ -410,7 +412,9 @@ export function QuizForm({
                   type="button"
                 >
                   <FenceOptionPreview label={type} />
-                  {type}
+                  <span className="min-w-0 break-words leading-tight">
+                    {type}
+                  </span>
                 </button>
               ))}
             </div>
@@ -542,7 +546,7 @@ export function QuizForm({
                   aria-pressed={values.gateType === type}
                   className={`flex min-h-[104px] items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[172px] sm:py-4 ${optionFocusClass} ${
                     values.gateType === type
-                      ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
+                      ? visualOptionSelectedClass
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
                   }`}
                   key={type}
@@ -577,7 +581,7 @@ export function QuizForm({
                   aria-pressed={values.wicket === type}
                   className={`flex min-h-[104px] items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[172px] sm:py-4 ${optionFocusClass} ${
                     values.wicket === type
-                      ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
+                      ? visualOptionSelectedClass
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
                   }`}
                   key={type}
@@ -621,7 +625,7 @@ export function QuizForm({
                   aria-pressed={values.paymentMethod === method}
                   className={`flex min-h-[92px] items-center gap-3 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[148px] sm:py-4 sm:text-center ${optionFocusClass} ${
                     values.paymentMethod === method
-                      ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
+                      ? visualOptionSelectedClass
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
                   }`}
                   key={method}
