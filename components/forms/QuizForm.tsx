@@ -38,6 +38,16 @@ const fenceTypeImages: Record<(typeof fenceTypes)[number], string> = {
   "Евроштакетник": "/icons/quiz/quiz-fence-evroshtaketnik.webp",
   "Сетка-рабица": "/icons/quiz/quiz-fence-rabitsa.webp",
 };
+const gateTypeImages: Partial<Record<(typeof gateTypes)[number], string>> = {
+  "Распашные": "/icons/quiz/quiz-gate-swing.webp",
+  "Откатные": "/icons/quiz/quiz-gate-sliding.webp",
+};
+const paymentMethodImages: Record<PaymentMethod, string> = {
+  "Собственные средства": "/icons/quiz/quiz-payment-own-funds.webp",
+  "Рассрочка или кредит":
+    "/icons/quiz/quiz-payment-installment-credit.webp",
+  "Пока не решил": "/icons/quiz/quiz-payment-undecided.webp",
+};
 const STEP_FOCUS_DELAY_MS = 50;
 const optionFocusClass =
   "touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 motion-reduce:transition-none";
@@ -66,101 +76,79 @@ function FenceOptionPreview({
 
 function LengthScheme() {
   return (
-    <svg
+    <div
       aria-hidden="true"
-      className="mt-4 h-40 w-full rounded-xl border border-slate-200 bg-slate-50 p-3"
-      focusable="false"
-      viewBox="0 0 360 150"
+      className="mx-auto mt-4 w-full max-w-[42rem]"
     >
-      {/* Лёгкая имитация секций забора вместо пунктира */}
-      <line x1="24" y1="34" x2="336" y2="34" stroke="#94A3B8" strokeWidth="1.4" strokeOpacity="0.55" />
-      <line x1="24" y1="98" x2="336" y2="98" stroke="#94A3B8" strokeWidth="1.2" strokeOpacity="0.5" />
-      {Array.from({ length: 11 }).map((_, index) => {
-        const x = 24 + index * 31.2;
-
-        return (
-          <line
-            key={x}
-            x1={x}
-            y1="98"
-            x2={x}
-            y2="38"
-            stroke="#94A3B8"
-            strokeWidth="1.3"
-            strokeOpacity="0.5"
-          />
-        );
-      })}
-
-      <line x1="24" y1="114" x2="336" y2="114" stroke="#F59E0B" strokeWidth="4.5" strokeLinecap="round" />
-      <polygon points="24,114 40,105 40,123" fill="#F59E0B" />
-      <polygon points="336,114 320,105 320,123" fill="#F59E0B" />
-      <text x="180" y="140" textAnchor="middle" fontSize="20" fontWeight="700" fill="#92400E">
-        Длина, м
-      </text>
-    </svg>
+      <Image
+        alt=""
+        className="h-auto w-full object-contain"
+        height={400}
+        src="/icons/quiz/quiz-measure-length.webp"
+        unoptimized
+        width={1200}
+      />
+    </div>
   );
 }
 
 function HeightScheme() {
   return (
-    <svg
+    <div
       aria-hidden="true"
-      className="mt-4 h-44 w-full rounded-xl border border-slate-200 bg-white p-3 sm:h-48"
-      focusable="false"
-      viewBox="0 0 360 180"
+      className="mx-auto mt-4 w-full max-w-[15rem] sm:max-w-[18rem]"
     >
-      <line x1="24" y1="152" x2="336" y2="152" stroke="#111827" strokeWidth="2.4" />
-      <rect x="64" y="52" width="62" height="100" fill="none" stroke="#111827" strokeWidth="2" />
-      <circle cx="176" cy="68" r="10" fill="none" stroke="#111827" strokeWidth="2" />
-      <line x1="176" y1="78" x2="176" y2="126" stroke="#111827" strokeWidth="2" />
-      <line x1="176" y1="90" x2="160" y2="108" stroke="#111827" strokeWidth="2" />
-      <line x1="176" y1="90" x2="192" y2="108" stroke="#111827" strokeWidth="2" />
-      <line x1="176" y1="126" x2="163" y2="152" stroke="#111827" strokeWidth="2" />
-      <line x1="176" y1="126" x2="189" y2="152" stroke="#111827" strokeWidth="2" />
-      <line x1="42" y1="56" x2="42" y2="146" stroke="#F59E0B" strokeWidth="2" />
-      <polygon points="42,56 38,64 46,64" fill="#F59E0B" />
-      <polygon points="42,146 38,138 46,138" fill="#F59E0B" />
-      <text x="214" y="38" fontSize="13" fontWeight="700" fill="#111827">1.5 / 1.8 / 2.0 / 2.5 м</text>
-      <text x="214" y="60" fontSize="13" fontWeight="600" fill="#334155">рост человека ~170 см</text>
-    </svg>
+      <Image
+        alt=""
+        className="h-auto w-full object-contain"
+        height={675}
+        src="/icons/quiz/quiz-measure-height.webp"
+        unoptimized
+        width={1200}
+      />
+    </div>
   );
 }
 
-function GateIcon({ type }: { type: string }) {
-  if (type === "Не нужны") {
-    return null;
-  }
-
-  if (type === "Распашные") {
-    return (
-      <svg aria-hidden="true" className="mb-3 h-16 w-full" focusable="false" viewBox="0 0 140 64">
-        <rect x="30" y="12" width="32" height="40" fill="none" stroke="#334155" />
-        <rect x="78" y="12" width="32" height="40" fill="none" stroke="#334155" />
-        <line x1="62" y1="32" x2="50" y2="22" stroke="#334155" />
-        <line x1="78" y1="32" x2="90" y2="22" stroke="#334155" />
-      </svg>
-    );
-  }
-
+function ObjectOptionPreview({ src }: { src?: string }) {
   return (
-    <svg aria-hidden="true" className="mb-3 h-16 w-full" focusable="false" viewBox="0 0 140 64">
-      <rect x="30" y="12" width="68" height="40" fill="none" stroke="#334155" />
-      <line x1="100" y1="32" x2="116" y2="32" stroke="#334155" strokeWidth="2" />
-      <polygon points="116,32 108,27 108,37" fill="#334155" />
-    </svg>
+    <span
+      aria-hidden="true"
+      className="flex h-20 w-20 shrink-0 items-center justify-center sm:mb-3 sm:h-28 sm:w-full"
+    >
+      {src ? (
+        <Image
+          alt=""
+          className="h-full w-auto max-w-full object-contain"
+          height={512}
+          src={src}
+          unoptimized
+          width={512}
+        />
+      ) : (
+        <span className="flex size-12 items-center justify-center rounded-full border border-dashed border-slate-300 bg-slate-100 text-2xl font-normal text-slate-400 sm:size-16">
+          —
+        </span>
+      )}
+    </span>
   );
 }
 
-function WicketIcon({ type }: { type: string }) {
-  if (type === "Нет, не нужна") {
-    return null;
-  }
-
+function PaymentOptionPreview({ method }: { method: PaymentMethod }) {
   return (
-    <svg aria-hidden="true" className="mb-3 h-16 w-full" focusable="false" viewBox="0 0 140 64">
-      <rect x="44" y="10" width="52" height="44" fill="none" stroke="#334155" />
-    </svg>
+    <span
+      aria-hidden="true"
+      className="flex size-16 shrink-0 items-center justify-center sm:mb-3 sm:h-24 sm:w-full"
+    >
+      <Image
+        alt=""
+        className="h-full w-auto max-w-full object-contain"
+        height={512}
+        src={paymentMethodImages[method]}
+        unoptimized
+        width={512}
+      />
+    </span>
   );
 }
 
@@ -491,6 +479,9 @@ export function QuizForm({
               — подскажем по телефону.
             </span>
             <HeightScheme />
+            <p className="mt-2 text-center text-xs text-slate-500">
+              Для ориентира: рост человека на схеме ≈ 175 см.
+            </p>
             <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
               {heights.map((height) => (
                 <button
@@ -549,7 +540,7 @@ export function QuizForm({
               {gateTypes.map((type) => (
                 <button
                   aria-pressed={values.gateType === type}
-                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${optionFocusClass} ${
+                  className={`flex min-h-[104px] items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[172px] sm:py-4 ${optionFocusClass} ${
                     values.gateType === type
                       ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
@@ -560,7 +551,7 @@ export function QuizForm({
                   }
                   type="button"
                 >
-                  <GateIcon type={type} />
+                  <ObjectOptionPreview src={gateTypeImages[type]} />
                   {type}
                 </button>
               ))}
@@ -580,11 +571,11 @@ export function QuizForm({
             >
               Нужна калитка?
             </legend>
-            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {wicketTypes.map((type) => (
                 <button
                   aria-pressed={values.wicket === type}
-                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${optionFocusClass} ${
+                  className={`flex min-h-[104px] items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[172px] sm:py-4 ${optionFocusClass} ${
                     values.wicket === type
                       ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
@@ -595,7 +586,13 @@ export function QuizForm({
                   }
                   type="button"
                 >
-                  <WicketIcon type={type} />
+                  <ObjectOptionPreview
+                    src={
+                      type === "Да, нужна"
+                        ? "/icons/quiz/quiz-gate-wicket.webp"
+                        : undefined
+                    }
+                  />
                   {type}
                 </button>
               ))}
@@ -622,7 +619,7 @@ export function QuizForm({
               {PAYMENT_METHODS.map((method) => (
                 <button
                   aria-pressed={values.paymentMethod === method}
-                  className={`rounded-xl border px-4 py-4 text-left font-semibold transition ${optionFocusClass} ${
+                  className={`flex min-h-[92px] items-center gap-3 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[148px] sm:py-4 sm:text-center ${optionFocusClass} ${
                     values.paymentMethod === method
                       ? "border-[#1B5E20] bg-green-50 text-[#1B5E20]"
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
@@ -633,7 +630,8 @@ export function QuizForm({
                   }
                   type="button"
                 >
-                  {method}
+                  <PaymentOptionPreview method={method} />
+                  <span>{method}</span>
                 </button>
               ))}
             </div>
