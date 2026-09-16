@@ -124,12 +124,12 @@ function HeightScheme() {
   return (
     <div
       aria-hidden="true"
-      className="mx-auto mt-1.5 w-full max-w-[16rem] max-[340px]:mt-1 sm:mt-4 sm:max-w-[21rem]"
+      className="mx-auto mt-1.5 w-full max-[340px]:mt-1 sm:mt-1 sm:max-w-[37.5rem]"
     >
       <Image
         alt=""
         className="h-auto w-full object-contain"
-        height={571}
+        height={400}
         src="/icons/quiz/quiz-measure-height.webp"
         unoptimized
         width={1200}
@@ -488,15 +488,15 @@ export function QuizForm({
             >
               Выберите высоту
             </legend>
-            <span className="mt-2 block text-sm text-slate-600 max-[340px]:mt-1 sm:mt-3">
+            <span className="mt-2 block text-sm text-slate-600 max-[340px]:mt-1">
               Нужна другая высота или сомневаетесь в выборе? Выберите «Не знаю,
               нужна консультация» — подскажем подходящий вариант по телефону.
             </span>
             <HeightScheme />
-            <p className="mt-1 text-center text-xs text-slate-500 sm:mt-2">
-              Для ориентира: средний рост взрослого человека — около 175 см.
+            <p className="mt-1 text-center text-xs text-slate-500">
+              Для ориентира: средний рост взрослого человека – около 175 см.
             </p>
-            <div className="mt-3 grid grid-cols-2 gap-3 max-[340px]:mt-2 sm:mt-5 sm:grid-cols-4">
+            <div className="mt-3 grid grid-cols-2 gap-3 max-[340px]:mt-2 sm:mt-2 sm:grid-cols-4">
               {heights.map((height) => (
                 <button
                   aria-pressed={values.height === height}

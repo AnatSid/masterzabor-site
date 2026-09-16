@@ -49,7 +49,7 @@ controls, and must have equal visual weight near `64–90 px`.
 | Откатные ворота | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\ворота-калитки\2.-Ворота откатные.png` | `/public/icons/quiz/quiz-gate-sliding.webp` | Step 4 |
 | Калитка | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\калитка\1.калитка.png` | `/public/icons/quiz/quiz-gate-wicket.webp` | Step 5 |
 | Длина | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\длина забора\1.длина забора для квиза-графит-штакетник.png` | `/public/icons/quiz/quiz-measure-length.webp` | Step 2 |
-| Высота | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\высота забора\1.высота забора - квиз.png` | `/public/icons/quiz/quiz-measure-height.webp` | Step 3 |
+| Высота | Approved v2 / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\высота забора\v2 - аысота забора для квиза длинная.png` | `/public/icons/quiz/quiz-measure-height.webp` | Step 3 |
 | Собственные средства | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\способы оплаты\1.Собственные средства- иконка кошелька.png` | `/public/icons/quiz/quiz-payment-own-funds.webp` | Step 6 |
 | Рассрочка или кредит | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\способы оплаты\2.Рассрочка или кредит - карта и календарь.png` | `/public/icons/quiz/quiz-payment-installment-credit.webp` | Step 6 |
 | Пока не решил | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\способы оплаты\3. Не решил - вопросик.png` | `/public/icons/quiz/quiz-payment-undecided.webp` | Step 6 |
@@ -65,7 +65,7 @@ controls, and must have equal visual weight near `64–90 px`.
 | `quiz-gate-sliding.webp` | WebP | 512×512 | 4,630 B |
 | `quiz-gate-wicket.webp` | WebP | 512×512 | 4,564 B |
 | `quiz-measure-length.webp` | WebP | 1200×400 | 13,182 B |
-| `quiz-measure-height.webp` | WebP | 1200×571 | 13,868 B |
+| `quiz-measure-height.webp` | WebP | 1200×400 | 13,026 B |
 | `quiz-payment-own-funds.webp` | WebP | 512×512 | 4,836 B |
 | `quiz-payment-installment-credit.webp` | WebP | 512×512 | 5,758 B |
 | `quiz-payment-undecided.webp` | WebP | 512×512 | 4,856 B |
@@ -116,9 +116,12 @@ controls, and must have equal visual weight near `64–90 px`.
 - Do not change: the person is not the measured object and is not a precise
   engineering scale. The static asset does not change with the selected height.
   The approximate `около 175 см` context stays in UI text outside the image.
-- Production preparation removes only the external canvas around the approved
-  rounded plate. Preserve the plate, person, measurement arrow, fence, shadows,
-  composition, and aspect ratio.
+- The approved wide v2 master supersedes the previous Step 3 asset. The stable
+  production filename remains `quiz-measure-height.webp`; do not retain the old
+  version as a separate runtime asset.
+- Production preparation is a proportional `2172×724` to `1200×400` WebP resize
+  without composition crop. Preserve the complete rounded plate, person,
+  measurement arrow, fence, shadows, composition, and aspect ratio.
 
 ### Own funds
 
