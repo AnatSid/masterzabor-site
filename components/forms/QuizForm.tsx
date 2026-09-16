@@ -31,7 +31,7 @@ type SubmitStatus = "idle" | "loading" | "success" | "error";
 type VisualOptionAssetSize = "object" | "payment";
 
 const fenceTypes = ["Профнастил", "Евроштакетник", "Сетка-рабица"] as const;
-const heights = ["1.5 м", "1.8 м", "2.0 м", "2.5 м"] as const;
+const heights = ["1.5 м", "1.7 м", "2.0 м"] as const;
 const gateTypes = ["Распашные", "Откатные", "Не нужны"] as const;
 const wicketTypes = ["Да, нужна", "Нет, не нужна"] as const;
 const fenceTypeImages: Record<(typeof fenceTypes)[number], string> = {
@@ -124,12 +124,12 @@ function HeightScheme() {
   return (
     <div
       aria-hidden="true"
-      className="mx-auto mt-4 w-full max-w-[15rem] sm:max-w-[18rem]"
+      className="mx-auto mt-1.5 w-full max-w-[16rem] max-[340px]:mt-1 sm:mt-4 sm:max-w-[21rem]"
     >
       <Image
         alt=""
         className="h-auto w-full object-contain"
-        height={675}
+        height={571}
         src="/icons/quiz/quiz-measure-height.webp"
         unoptimized
         width={1200}
@@ -213,7 +213,7 @@ export function QuizForm({
   const initialResetValues = useMemo(
     () => ({
       fenceType: initialFenceType,
-      height: "1.8 м",
+      height: "1.7 м",
       gateType: initialGateType,
       wicket: initialWicketType,
       paymentMethod: "" as const,
@@ -243,7 +243,7 @@ export function QuizForm({
     reValidateMode: "onChange",
     defaultValues: {
       fenceType: initialFenceType,
-      height: "1.8 м",
+      height: "1.7 м",
       gateType: initialGateType,
       wicket: initialWicketType,
       paymentMethod: "",
@@ -488,15 +488,15 @@ export function QuizForm({
             >
               Выберите высоту
             </legend>
-            <span className="mt-3 block text-sm text-slate-600">
-              Если сомневаетесь в высоте, нажмите «Не знаю, нужна консультация»
-              — подскажем по телефону.
+            <span className="mt-2 block text-sm text-slate-600 max-[340px]:mt-1 sm:mt-3">
+              Нужна другая высота или сомневаетесь в выборе? Выберите «Не знаю,
+              нужна консультация» — подскажем подходящий вариант по телефону.
             </span>
             <HeightScheme />
-            <p className="mt-2 text-center text-xs text-slate-500">
-              Для ориентира: рост человека на схеме ≈ 175 см.
+            <p className="mt-1 text-center text-xs text-slate-500 sm:mt-2">
+              Для ориентира: средний рост взрослого человека — около 175 см.
             </p>
-            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
+            <div className="mt-3 grid grid-cols-2 gap-3 max-[340px]:mt-2 sm:mt-5 sm:grid-cols-4">
               {heights.map((height) => (
                 <button
                   aria-pressed={values.height === height}
@@ -515,14 +515,16 @@ export function QuizForm({
                 </button>
               ))}
               <button
-                aria-pressed={values.height === "Нужна консультация"}
+                aria-pressed={
+                  values.height === "Не знаю, нужна консультация"
+                }
                 className={`col-span-2 flex min-h-[88px] w-full items-center justify-center rounded-xl border border-dashed px-4 py-4 text-center text-sm leading-tight whitespace-normal font-semibold transition sm:col-span-1 ${optionFocusClass} ${
-                  values.height === "Нужна консультация"
+                  values.height === "Не знаю, нужна консультация"
                     ? "border-slate-500 bg-slate-200 text-slate-900"
                     : "border-slate-300 bg-slate-100 text-slate-700 hover:border-slate-500"
                 }`}
                 onClick={() =>
-                  setValue("height", "Нужна консультация", {
+                  setValue("height", "Не знаю, нужна консультация", {
                     shouldValidate: true,
                   })
                 }

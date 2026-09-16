@@ -65,7 +65,7 @@ controls, and must have equal visual weight near `64–90 px`.
 | `quiz-gate-sliding.webp` | WebP | 512×512 | 4,630 B |
 | `quiz-gate-wicket.webp` | WebP | 512×512 | 4,564 B |
 | `quiz-measure-length.webp` | WebP | 1200×400 | 13,182 B |
-| `quiz-measure-height.webp` | WebP | 1200×675 | 10,472 B |
+| `quiz-measure-height.webp` | WebP | 1200×571 | 13,868 B |
 | `quiz-payment-own-funds.webp` | WebP | 512×512 | 4,836 B |
 | `quiz-payment-installment-credit.webp` | WebP | 512×512 | 5,758 B |
 | `quiz-payment-undecided.webp` | WebP | 512×512 | 4,856 B |
@@ -115,7 +115,10 @@ controls, and must have equal visual weight near `64–90 px`.
   reference, amber vertical line measuring the fence from ground to its top.
 - Do not change: the person is not the measured object and is not a precise
   engineering scale. The static asset does not change with the selected height.
-  The `≈ 175 см` context stays in UI text outside the image.
+  The approximate `около 175 см` context stays in UI text outside the image.
+- Production preparation removes only the external canvas around the approved
+  rounded plate. Preserve the plate, person, measurement arrow, fence, shadows,
+  composition, and aspect ratio.
 
 ### Own funds
 
