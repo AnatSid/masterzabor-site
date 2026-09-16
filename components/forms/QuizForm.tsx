@@ -28,6 +28,7 @@ type QuizFormValues = {
 };
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
+type VisualOptionAssetSize = "object" | "payment";
 
 const fenceTypes = ["Профнастил", "Евроштакетник", "Сетка-рабица"] as const;
 const heights = ["1.5 м", "1.8 м", "2.0 м", "2.5 м"] as const;
@@ -51,29 +52,54 @@ const paymentMethodImages: Record<PaymentMethod, string> = {
 const STEP_FOCUS_DELAY_MS = 50;
 const optionFocusClass =
   "touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 motion-reduce:transition-none";
+const visualOptionAssetSizeClasses: Record<VisualOptionAssetSize, string> = {
+  object:
+    "flex h-[146px] w-[146px] shrink-0 items-center justify-center max-[340px]:h-[132px] max-[340px]:w-[132px] sm:mb-3 sm:h-[184px] sm:w-full",
+  payment:
+    "flex size-16 shrink-0 items-center justify-center sm:mb-3 sm:h-24 sm:w-full",
+};
+const visualOptionNormalClass =
+  "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20] hover:bg-green-50/40";
 const visualOptionSelectedClass =
+  "border-[#1B5E20] bg-green-50 text-[#1B5E20] shadow-[0_0_0_1px_rgba(27,94,32,0.20),0_6px_16px_rgba(27,94,32,0.12)]";
+// Steps 4–6 keep their reviewed state until the Step 1 treatment is approved.
+const pendingVisualOptionSelectedClass =
   "border-[#1B5E20] bg-white text-[#1B5E20] shadow-[0_0_0_1px_rgba(27,94,32,0.28),0_4px_12px_rgba(27,94,32,0.10)]";
+
+function getVisualOptionCardStateClass(isSelected: boolean) {
+  return isSelected ? visualOptionSelectedClass : visualOptionNormalClass;
+}
+
+function VisualOptionAsset({
+  size,
+  src,
+}: {
+  size: VisualOptionAssetSize;
+  src: string;
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      className={visualOptionAssetSizeClasses[size]}
+    >
+      <Image
+        alt=""
+        className="h-full w-auto max-w-full object-contain"
+        height={512}
+        src={src}
+        unoptimized
+        width={512}
+      />
+    </span>
+  );
+}
 
 function FenceOptionPreview({
   label,
 }: {
   label: (typeof fenceTypes)[number];
 }) {
-  return (
-    <div
-      aria-hidden="true"
-      className="flex h-[146px] w-[146px] shrink-0 items-center justify-center max-[340px]:h-[132px] max-[340px]:w-[132px] sm:mb-3 sm:h-[164px] sm:w-full"
-    >
-      <Image
-        alt=""
-        className="h-full w-auto max-w-full object-contain"
-        height={512}
-        src={fenceTypeImages[label]}
-        unoptimized
-        width={512}
-      />
-    </div>
-  );
+  return <VisualOptionAsset size="object" src={fenceTypeImages[label]} />;
 }
 
 function LengthScheme() {
@@ -138,19 +164,7 @@ function ObjectOptionPreview({ src }: { src?: string }) {
 
 function PaymentOptionPreview({ method }: { method: PaymentMethod }) {
   return (
-    <span
-      aria-hidden="true"
-      className="flex size-16 shrink-0 items-center justify-center sm:mb-3 sm:h-24 sm:w-full"
-    >
-      <Image
-        alt=""
-        className="h-full w-auto max-w-full object-contain"
-        height={512}
-        src={paymentMethodImages[method]}
-        unoptimized
-        width={512}
-      />
-    </span>
+    <VisualOptionAsset size="payment" src={paymentMethodImages[method]} />
   );
 }
 
@@ -399,11 +413,7 @@ export function QuizForm({
               {fenceTypes.map((type) => (
                 <button
                   aria-pressed={values.fenceType === type}
-                  className={`flex items-center gap-3 rounded-xl border px-3 py-1 text-left font-semibold transition-colors sm:block sm:px-4 sm:py-4 ${optionFocusClass} ${
-                    values.fenceType === type
-                      ? visualOptionSelectedClass
-                      : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
-                  }`}
+                  className={`flex items-center gap-3 rounded-xl border px-3 py-1 text-left font-semibold transition-colors sm:block sm:px-3 sm:py-4 ${optionFocusClass} ${getVisualOptionCardStateClass(values.fenceType === type)}`}
                   key={type}
                   onClick={() => {
                     trackQuizEventOnce("quiz_started");
@@ -546,7 +556,7 @@ export function QuizForm({
                   aria-pressed={values.gateType === type}
                   className={`flex min-h-[104px] items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[172px] sm:py-4 ${optionFocusClass} ${
                     values.gateType === type
-                      ? visualOptionSelectedClass
+                      ? pendingVisualOptionSelectedClass
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
                   }`}
                   key={type}
@@ -581,7 +591,7 @@ export function QuizForm({
                   aria-pressed={values.wicket === type}
                   className={`flex min-h-[104px] items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[172px] sm:py-4 ${optionFocusClass} ${
                     values.wicket === type
-                      ? visualOptionSelectedClass
+                      ? pendingVisualOptionSelectedClass
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
                   }`}
                   key={type}
@@ -625,7 +635,7 @@ export function QuizForm({
                   aria-pressed={values.paymentMethod === method}
                   className={`flex min-h-[92px] items-center gap-3 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[148px] sm:py-4 sm:text-center ${optionFocusClass} ${
                     values.paymentMethod === method
-                      ? visualOptionSelectedClass
+                      ? pendingVisualOptionSelectedClass
                       : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
                   }`}
                   key={method}

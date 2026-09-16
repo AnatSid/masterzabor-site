@@ -58,9 +58,9 @@ controls, and must have equal visual weight near `64–90 px`.
 
 | Production file | Format | Dimensions | Size |
 | --- | --- | ---: | ---: |
-| `quiz-fence-profnastil.webp` | WebP | 512×512 | 7,578 B |
-| `quiz-fence-evroshtaketnik.webp` | WebP | 512×512 | 11,660 B |
-| `quiz-fence-rabitsa.webp` | WebP | 512×512 | 28,620 B |
+| `quiz-fence-profnastil.webp` | WebP with alpha | 512×512 | 5,502 B |
+| `quiz-fence-evroshtaketnik.webp` | WebP with alpha | 512×512 | 7,682 B |
+| `quiz-fence-rabitsa.webp` | WebP with alpha | 512×512 | 19,724 B |
 | `quiz-gate-swing.webp` | WebP | 512×512 | 5,658 B |
 | `quiz-gate-sliding.webp` | WebP | 512×512 | 4,630 B |
 | `quiz-gate-wicket.webp` | WebP | 512×512 | 4,564 B |
@@ -143,6 +143,9 @@ controls, and must have equal visual weight near `64–90 px`.
   the website.
 - Preserve aspect ratio. Do not crop, stretch, or use `object-cover` where it can
   remove semantic parts of an illustration.
+- Object/payment assets may use a transparent outer canvas so the approved light
+  rounded plate sits naturally on the card state. Do not remove or recolor the
+  plate itself, artwork, or shadows.
 - Illustrations are decorative support for existing labels and use empty alt text
   or equivalent assistive-technology hiding.
 - The complete option card remains the click/focus/selected target.
