@@ -447,13 +447,7 @@ export function QuizForm({
         </div>
       </div>
 
-      <div
-        className={
-          isContactStep
-            ? "min-w-0"
-            : "min-h-[34rem] min-w-0 sm:min-h-[25rem]"
-        }
-      >
+      <div className="min-h-[34rem] min-w-0 sm:min-h-[25rem]">
         <div
           className="h-full animate-[fadeIn_220ms_ease-out] motion-reduce:animate-none"
           key={step}
