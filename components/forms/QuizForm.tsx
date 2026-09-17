@@ -56,6 +56,8 @@ const paymentMethodImages: Record<PaymentMethod, string> = {
   "Пока не решил": "/icons/quiz/quiz-payment-undecided.webp",
 };
 const STEP_FOCUS_DELAY_MS = 50;
+const MOBILE_STEP_PROGRESS_SAFE_TOP_PX = 120;
+const MOBILE_VIEWPORT_QUERY = "(max-width: 767px)";
 const optionFocusClass =
   "touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 motion-reduce:transition-none";
 const visualObjectAssetSlotClass =
@@ -202,7 +204,8 @@ export function QuizForm({
     : "Нет, не нужна";
   const initialStep = sanitizeDefaultStep(defaultStep);
   const trackedQuizEvents = useRef(new Set<string>());
-  const formRef = useRef<HTMLFormElement>(null);
+  const transitionAnchorRef = useRef<HTMLSpanElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
   const stepHeadingRef = useRef<HTMLElement>(null);
   const previousStepRef = useRef(initialStep);
   const initialResetValues = useMemo(
@@ -276,8 +279,41 @@ export function QuizForm({
     }
 
     const focusTimer = window.setTimeout(() => {
-      stepHeadingRef.current?.focus({ preventScroll: true });
-      formRef.current?.scrollIntoView({ block: "start" });
+      const heading = stepHeadingRef.current;
+      const progressElement = progressRef.current;
+      const transitionAnchor = transitionAnchorRef.current;
+
+      heading?.focus({ preventScroll: true });
+
+      if (!transitionAnchor) {
+        return;
+      }
+
+      if (!window.matchMedia(MOBILE_VIEWPORT_QUERY).matches) {
+        transitionAnchor.scrollIntoView({ block: "start" });
+        return;
+      }
+
+      if (!heading || !progressElement) {
+        transitionAnchor.scrollIntoView({ block: "start" });
+        return;
+      }
+
+      const visualViewport = window.visualViewport;
+      const viewportTop = visualViewport?.offsetTop ?? 0;
+      const viewportBottom =
+        viewportTop + (visualViewport?.height ?? window.innerHeight);
+      const progressRect = progressElement.getBoundingClientRect();
+      const headingRect = heading.getBoundingClientRect();
+      const isProgressInSafeZone =
+        progressRect.top >= viewportTop &&
+        progressRect.top <= viewportTop + MOBILE_STEP_PROGRESS_SAFE_TOP_PX;
+      const isHeadingVisible =
+        headingRect.top >= viewportTop && headingRect.bottom <= viewportBottom;
+
+      if (!isProgressInSafeZone || !isHeadingVisible) {
+        transitionAnchor.scrollIntoView({ block: "start" });
+      }
     }, STEP_FOCUS_DELAY_MS);
 
     return () => window.clearTimeout(focusTimer);
@@ -363,13 +399,19 @@ export function QuizForm({
     <form
       className={
         isCompact
-          ? "grid scroll-mt-20 grid-rows-[auto_minmax(0,1fr)_auto_auto] rounded-2xl bg-white p-5 shadow-lg shadow-slate-950/5 ring-1 ring-slate-200 sm:p-6 lg:scroll-mt-24"
-          : "grid scroll-mt-20 grid-rows-[auto_minmax(0,1fr)_auto_auto] rounded-3xl bg-white p-6 shadow-xl ring-1 ring-slate-200 sm:p-8 lg:scroll-mt-24"
+          ? "relative grid scroll-mt-20 grid-rows-[auto_minmax(0,1fr)_auto_auto] rounded-2xl bg-white p-5 shadow-lg shadow-slate-950/5 ring-1 ring-slate-200 sm:p-6 lg:scroll-mt-24"
+          : "relative grid scroll-mt-20 grid-rows-[auto_minmax(0,1fr)_auto_auto] rounded-3xl bg-white p-6 shadow-xl ring-1 ring-slate-200 sm:p-8 lg:scroll-mt-24"
       }
       aria-label="Калькулятор стоимости забора"
+      data-quiz-form
       onSubmit={onSubmit}
-      ref={formRef}
     >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px scroll-mt-0 lg:scroll-mt-24"
+        data-quiz-transition-anchor
+        ref={transitionAnchorRef}
+      />
       <div className={isCompact ? "mb-6" : "mb-8"}>
         <div className="flex items-center justify-between text-sm font-semibold text-slate-600">
           <span>Шаг {step} из {QUIZ_TOTAL_STEPS}</span>
@@ -381,6 +423,7 @@ export function QuizForm({
           aria-valuemin={1}
           aria-valuenow={step}
           className="mt-3 h-2 overflow-hidden rounded-full bg-slate-200"
+          ref={progressRef}
           role="progressbar"
         >
           <div
