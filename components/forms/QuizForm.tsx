@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { BelarusPhoneField } from "@/components/forms/BelarusPhoneField";
 import {
@@ -352,6 +352,7 @@ export function QuizForm({
 
       if (nextStepId === "contact") {
         clearErrors(["name", "phone"]);
+        setStatus("idle");
         trackQuizEventOnce("quiz_contact_step_reached");
       }
 
@@ -367,7 +368,11 @@ export function QuizForm({
     setStep((current) => Math.max(current - 1, 1));
   };
 
-  const onSubmit = handleSubmit(async (formValues) => {
+  const submitContactStep = handleSubmit(async (formValues) => {
+    if (!isContactStep) {
+      return;
+    }
+
     setStatus("loading");
 
     try {
@@ -395,6 +400,15 @@ export function QuizForm({
     }
   });
 
+  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    if (!isContactStep) {
+      event.preventDefault();
+      return;
+    }
+
+    void submitContactStep(event);
+  };
+
   return (
     <form
       className={
@@ -404,7 +418,7 @@ export function QuizForm({
       }
       aria-label="Калькулятор стоимости забора"
       data-quiz-form
-      onSubmit={onSubmit}
+      onSubmit={handleFormSubmit}
     >
       <span
         aria-hidden="true"
@@ -831,6 +845,7 @@ export function QuizForm({
         {step < QUIZ_TOTAL_STEPS ? (
           <button
             className="min-h-12 touch-manipulation rounded-xl bg-[#F59E0B] px-3 py-3 font-bold text-white transition-colors hover:bg-amber-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 motion-reduce:transition-none sm:px-6"
+            key="quiz-next-step"
             onClick={nextStep}
             type="button"
           >
@@ -840,6 +855,7 @@ export function QuizForm({
           <button
             className="min-h-12 touch-manipulation rounded-xl bg-[#F59E0B] px-3 py-3 font-bold text-white transition-colors hover:bg-amber-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70 motion-reduce:transition-none sm:px-6"
             disabled={status === "loading"}
+            key="quiz-submit"
             type="submit"
           >
             {status === "loading" ? "Отправляем..." : "Получить расчёт"}
