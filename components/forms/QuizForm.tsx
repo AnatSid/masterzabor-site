@@ -323,6 +323,14 @@ export function QuizForm({
     }
   };
 
+  const previousStep = () => {
+    if (status === "error") {
+      setStatus("idle");
+    }
+
+    setStep((current) => Math.max(current - 1, 1));
+  };
+
   const onSubmit = handleSubmit(async (formValues) => {
     setStatus("loading");
 
@@ -771,7 +779,7 @@ export function QuizForm({
         <button
           className="min-h-12 touch-manipulation rounded-xl border border-slate-300 px-3 py-3 font-semibold text-slate-800 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none sm:px-6"
           disabled={step === 1 || status === "loading"}
-          onClick={() => setStep((current) => Math.max(current - 1, 1))}
+          onClick={previousStep}
           type="button"
         >
           Назад
@@ -802,10 +810,9 @@ export function QuizForm({
             Заявка отправлена! Перезвоним в течение рабочего дня.
           </p>
         ) : null}
-        {status === "error" ? (
+        {isContactStep && status === "error" ? (
           <p className="mt-4 text-sm font-semibold text-red-600">
-            Пока заявка не отправилась. Позвоните нам или повторите попытку после
-            настройки API.
+            Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.
           </p>
         ) : null}
       </div>
