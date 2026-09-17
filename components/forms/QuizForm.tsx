@@ -408,7 +408,7 @@ export function QuizForm({
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-px scroll-mt-0 lg:scroll-mt-24"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px scroll-mt-0 md:scroll-mt-20 lg:scroll-mt-24"
         data-quiz-transition-anchor
         ref={transitionAnchorRef}
       />
