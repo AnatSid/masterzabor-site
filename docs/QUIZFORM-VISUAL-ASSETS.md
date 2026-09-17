@@ -47,7 +47,7 @@ controls, and must have equal visual weight near `64–90 px`.
 | Сетка-рабица | Approved / implemented | not recorded | `/public/icons/quiz/quiz-fence-rabitsa.webp` | Step 1 |
 | Распашные ворота | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\ворота-калитки\1.-Ворота распашные.png` | `/public/icons/quiz/quiz-gate-swing.webp` | Step 4 |
 | Откатные ворота | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\ворота-калитки\2.-Ворота откатные.png` | `/public/icons/quiz/quiz-gate-sliding.webp` | Step 4 |
-| Нейтральный вариант «не нужен» | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\ворота-калитки\3. Кнопка минус - для Не нужны.png` | `/public/icons/quiz/quiz-option-none.webp` | Step 4 `Не нужны`; future Step 5 `Нет, не нужна` |
+| Нейтральный вариант «не нужен» | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\ворота-калитки\3. Кнопка минус - для Не нужны.png` | `/public/icons/quiz/quiz-option-none.webp` | Step 4 `Не нужны`; Step 5 `Нет, не нужна` |
 | Калитка | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\калитка\1.калитка.png` | `/public/icons/quiz/quiz-gate-wicket.webp` | Step 5 |
 | Длина | Approved / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\длина забора\1.длина забора для квиза-графит-штакетник.png` | `/public/icons/quiz/quiz-measure-length.webp` | Step 2 |
 | Высота | Approved v2 / implemented | `C:\DiscD\проекты сайта\Фото типов забора\Референсы для квиза-иконка\высота забора\v2 - аысота забора для квиза длинная.png` | `/public/icons/quiz/quiz-measure-height.webp` | Step 3 |
@@ -65,7 +65,7 @@ controls, and must have equal visual weight near `64–90 px`.
 | `quiz-gate-swing.webp` | WebP with alpha | 512×512 | 17,788 B |
 | `quiz-gate-sliding.webp` | WebP with alpha | 512×512 | 17,288 B |
 | `quiz-option-none.webp` | WebP with alpha | 512×512 | 8,498 B |
-| `quiz-gate-wicket.webp` | WebP | 512×512 | 4,564 B |
+| `quiz-gate-wicket.webp` | WebP with alpha | 512×512 | 17,218 B |
 | `quiz-measure-length.webp` | WebP | 1200×400 | 13,182 B |
 | `quiz-measure-height.webp` | WebP | 1200×400 | 13,026 B |
 | `quiz-payment-own-funds.webp` | WebP | 512×512 | 4,836 B |
@@ -98,8 +98,8 @@ controls, and must have equal visual weight near `64–90 px`.
 
 ### Neutral none option
 
-- Meaning: a calm absence-of-an-additional-element choice, currently Step 4
-  `Не нужны` and reserved for future reuse in Step 5 `Нет, не нужна`.
+- Meaning: a calm absence-of-an-additional-element choice shared by Step 4
+  `Не нужны` and Step 5 `Нет, не нужна`.
 - Approved features: one graphite 2.5D neutral badge with a short horizontal
   minus on the approved light green rounded plate.
 - Source/master: the approved Step 4 source and
@@ -116,6 +116,9 @@ controls, and must have equal visual weight near `64–90 px`.
 - Meaning: a separate pedestrian wicket.
 - Approved features: one slightly open leaf, visible frame, handle and lock.
 - Do not change: keep one leaf and the recognizable pedestrian-scale hardware.
+- Production preparation removes only the edge-connected outer white field;
+  preserve the complete rounded plate, artwork, hardware, shadows, proportions,
+  and composition.
 
 ### Length diagram
 

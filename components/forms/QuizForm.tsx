@@ -45,6 +45,10 @@ const gateTypeImages: Record<(typeof gateTypes)[number], string> = {
   "Откатные": "/icons/quiz/quiz-gate-sliding.webp",
   "Не нужны": "/icons/quiz/quiz-option-none.webp",
 };
+const wicketTypeImages: Record<(typeof wicketTypes)[number], string> = {
+  "Да, нужна": "/icons/quiz/quiz-gate-wicket.webp",
+  "Нет, не нужна": "/icons/quiz/quiz-option-none.webp",
+};
 const paymentMethodImages: Record<PaymentMethod, string> = {
   "Собственные средства": "/icons/quiz/quiz-payment-own-funds.webp",
   "Рассрочка или кредит":
@@ -78,7 +82,7 @@ const visualOptionNormalClass =
   "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20] hover:bg-green-50/40";
 const visualOptionSelectedClass =
   "border-[#1B5E20] bg-green-50 text-[#1B5E20] shadow-[0_0_0_1px_rgba(27,94,32,0.20),0_6px_16px_rgba(27,94,32,0.12)]";
-// Steps 5–6 keep their reviewed state until the shared treatment is approved there.
+// Step 6 keeps its reviewed state until the shared treatment is approved there.
 const pendingVisualOptionSelectedClass =
   "border-[#1B5E20] bg-white text-[#1B5E20] shadow-[0_0_0_1px_rgba(27,94,32,0.28),0_4px_12px_rgba(27,94,32,0.10)]";
 
@@ -153,30 +157,6 @@ function HeightScheme() {
         width={1200}
       />
     </div>
-  );
-}
-
-function ObjectOptionPreview({ src }: { src?: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className="flex h-20 w-20 shrink-0 items-center justify-center sm:mb-3 sm:h-28 sm:w-full"
-    >
-      {src ? (
-        <Image
-          alt=""
-          className="h-full w-auto max-w-full object-contain"
-          height={512}
-          src={src}
-          unoptimized
-          width={512}
-        />
-      ) : (
-        <span className="flex size-12 items-center justify-center rounded-full border border-dashed border-slate-300 bg-slate-100 text-2xl font-normal text-slate-400 sm:size-16">
-          —
-        </span>
-      )}
-    </span>
   );
 }
 
@@ -612,30 +592,30 @@ export function QuizForm({
               Нужна калитка?
             </legend>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              {wicketTypes.map((type) => (
-                <button
-                  aria-pressed={values.wicket === type}
-                  className={`flex min-h-[104px] items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[172px] sm:py-4 ${optionFocusClass} ${
-                    values.wicket === type
-                      ? pendingVisualOptionSelectedClass
-                      : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
-                  }`}
-                  key={type}
-                  onClick={() =>
-                    setValue("wicket", type, { shouldValidate: true })
-                  }
-                  type="button"
-                >
-                  <ObjectOptionPreview
-                    src={
-                      type === "Да, нужна"
-                        ? "/icons/quiz/quiz-gate-wicket.webp"
-                        : undefined
+              {wicketTypes.map((type) => {
+                const isNeutralOption = type === "Нет, не нужна";
+
+                return (
+                  <button
+                    aria-pressed={values.wicket === type}
+                    className={`${visualObjectOptionCardClass} ${optionFocusClass} ${getVisualOptionCardStateClass(values.wicket === type)}`}
+                    key={type}
+                    onClick={() =>
+                      setValue("wicket", type, { shouldValidate: true })
                     }
-                  />
-                  {type}
-                </button>
-              ))}
+                    type="button"
+                  >
+                    <VisualOptionAsset
+                      scale={isNeutralOption ? "default" : "expanded"}
+                      size={isNeutralOption ? "neutral" : "object"}
+                      src={wicketTypeImages[type]}
+                    />
+                    <span className="min-w-0 break-words leading-tight">
+                      {type}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
             <input type="hidden" {...register("wicket", { required: true })} />
           </fieldset>
