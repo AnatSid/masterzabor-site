@@ -13,6 +13,8 @@ type BelarusPhoneFieldProps = {
   onChange: (value: string) => void;
   onBlur: () => void;
   placeholder?: string;
+  ariaDescribedBy?: string;
+  ariaInvalid?: boolean;
 };
 
 export function BelarusPhoneField({
@@ -21,6 +23,8 @@ export function BelarusPhoneField({
   onChange,
   onBlur,
   placeholder = "29-123-45-67",
+  ariaDescribedBy,
+  ariaInvalid,
 }: BelarusPhoneFieldProps) {
   const localDigits = extractBelarusLocalDigits(value);
 
@@ -33,6 +37,8 @@ export function BelarusPhoneField({
         <span>{BELARUS_PHONE_PREFIX}</span>
       </div>
       <input
+        aria-describedby={ariaDescribedBy}
+        aria-invalid={ariaInvalid}
         autoComplete="tel-national"
         className="w-full px-4 py-3 outline-none"
         id={id}

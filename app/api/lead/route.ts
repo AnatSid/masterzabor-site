@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { PAYMENT_METHODS } from "@/components/forms/quiz-form-config";
 import { appendLeadToStorage, updateLeadDeliveryStatus } from "@/lib/leads";
 import { LeadData, sendToTelegram } from "@/lib/telegram";
 import { isValidBelarusPhone, normalizeBelarusPhone } from "@/lib/phone";
@@ -48,6 +49,7 @@ function validateLead(body: LeadRequestBody) {
     height: readString(body.height),
     gateType: readString(body.gateType),
     wicket: readString(body.wicket),
+    paymentMethod: readString(body.paymentMethod),
     comment: readString(body.comment),
     source: readString(body.source),
   };
@@ -62,6 +64,15 @@ function validateLead(body: LeadRequestBody) {
 
   if (!lead.source) {
     return { error: "Не указан источник заявки" };
+  }
+
+  if (
+    lead.paymentMethod &&
+    !PAYMENT_METHODS.includes(
+      lead.paymentMethod as (typeof PAYMENT_METHODS)[number],
+    )
+  ) {
+    return { error: "Некорректный вариант оплаты" };
   }
 
   return { lead };

@@ -108,7 +108,7 @@ function getQuizDefaultsByServiceSlug(serviceSlug: string) {
     case "vorota-otkatnye":
       return { defaultGateType: "Откатные" };
     case "kalitki":
-      return { defaultWicketType: "Калитка с замком" };
+      return { defaultWicketType: "Да, нужна" };
     default:
       return {};
   }

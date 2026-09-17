@@ -96,6 +96,7 @@ function formatQuizFunnelLines(events: ConversionEventSummary) {
   return [
     `начали: ${events.quizFunnel.started}`,
     `прошли 2 шага и более: ${events.quizFunnel.step3Reached}`,
+    `дошли до шага оплаты: ${events.quizFunnel.paymentStepReached}`,
     `дошли до шага контактов: ${events.quizFunnel.contactStepReached}`,
   ];
 }

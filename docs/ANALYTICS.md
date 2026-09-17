@@ -51,6 +51,7 @@ P1-01 intentionally tracks only the signals not covered by lead stats:
 | `click_viber` | user clicked Viber |
 | `quiz_started` | user interacted with the quiz |
 | `quiz_step_3_reached` | user completed the first two quiz steps |
+| `quiz_payment_step_reached` | user reached the quiz payment step |
 | `quiz_contact_step_reached` | user reached the quiz contact step |
 
 Submitted forms are not duplicated as analytics events: they are already counted by the lead pipeline and daily/monthly lead stats.

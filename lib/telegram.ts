@@ -7,6 +7,7 @@ export type LeadData = {
   height?: string;
   gateType?: string;
   wicket?: string;
+  paymentMethod?: string;
   comment?: string;
   source: string;
 };
@@ -36,6 +37,7 @@ const WICKET_PRICE: Record<string, number> = {
   "Калитка с замком": 600,
   "Калитка без замка": 400,
   "Калитка не нужна": 0,
+  "Нет, не нужна": 0,
 };
 
 function parseLengthMeters(length?: string) {
@@ -86,6 +88,9 @@ function formatLeadMessage(data: LeadData) {
   if (hasValue(data.wicket)) {
     lines.push(`🚶 Калитка: ${valueOrEmpty(data.wicket)}`);
   }
+  if (hasValue(data.paymentMethod)) {
+    lines.push(`💳 Оплата: ${valueOrEmpty(data.paymentMethod)}`);
+  }
   if (hasValue(data.comment)) {
     lines.push(`💬 ${valueOrEmpty(data.comment)}`);
   }
@@ -101,19 +106,26 @@ function formatLeadMessage(data: LeadData) {
 
   if (lengthMeters && pricePerMeter) {
     const gatePrice = data.gateType ? (GATE_PRICE[data.gateType] ?? 0) : 0;
-    const wicketPrice = data.wicket ? (WICKET_PRICE[data.wicket] ?? 0) : 0;
+    const wicketPrice = data.wicket ? WICKET_PRICE[data.wicket] : 0;
     const gateLabel = data.gateType?.trim() || "не выбраны";
     const wicketLabel = data.wicket?.trim() || "не выбрана";
     const subtotal = Math.round(lengthMeters * pricePerMeter);
-    const total = subtotal + gatePrice + wicketPrice;
+    const knownWicketPrice = wicketPrice ?? 0;
+    const total = subtotal + gatePrice + knownWicketPrice;
+    const wicketEstimateLine =
+      wicketPrice === undefined
+        ? `   Калитка (${wicketLabel}): стоимость не включена`
+        : `   Калитка (${wicketLabel}): +${wicketPrice} BYN`;
+    const totalLabel =
+      wicketPrice === undefined ? "   ≈ ИТОГО БЕЗ КАЛИТКИ:" : "   ≈ ИТОГО:";
 
     lines.push(
       "─────────────────",
       "💰 Ориентир (для менеджера):",
       `   Забор: ${lengthMeters}м × ${pricePerMeter} BYN/м.п. = ${subtotal} BYN`,
       `   Ворота (${gateLabel}): +${gatePrice} BYN`,
-      `   Калитка (${wicketLabel}): +${wicketPrice} BYN`,
-      `   ≈ ИТОГО: ${total} BYN`,
+      wicketEstimateLine,
+      `${totalLabel} ${total} BYN`,
     );
   }
 

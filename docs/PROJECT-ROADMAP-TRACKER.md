@@ -50,6 +50,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - BLOG-SEO-01C is complete and in Production: Page B covers height/neighbour intent at `/blog/vysota-zabora-mezhdu-sosedyami-v-belarusi` and uses an approved real hero asset.
 - Page A and Page B share the current article presentation and `1200×630` WebP hero convention. The same image field supplies article hero, `/blog` card, Open Graph, Twitter and Article JSON-LD.
 - BLOG-DOCS-01 adds `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md` as the permanent editorial and asset workflow for future articles.
+- QZ-04B is ready for review on `codex/QZ-04B-quiz-remaining-assets`: the full approved QuizForm visual asset set is integrated across Steps 1–6; the permanent registry and invariants live in [`docs/QUIZFORM-VISUAL-ASSETS.md`](QUIZFORM-VISUAL-ASSETS.md).
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
