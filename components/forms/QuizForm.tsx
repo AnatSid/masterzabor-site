@@ -751,9 +751,8 @@ export function QuizForm({
               </label>
 
               <label className="block sm:col-span-2">
-                <span className="text-xs text-slate-500">Необязательно</span>
                 <span className="block text-sm font-semibold text-slate-800">
-                  Комментарий
+                  Комментарий (необязательно)
                 </span>
                 <textarea
                   autoComplete="off"
