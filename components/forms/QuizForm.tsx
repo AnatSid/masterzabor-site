@@ -28,7 +28,8 @@ type QuizFormValues = {
 };
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
-type VisualOptionAssetSize = "object" | "payment";
+type VisualOptionAssetScale = "default" | "expanded";
+type VisualOptionAssetSize = "object" | "neutral" | "payment";
 
 const fenceTypes = ["Профнастил", "Евроштакетник", "Сетка-рабица"] as const;
 const heights = ["1.5 м", "1.7 м", "2.0 м"] as const;
@@ -53,11 +54,23 @@ const paymentMethodImages: Record<PaymentMethod, string> = {
 const STEP_FOCUS_DELAY_MS = 50;
 const optionFocusClass =
   "touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E20] focus-visible:ring-offset-2 motion-reduce:transition-none";
+const visualObjectAssetSlotClass =
+  "flex h-[146px] w-[146px] shrink-0 items-center justify-center max-[340px]:h-[132px] max-[340px]:w-[132px] sm:mb-3 sm:h-[184px] sm:w-full";
 const visualOptionAssetSizeClasses: Record<VisualOptionAssetSize, string> = {
-  object:
-    "flex h-[146px] w-[146px] shrink-0 items-center justify-center max-[340px]:h-[132px] max-[340px]:w-[132px] sm:mb-3 sm:h-[184px] sm:w-full",
+  object: visualObjectAssetSlotClass,
+  neutral: visualObjectAssetSlotClass,
   payment:
     "flex size-16 shrink-0 items-center justify-center sm:mb-3 sm:h-24 sm:w-full",
+};
+const visualOptionAssetImageClasses: Record<VisualOptionAssetSize, string> = {
+  object: "h-full w-auto max-w-full",
+  neutral:
+    "h-28 w-28 max-[340px]:h-[104px] max-[340px]:w-[104px] sm:h-[152px] sm:w-[152px]",
+  payment: "h-full w-auto max-w-full",
+};
+const visualOptionAssetScaleClasses: Record<VisualOptionAssetScale, string> = {
+  default: "",
+  expanded: "sm:h-[200px] sm:w-[200px] sm:max-w-none",
 };
 const visualObjectOptionCardClass =
   "flex items-center gap-3 rounded-xl border px-3 py-1 text-left font-semibold transition-colors sm:block sm:px-3 sm:py-4";
@@ -74,9 +87,11 @@ function getVisualOptionCardStateClass(isSelected: boolean) {
 }
 
 function VisualOptionAsset({
+  scale = "default",
   size,
   src,
 }: {
+  scale?: VisualOptionAssetScale;
   size: VisualOptionAssetSize;
   src: string;
 }) {
@@ -87,7 +102,7 @@ function VisualOptionAsset({
     >
       <Image
         alt=""
-        className="h-full w-auto max-w-full object-contain"
+        className={`object-contain ${visualOptionAssetImageClasses[size]} ${visualOptionAssetScaleClasses[scale]}`}
         height={512}
         src={src}
         unoptimized
@@ -556,25 +571,30 @@ export function QuizForm({
               Нужны ворота?
             </legend>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
-              {gateTypes.map((type) => (
-                <button
-                  aria-pressed={values.gateType === type}
-                  className={`${visualObjectOptionCardClass} ${optionFocusClass} ${getVisualOptionCardStateClass(values.gateType === type)}`}
-                  key={type}
-                  onClick={() =>
-                    setValue("gateType", type, { shouldValidate: true })
-                  }
-                  type="button"
-                >
-                  <VisualOptionAsset
-                    size="object"
-                    src={gateTypeImages[type]}
-                  />
-                  <span className="min-w-0 break-words leading-tight">
-                    {type}
-                  </span>
-                </button>
-              ))}
+              {gateTypes.map((type) => {
+                const isNeutralOption = type === "Не нужны";
+
+                return (
+                  <button
+                    aria-pressed={values.gateType === type}
+                    className={`${visualObjectOptionCardClass} ${optionFocusClass} ${getVisualOptionCardStateClass(values.gateType === type)}`}
+                    key={type}
+                    onClick={() =>
+                      setValue("gateType", type, { shouldValidate: true })
+                    }
+                    type="button"
+                  >
+                    <VisualOptionAsset
+                      scale={isNeutralOption ? "default" : "expanded"}
+                      size={isNeutralOption ? "neutral" : "object"}
+                      src={gateTypeImages[type]}
+                    />
+                    <span className="min-w-0 break-words leading-tight">
+                      {type}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
             <input type="hidden" {...register("gateType", { required: true })} />
           </fieldset>

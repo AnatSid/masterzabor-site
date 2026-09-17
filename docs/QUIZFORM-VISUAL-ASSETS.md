@@ -169,6 +169,12 @@ controls, and must have equal visual weight near `64–90 px`.
 - Object/payment assets may use a transparent outer canvas so the approved light
   rounded plate sits naturally on the card state. Do not remove or recolor the
   plate itself, artwork, or shadows.
+- Visual sizing uses reusable roles rather than per-card dimensions. Standard
+  object illustrations use the shared object slot; compositions with more
+  internal whitespace may use the shared expanded-object scale without changing
+  that slot or the card geometry. Neutral `none/no-extra` support art uses the
+  same object slot with a smaller inner visual, while payment assets keep their
+  separate micro-asset role. Measurement diagrams retain independent geometry.
 - Illustrations are decorative support for existing labels and use empty alt text
   or equivalent assistive-technology hiding.
 - The complete option card remains the click/focus/selected target.
