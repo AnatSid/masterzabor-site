@@ -25,7 +25,9 @@ explained and do not need to be square.
 
 Used inside the three payment option cards: own funds, installment/credit, and
 undecided. They are decorative support for the option label, not independent
-controls, and must have equal visual weight near `64–90 px`.
+controls. They use the shared intermediate payment role at `128×128 px` on
+desktop, `92×92 px` on regular mobile widths, and `84×84 px` at `340 px` and
+below—larger than micro-icons, but clearly smaller than object illustrations.
 
 ## Global visual invariants
 
@@ -68,9 +70,9 @@ controls, and must have equal visual weight near `64–90 px`.
 | `quiz-gate-wicket.webp` | WebP with alpha | 512×512 | 17,218 B |
 | `quiz-measure-length.webp` | WebP | 1200×400 | 13,182 B |
 | `quiz-measure-height.webp` | WebP | 1200×400 | 13,026 B |
-| `quiz-payment-own-funds.webp` | WebP | 512×512 | 4,836 B |
-| `quiz-payment-installment-credit.webp` | WebP | 512×512 | 5,758 B |
-| `quiz-payment-undecided.webp` | WebP | 512×512 | 4,856 B |
+| `quiz-payment-own-funds.webp` | WebP with alpha | 512×512 | 7,260 B |
+| `quiz-payment-installment-credit.webp` | WebP with alpha | 512×512 | 9,774 B |
+| `quiz-payment-undecided.webp` | WebP with alpha | 512×512 | 6,910 B |
 
 ## Per-asset specification
 
@@ -172,6 +174,9 @@ controls, and must have equal visual weight near `64–90 px`.
 - Object/payment assets may use a transparent outer canvas so the approved light
   rounded plate sits naturally on the card state. Do not remove or recolor the
   plate itself, artwork, or shadows.
+- Payment production preparation removes only the edge-connected outer white
+  field. The approved rounded plate, artwork, shadows, proportions, and
+  composition remain unchanged.
 - Visual sizing uses reusable roles rather than per-card dimensions. Standard
   object illustrations use the shared object slot; compositions with more
   internal whitespace may use the shared expanded-object scale without changing

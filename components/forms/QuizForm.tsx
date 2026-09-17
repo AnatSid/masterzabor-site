@@ -64,7 +64,7 @@ const visualOptionAssetSizeClasses: Record<VisualOptionAssetSize, string> = {
   object: visualObjectAssetSlotClass,
   neutral: visualObjectAssetSlotClass,
   payment:
-    "flex size-16 shrink-0 items-center justify-center sm:mb-3 sm:h-24 sm:w-full",
+    "flex h-[92px] w-[92px] shrink-0 items-center justify-center max-[340px]:h-[84px] max-[340px]:w-[84px] sm:mb-3 sm:h-32 sm:w-full",
 };
 const visualOptionAssetImageClasses: Record<VisualOptionAssetSize, string> = {
   object: "h-full w-auto max-w-full",
@@ -82,9 +82,6 @@ const visualOptionNormalClass =
   "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20] hover:bg-green-50/40";
 const visualOptionSelectedClass =
   "border-[#1B5E20] bg-green-50 text-[#1B5E20] shadow-[0_0_0_1px_rgba(27,94,32,0.20),0_6px_16px_rgba(27,94,32,0.12)]";
-// Step 6 keeps its reviewed state until the shared treatment is approved there.
-const pendingVisualOptionSelectedClass =
-  "border-[#1B5E20] bg-white text-[#1B5E20] shadow-[0_0_0_1px_rgba(27,94,32,0.28),0_4px_12px_rgba(27,94,32,0.10)]";
 
 function getVisualOptionCardStateClass(isSelected: boolean) {
   return isSelected ? visualOptionSelectedClass : visualOptionNormalClass;
@@ -639,11 +636,7 @@ export function QuizForm({
               {PAYMENT_METHODS.map((method) => (
                 <button
                   aria-pressed={values.paymentMethod === method}
-                  className={`flex min-h-[92px] items-center gap-3 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[148px] sm:py-4 sm:text-center ${optionFocusClass} ${
-                    values.paymentMethod === method
-                      ? pendingVisualOptionSelectedClass
-                      : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
-                  }`}
+                  className={`flex min-h-[92px] items-center gap-3 rounded-xl border px-4 py-2 text-left font-semibold transition-colors sm:block sm:min-h-[148px] sm:py-4 sm:text-center ${optionFocusClass} ${getVisualOptionCardStateClass(values.paymentMethod === method)}`}
                   key={method}
                   onClick={() =>
                     setValue("paymentMethod", method, { shouldValidate: true })
@@ -651,7 +644,9 @@ export function QuizForm({
                   type="button"
                 >
                   <PaymentOptionPreview method={method} />
-                  <span>{method}</span>
+                  <span className="min-w-0 break-words leading-tight">
+                    {method}
+                  </span>
                 </button>
               ))}
             </div>
