@@ -39,9 +39,10 @@ const fenceTypeImages: Record<(typeof fenceTypes)[number], string> = {
   "Евроштакетник": "/icons/quiz/quiz-fence-evroshtaketnik.webp",
   "Сетка-рабица": "/icons/quiz/quiz-fence-rabitsa.webp",
 };
-const gateTypeImages: Partial<Record<(typeof gateTypes)[number], string>> = {
+const gateTypeImages: Record<(typeof gateTypes)[number], string> = {
   "Распашные": "/icons/quiz/quiz-gate-swing.webp",
   "Откатные": "/icons/quiz/quiz-gate-sliding.webp",
+  "Не нужны": "/icons/quiz/quiz-option-none.webp",
 };
 const paymentMethodImages: Record<PaymentMethod, string> = {
   "Собственные средства": "/icons/quiz/quiz-payment-own-funds.webp",
@@ -58,11 +59,13 @@ const visualOptionAssetSizeClasses: Record<VisualOptionAssetSize, string> = {
   payment:
     "flex size-16 shrink-0 items-center justify-center sm:mb-3 sm:h-24 sm:w-full",
 };
+const visualObjectOptionCardClass =
+  "flex items-center gap-3 rounded-xl border px-3 py-1 text-left font-semibold transition-colors sm:block sm:px-3 sm:py-4";
 const visualOptionNormalClass =
   "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20] hover:bg-green-50/40";
 const visualOptionSelectedClass =
   "border-[#1B5E20] bg-green-50 text-[#1B5E20] shadow-[0_0_0_1px_rgba(27,94,32,0.20),0_6px_16px_rgba(27,94,32,0.12)]";
-// Steps 4–6 keep their reviewed state until the Step 1 treatment is approved.
+// Steps 5–6 keep their reviewed state until the shared treatment is approved there.
 const pendingVisualOptionSelectedClass =
   "border-[#1B5E20] bg-white text-[#1B5E20] shadow-[0_0_0_1px_rgba(27,94,32,0.28),0_4px_12px_rgba(27,94,32,0.10)]";
 
@@ -413,7 +416,7 @@ export function QuizForm({
               {fenceTypes.map((type) => (
                 <button
                   aria-pressed={values.fenceType === type}
-                  className={`flex items-center gap-3 rounded-xl border px-3 py-1 text-left font-semibold transition-colors sm:block sm:px-3 sm:py-4 ${optionFocusClass} ${getVisualOptionCardStateClass(values.fenceType === type)}`}
+                  className={`${visualObjectOptionCardClass} ${optionFocusClass} ${getVisualOptionCardStateClass(values.fenceType === type)}`}
                   key={type}
                   onClick={() => {
                     trackQuizEventOnce("quiz_started");
@@ -556,19 +559,20 @@ export function QuizForm({
               {gateTypes.map((type) => (
                 <button
                   aria-pressed={values.gateType === type}
-                  className={`flex min-h-[104px] items-center gap-4 rounded-xl border px-4 py-3 text-left font-semibold transition-colors sm:block sm:min-h-[172px] sm:py-4 ${optionFocusClass} ${
-                    values.gateType === type
-                      ? pendingVisualOptionSelectedClass
-                      : "border-slate-200 bg-white text-slate-800 hover:border-[#1B5E20]"
-                  }`}
+                  className={`${visualObjectOptionCardClass} ${optionFocusClass} ${getVisualOptionCardStateClass(values.gateType === type)}`}
                   key={type}
                   onClick={() =>
                     setValue("gateType", type, { shouldValidate: true })
                   }
                   type="button"
                 >
-                  <ObjectOptionPreview src={gateTypeImages[type]} />
-                  {type}
+                  <VisualOptionAsset
+                    size="object"
+                    src={gateTypeImages[type]}
+                  />
+                  <span className="min-w-0 break-words leading-tight">
+                    {type}
+                  </span>
                 </button>
               ))}
             </div>
