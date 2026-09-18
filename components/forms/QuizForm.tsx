@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { BelarusPhoneField } from "@/components/forms/BelarusPhoneField";
 import {
   PAYMENT_METHODS,
@@ -231,7 +231,6 @@ export function QuizForm({
     register,
     handleSubmit,
     setValue,
-    watch,
     trigger,
     clearErrors,
     reset,
@@ -256,13 +255,15 @@ export function QuizForm({
   }, [cityName, setValue]);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect -- Reset the flow when external quiz defaults change. */
     setStatus("idle");
     setStep(initialStep);
+    /* eslint-enable react-hooks/set-state-in-effect */
     reset(initialResetValues);
     trackedQuizEvents.current.clear();
   }, [initialResetValues, initialStep, reset, source]);
 
-  const values = watch();
+  const values = useWatch({ control });
   const progress = (step / QUIZ_TOTAL_STEPS) * 100;
   const currentStep = QUIZ_STEPS[step - 1];
   const isContactStep = currentStep.id === "contact";
