@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production implementation/UI baseline after PRICING-UI-01: `529acfccd39bbecdeb928983940beb0cc442d06a` (`Merge PRICING-UI-01 secondary CTA`).
+Latest production baseline: `fa119d75dbf2d8489e8d97424fdfeec0995f6243` (`Merge branch 'codex/QZ-06C-telegram-style'`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -172,7 +172,7 @@ architecture changes without separate rationale and user decision.
 - `components/templates/` - reusable page templates for city/service pages.
 - `components/cards/` - repeated product card.
 - `components/portfolio/` - portfolio cards and filter/gallery.
-- `content/` - 40 cities, 6 services, 3 posts, project portfolio dataset.
+- `content/` - 40 cities, 6 services, 4 posts, project portfolio dataset.
 - `lib/` - constants, SEO, phone, Telegram, leads, reporting, analytics.
 - `public/` - icons, manifest, logo, OG image.
 - `docs/` - project history and runbooks.
@@ -259,6 +259,28 @@ Duplicated/centralization candidates:
 - Breadcrumb URL construction.
 - Analytics source-to-page conversion was normalized to no-slash paths in P0-01.
 
+## Quiz, internal manager estimate and Telegram contract
+
+The universal QuizForm height options remain `1.5 м`, `1.7 м`, `2.0 м` and `Не знаю, нужна консультация`. Do not add `1.0 м` or `1.2 м` automatically. The form uses `useWatch({ control })`; the former `react-hook-form watch()` React Compiler warning is resolved without changing QZ-05 focus, scroll or task-mode behavior.
+
+The implemented internal manager-estimate matrix is:
+
+| Тип забора | 1.5 м | 1.7 м | 2.0 м |
+| --- | ---: | ---: | ---: |
+| Сетка-рабица | 65 BYN/м.п. | 70 BYN/м.п. | 75 BYN/м.п. |
+| Профнастил | 130 BYN/м.п. | 135 BYN/м.п. | 140 BYN/м.п. |
+| Евроштакетник | 155 BYN/м.п. | 165 BYN/м.п. | 180 BYN/м.п. |
+
+Gate and wicket additions are `1400 BYN` for swing gates, `4500 BYN` for sliding gates, `0 BYN` when gates are not needed, `1200 BYN` when a wicket is needed, and `0 BYN` when it is not. `paymentMethod` and `city` do not affect the estimate.
+
+The broader owner-provided euro-shtaketnik business pricing model also records `1.0 м = 130 BYN/м.п.`, then `+5 BYN` for each additional `0.1 м`, including `1.2 м = 140 BYN/м.п.`. Those euro-shtaketnik points are business memory, not implemented universal QuizForm options or entries in the current estimate matrix. Public advertising pricing is a separate owner-approved concern.
+
+The only intentional estimate fallback is `Не знаю, нужна консультация` to `1.7 м`. Preserve the client's original answer. Telegram states `Для расчёта принята высота 1.7 м` and describes the estimate as `высоту клиент не знает`. Do not use `1.8 м`, nearest-rate matching or hidden fallbacks for unsupported values.
+
+Telegram lead messages use semantic blocks for client, fence, payment, optional client comment, optional calculated manager estimate, and source/date footer. `Собственные средства` has a distinct bold payment treatment but does not change the price. The manager estimate repeats the selected fence type, height context, gate type and wicket answer and highlights the total.
+
+All dynamic/user values are HTML-escaped before insertion into the message. Trusted formatter markup is kept separate. Generic LeadForm submissions remain compatible: missing Quiz values do not produce empty fields, empty blocks or a manager estimate.
+
 ## Dependency Map
 
 Current lockfile versions:
@@ -287,7 +309,7 @@ Next 16 / MCP status:
 - P0-01.5 is done locally on branch `codex/p0-next16-mcp-readiness`.
 - Upgrade target reached locally: Next.js `16.2.9`, React `19.2.7`, React DOM `19.2.7`.
 - Runtime Next DevTools MCP is available through `nextjs_index` / `nextjs_call` on a running dev server and exposes project metadata, routes and error diagnostics.
-- `npm run lint` uses ESLint CLI and ignores `.cursor/**`; current app lint passes with one React Compiler warning from `react-hook-form` `watch()`.
+- `npm run lint` uses ESLint CLI and ignores `.cursor/**`; TECH-QUIZ-01 removed the React Compiler warning from `react-hook-form watch()` by switching QuizForm to `useWatch({ control })`.
 - `npm run build` passes with Turbopack.
 - P0-04 rechecked the tooling baseline: lint/build/dev server/Next MCP/Browser/curl smoke pass; no extra code changes needed.
 
@@ -548,7 +570,7 @@ P1-03.2 change rules:
 - Keep `ProjectCard` reusable and data-driven; do not hardcode homepage-only titles, cities or categories in the component.
 - Keep one old gate project in homepage featured to preserve visual/category variety.
 - `app/nashi-raboty/page.tsx` may keep the small `max-w-5xl` intro width adjustment so the desktop H1 does not wrap "заборов" too early.
-- P1-03.2 is now production baseline; future homepage featured changes should still be data-only unless the user explicitly asks for redesign.
+- P1-03.2 remains the production homepage featured-selection baseline; future homepage featured changes should still be data-only unless the user explicitly asks for redesign.
 
 Future real-project expansion workflow:
 
