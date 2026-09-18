@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production baseline: `3b39c63f27afb098ba6d0e175cf2e04a87106f27` (`Merge branch 'codex/QZ-06D-docs-continuity'`).
+Latest production baseline: `148e6db2fd7dfe51e41389404d0d938a0f63dccb` (QZ-06E merge).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -108,8 +108,9 @@ architecture changes without separate rationale and user decision.
 - In-memory rate limit слаб для serverless.
 - QZ-06E keeps one canonical lead-storage path: `leads:v2:{YYYY-MM-DD}` via `rpush` plus `lead-statuses:{YYYY-MM-DD}`. `lead-index:{leadId}` stores only the date locator, never a duplicated `StoredLead`. Legacy `leads:{YYYY-MM-DD}` arrays are not read or normalized at runtime.
 - Lead lists, delivery-status hashes, lead locator keys and `analytics-events:v1:{YYYY-MM-DD}` hashes use Redis TTL with a 180-day retention window. `/lead <id>` reads its locator and then only the corresponding canonical daily list/status pair; there is no 180-day fallback scan.
-- Production cleanup is never automatic. After deployment, first enumerate existing keys, distinguish legacy `leads:{YYYY-MM-DD}` from `leads:v2:*`, identify canonical/status/analytics keys created before TTL, and show the owner the exact key list or narrowly bounded mask. One-time deletion or retention normalization requires separate approval.
+- QZ-06F completed the separately approved one-time Production normalization: legacy `leads:{date}` keys are gone, pre-QZ-06E canonical/status/analytics keys have date-derived retention, missing indexes are backfilled, and no target key remains without expiry. Final anomalies were zero missing indexes and zero wrong/orphan locators. QZ-06F changed no code, commit or deployment.
 - Telegram shows the persisted lead ID and original stored submission time. `/stats_*` remains aggregate reporting; `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>` provide detailed stored-lead retrieval, newest-first, within retention.
+- The Telegram command menu was synchronized through `scripts/set-telegram-bot.ts`. `setMyCommands` registered `/report`, three `/stats_*`, three `/leads_*`, `/lead`, three `/traffic_*`, `/top`, and `/help`. The webhook remains `https://www.masterzabor.by/api/telegram-webhook` with zero pending updates at sync time.
 - `SearchAction` в JSON-LD есть без реального поиска.
 - P1-06.1 сформировал pricing strategy: `/tseny` сохранена как indexable pricing landing, а Header теперь намеренно содержит `Цены -> /tseny` after `Наши работы`.
 - P1-06.3 aligned CityPage calculator UX with the approved compact QuizForm flow while preserving one universal CityPage template and city/source lead context.
@@ -283,6 +284,10 @@ The only intentional estimate fallback is `Не знаю, нужна консу�
 Telegram lead messages use semantic blocks for client, fence, payment, optional client comment, optional calculated manager estimate, and source/date footer. `Собственные средства` has a distinct bold payment treatment but does not change the price. The manager estimate repeats the selected fence type, height context, gate type and wicket answer and highlights the total.
 
 All dynamic/user values are HTML-escaped before insertion into the message. Trusted formatter markup is kept separate. Generic LeadForm submissions remain compatible: missing Quiz values do not produce empty fields, empty blocks or a manager estimate.
+
+QZ-06E is deployed at merge/main SHA `148e6db2fd7dfe51e41389404d0d938a0f63dccb`. The canonical runtime model is `leads:v2:{YYYY-MM-DD}`, `lead-statuses:{YYYY-MM-DD}`, and `lead-index:{leadId} -> YYYY-MM-DD`; legacy lead arrays are not read. Lead, status, index and analytics keys use 180-day retention. Detailed Telegram retrieval uses `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>`, while `/stats_*` remains aggregate reporting.
+
+QZ-07 passed one controlled real Production QuizForm E2E on 2026-09-18. The scenario used Профнастил, `60 м`, consultation height, swing gates, a wicket, own funds, a present comment and source `home-quiz`; durable docs omit the test identity and contact details. The API returned `success: true`, the persisted lead ID and `deliveryStatus: telegram_sent`. The live Telegram estimate was `8100 BYN` fence + `1400 BYN` gates + `1200 BYN` wicket = `10700 BYN`. It preserved the client's unknown-height answer, used `1.7 м`, displayed the persisted ID and original time, and rendered the same stored submission through `/leads_today` and `/lead <id>`. `/stats_today` increased by one. A final read-only check confirmed the canonical record, `telegram_sent`, correct locator and positive lead/status/index TTLs. Focused tests cover generic LeadForm compatibility.
 
 ## Dependency Map
 
@@ -897,7 +902,7 @@ Add or formalize:
 6. Retry/report delivery failures.
 7. Return success once lead is safely stored.
 
-Detailed manager retrieval uses `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>`. Period results are ordered newest-first and sent as separate Telegram messages rather than one unbounded payload. Single-ID lookup resolves one date through `lead-index:{leadId}` and reads one daily list/status pair. Aggregate `/stats_*` commands remain unchanged in purpose. QZ-07 controlled real lead E2E is the next stage after QZ-06E review and Production merge.
+Detailed manager retrieval uses `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>`. Period results are ordered newest-first and sent as separate Telegram messages rather than one unbounded payload. Single-ID lookup resolves one date through `lead-index:{leadId}` and reads one daily list/status pair. Aggregate `/stats_*` commands remain unchanged in purpose. QZ-07 passed in Production; QZ-08 analytics and representative-surface regression is NEXT / NOT STARTED. QZ-09 public advertising pricing remains FUTURE / DEFERRED and is not part of QZ-08.
 
 ### Analytics Event Taxonomy
 
