@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:pricing": "node --test --test-isolation=none --experimental-strip-types tests/lead-pricing.test.ts"
   },
   "dependencies": {
     "@tailwindcss/postcss": "latest",
