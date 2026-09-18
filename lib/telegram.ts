@@ -23,6 +23,12 @@ const escapeHtml = (value: string) =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
 
+const escapeValue = (value?: string | number | null) =>
+  escapeHtml(String(value ?? "").trim());
+
+const SECTION_DIVIDER = "─────────────────";
+const OWN_FUNDS = "Собственные средства";
+
 export function formatLeadMessage(data: LeadData) {
   const submittedAt = new Intl.DateTimeFormat("ru-BY", {
     dateStyle: "medium",
@@ -31,71 +37,90 @@ export function formatLeadMessage(data: LeadData) {
   }).format(new Date());
 
   const lines = [
-    "🔔 Новая заявка с сайта masterzabor.by!",
-    "─────────────────",
-    `👤 Имя: ${valueOrEmpty(data.name)}`,
-    `📞 Телефон: ${valueOrEmpty(data.phone)}`,
+    "🔔 Новая заявка с masterzabor.by",
+    "",
+    "👤 КЛИЕНТ",
+    `Имя: ${escapeValue(data.name)}`,
+    `Телефон: ${escapeValue(data.phone)}`,
   ];
 
   if (hasValue(data.city)) {
-    lines.push(`📍 Населённый пункт: ${valueOrEmpty(data.city)}`);
-  }
-  if (hasValue(data.fenceType)) {
-    lines.push(`🏗 Тип забора: ${valueOrEmpty(data.fenceType)}`);
-  }
-  if (hasValue(data.length)) {
-    lines.push(`📏 Длина: ${valueOrEmpty(data.length)}`);
-  }
-  if (hasValue(data.height)) {
-    lines.push(`📐 Высота: ${valueOrEmpty(data.height)}`);
-  }
-  if (hasValue(data.gateType)) {
-    lines.push(`🚪 Ворота: ${valueOrEmpty(data.gateType)}`);
-  }
-  if (hasValue(data.wicket)) {
-    lines.push(`🚶 Калитка: ${valueOrEmpty(data.wicket)}`);
-  }
-  if (hasValue(data.paymentMethod)) {
-    lines.push(`💳 Оплата: ${valueOrEmpty(data.paymentMethod)}`);
-  }
-  if (hasValue(data.comment)) {
-    lines.push(`💬 ${valueOrEmpty(data.comment)}`);
+    lines.push(`Населённый пункт: ${escapeValue(data.city)}`);
   }
 
-  lines.push(
-    "─────────────────",
-    `📄 Страница: ${valueOrEmpty(data.source)}`,
-    `⏰ ${submittedAt}`,
-  );
+  const fenceLines = [
+    hasValue(data.fenceType) ? `Тип: ${escapeValue(data.fenceType)}` : null,
+    hasValue(data.length) ? `Длина: ${escapeValue(data.length)}` : null,
+    hasValue(data.height) ? `Высота: ${escapeValue(data.height)}` : null,
+    hasValue(data.gateType) ? `Ворота: ${escapeValue(data.gateType)}` : null,
+    hasValue(data.wicket) ? `Калитка: ${escapeValue(data.wicket)}` : null,
+  ].filter((line): line is string => line !== null);
+
+  if (fenceLines.length > 0) {
+    lines.push("", SECTION_DIVIDER, "🏗 ЗАБОР", ...fenceLines);
+  }
+
+  if (hasValue(data.paymentMethod)) {
+    const paymentMethod = valueOrEmpty(data.paymentMethod);
+    const isOwnFunds = paymentMethod === OWN_FUNDS;
+
+    lines.push(
+      "",
+      SECTION_DIVIDER,
+      isOwnFunds ? "💵 ОПЛАТА" : "💳 ОПЛАТА",
+      isOwnFunds
+        ? `<b>${escapeValue(paymentMethod.toUpperCase())}</b>`
+        : escapeValue(paymentMethod),
+    );
+  }
+
+  if (hasValue(data.comment)) {
+    lines.push(
+      "",
+      SECTION_DIVIDER,
+      "💬 КОММЕНТАРИЙ КЛИЕНТА",
+      escapeValue(data.comment),
+    );
+  }
 
   const estimate = calculateManagerEstimate(data);
 
   if (estimate.status === "calculated") {
     const gateLabel = data.gateType?.trim() || "не выбраны";
     const wicketLabel = data.wicket?.trim() || "не выбрана";
+    const estimateHeight = estimate.heightFallbackUsed
+      ? "высоту клиент не знает"
+      : estimate.calculationHeight;
 
     lines.push(
-      "─────────────────",
-      "💰 Ориентир (для менеджера):",
-      `   Забор: ${estimate.lengthMeters}м × ${estimate.pricePerMeter} BYN/м.п. = ${estimate.fenceSubtotal} BYN`,
+      "",
+      SECTION_DIVIDER,
+      "💰 ОРИЕНТИР ДЛЯ МЕНЕДЖЕРА",
+      `Забор: ${escapeValue(estimate.lengthMeters)} м (${escapeValue(data.fenceType)}, ${escapeValue(estimateHeight)}) × ${escapeValue(estimate.pricePerMeter)} BYN/м.п. = ${escapeValue(estimate.fenceSubtotal)} BYN`,
     );
 
     if (estimate.heightFallbackUsed) {
       lines.push(
-        `   Для ориентира использована высота ${estimate.calculationHeight}`,
+        `Для расчёта принята высота ${escapeValue(estimate.calculationHeight)}`,
       );
     }
 
     lines.push(
-      `   Ворота (${gateLabel}): +${estimate.gatePrice} BYN`,
-      `   Калитка (${wicketLabel}): +${estimate.wicketPrice} BYN`,
-      `   ≈ ИТОГО: ${estimate.total} BYN`,
+      `Ворота: ${escapeValue(gateLabel)} — ${escapeValue(estimate.gatePrice)} BYN`,
+      `Калитка: ${escapeValue(wicketLabel)} — ${escapeValue(estimate.wicketPrice)} BYN`,
+      "",
+      `<b>ИТОГО: ≈ ${escapeValue(estimate.total)} BYN</b>`,
     );
   }
 
-  return lines
-    .map(escapeHtml)
-    .join("\n");
+  lines.push(
+    "",
+    SECTION_DIVIDER,
+    `Источник: ${escapeValue(data.source)}`,
+    submittedAt,
+  );
+
+  return lines.join("\n");
 }
 
 async function sendTelegramRequest({
