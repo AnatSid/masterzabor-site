@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production baseline: `148e6db2fd7dfe51e41389404d0d938a0f63dccb` (QZ-06E merge).
+Latest production baseline: `1cb268db73258c296589845f4a6dbcd6cf7434cb` (QZ-07 docs closeout merge; application runtime remains the QZ-06E implementation).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -902,7 +902,9 @@ Add or formalize:
 6. Retry/report delivery failures.
 7. Return success once lead is safely stored.
 
-Detailed manager retrieval uses `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>`. Period results are ordered newest-first and sent as separate Telegram messages rather than one unbounded payload. Single-ID lookup resolves one date through `lead-index:{leadId}` and reads one daily list/status pair. Aggregate `/stats_*` commands remain unchanged in purpose. QZ-07 passed in Production; QZ-08 analytics and representative-surface regression is NEXT / NOT STARTED. QZ-09 public advertising pricing remains FUTURE / DEFERRED and is not part of QZ-08.
+Detailed manager retrieval uses `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>`. Period results are ordered newest-first and sent as separate Telegram messages rather than one unbounded payload. Single-ID lookup resolves one date through `lead-index:{leadId}` and reads one daily list/status pair. Aggregate `/stats_*` commands remain unchanged in purpose. QZ-07 passed in Production. QZ-08 passed its analytics and representative-surface regression, so the Quiz / Pricing / Lead workstream is CLOSED. QZ-09 public advertising pricing remains FUTURE / DEFERRED and was not part of QZ-08.
+
+QZ-08 checked `/`, `/tseny`, `/zabory-iz-profnastila`, `/lida`, `/kontakty`, and `/blog/nuzhno-li-razreshenie-na-ustanovku-zabora-v-rb` in Production. All returned `200`; representative desktop/mobile checks confirmed the shared QuizForm, source wiring, `Next` / `Back`, QZ-05 focus/scroll behavior, and the contact-only submit boundary without creating a lead. A completed homepage funnel received HTTP `200` for the four expected `/api/events` requests. Read-only KV verification showed `+1` for each event counter and `+4` for the aggregate homepage/source/location counters. The generic LeadForm path remained independent of Quiz-only fields, and the focused pricing, Telegram, and lead suites passed.
 
 ### Analytics Event Taxonomy
 
@@ -912,6 +914,7 @@ Detailed manager retrieval uses `/leads_today`, `/leads_week`, `/leads_month` an
 - `click_viber`
 - `quiz_started`
 - `quiz_step_3_reached`
+- `quiz_payment_step_reached`
 - `quiz_contact_step_reached`
 
 Current decision:

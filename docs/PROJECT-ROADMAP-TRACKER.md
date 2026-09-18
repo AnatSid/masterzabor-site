@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: QZ-06E merge SHA `148e6db2fd7dfe51e41389404d0d938a0f63dccb`
+Текущая production точка отсчета: `1cb268db73258c296589845f4a6dbcd6cf7434cb` (QZ-07 docs closeout merge)
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production baseline: `148e6db2fd7dfe51e41389404d0d938a0f63dccb` (QZ-06E merge).
+- Последний production baseline: `1cb268db73258c296589845f4a6dbcd6cf7434cb` (QZ-07 docs closeout merge; application runtime remains the QZ-06E implementation).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -53,7 +53,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - QZ-04B is DONE: the full approved QuizForm visual asset set is integrated across Steps 1–6; the permanent registry and invariants live in [`docs/QUIZFORM-VISUAL-ASSETS.md`](QUIZFORM-VISUAL-ASSETS.md).
 - QZ-05 is DONE: the approved shared multi-step interaction architecture, including stable navigation geometry, conditional step transitions, mobile task mode and verification requirements, lives in [`docs/QUIZFORM-INTERACTION-PATTERN.md`](QUIZFORM-INTERACTION-PATTERN.md).
 - QZ-06A through QZ-06F and QZ-07 are DONE in Production or, for QZ-06F, completed as an approved operational stage without code/deploy changes.
-- QZ-08 is NEXT / NOT STARTED. The Quiz / Pricing / Lead workstream remains open until QZ-08 passes.
+- QZ-08 is DONE. The Quiz / Pricing / Lead workstream is CLOSED.
 - QZ-09 public advertising pricing is FUTURE / DEFERRED and requires separate owner approval of values and presentation.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
@@ -150,11 +150,15 @@ The Production QuizForm completed submission successfully, and the lead appeared
 
 The existing `scripts/set-telegram-bot.ts` operational sync completed successfully through `setMyCommands`. Telegram registered 13 commands: `/report`, `/stats_today`, `/stats_week`, `/stats_month`, `/leads_today`, `/leads_week`, `/leads_month`, `/lead`, `/traffic_today`, `/traffic_week`, `/traffic_month`, `/top`, and `/help`. The webhook remains `https://www.masterzabor.by/api/telegram-webhook`; pending updates were `0`.
 
-### QZ-08: NEXT / NOT STARTED
+### QZ-08: DONE / PRODUCTION CLOSURE
 
-Verify the actual quiz analytics funnel and representative Production surfaces: `/`, `/tseny`, one ServicePage, one CityPage, `/kontakty`, and a relevant blog surface. Check LeadForm regression, investigate only concrete findings, and do not redesign or refactor without a demonstrated issue. After verification, close the Quiz / Pricing / Lead workstream and synchronize durable docs.
+Representative Production checks passed on `/`, `/tseny`, `/zabory-iz-profnastila`, `/lida`, `/kontakty`, and `/blog/nuzhno-li-razreshenie-na-ustanovku-zabora-v-rb`. Every route returned `200`; desktop/mobile checks found the expected shared QuizForm, no page-level horizontal overflow, no QuizForm/LeadForm runtime exception, and working `Next` / `Back` transitions. The homepage funnel reached the contact step without submission, preserved the QZ-05 focus/scroll task-mode behavior, kept intermediate controls as `type="button"`, and exposed `type="submit"` only on the contact step. No `/api/lead` request was made.
 
-The Quiz / Pricing / Lead workstream is complete only after QZ-08 passes.
+One completed homepage analytics verification received HTTP `200` from `/api/events` for `quiz_started`, `quiz_step_3_reached`, `quiz_payment_step_reached`, and `quiz_contact_step_reached`. Read-only Production KV verification showed `+1` for every corresponding type and type/location counter, and `+4` for `total`, `source:home-quiz`, `page:/`, and `location:quiz`. GA4 and Yandex client integrations remained present; no immediate third-party reporting confirmation was required.
+
+Cross-surface source wiring remains: `/` -> `home-quiz`, `/tseny` -> `prices-page`, `/zabory-iz-profnastila` -> `service-zabory-iz-profnastila`, `/lida` -> `city-lida`, `/kontakty` -> `contacts-page`, and the checked article -> `blog-post-nuzhno-li-razreshenie-na-ustanovku-zabora-v-rb`. The homepage generic LeadForm remained present and independent of Quiz-only fields. Focused pricing, Telegram and lead-storage/retrieval suites passed (`22`, `12`, and `11` tests respectively).
+
+No application issue requiring a code change was found. The Quiz / Pricing / Lead workstream is CLOSED.
 
 ### QZ-09: FUTURE / DEFERRED
 
