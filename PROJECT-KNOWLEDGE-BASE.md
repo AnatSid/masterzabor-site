@@ -106,8 +106,9 @@ architecture changes without separate rationale and user decision.
 
 - P0-03 makes `CRON_SECRET`, `TELEGRAM_WEBHOOK_SECRET` and `TELEGRAM_CHAT_ID` fail-closed in Vercel Production; dashboard env values still need verification.
 - In-memory rate limit слаб для serverless.
-- QZ-06E keeps one canonical lead-storage path: `leads:v2:{YYYY-MM-DD}` via `rpush` plus `lead-statuses:{YYYY-MM-DD}`. Legacy `leads:{YYYY-MM-DD}` arrays are not read or normalized at runtime.
-- Lead lists, delivery-status hashes and `analytics-events:v1:{YYYY-MM-DD}` hashes use Redis TTL with a 180-day retention window. Production legacy-key deletion is never automatic and requires a separately approved, narrowly verified one-time cleanup.
+- QZ-06E keeps one canonical lead-storage path: `leads:v2:{YYYY-MM-DD}` via `rpush` plus `lead-statuses:{YYYY-MM-DD}`. `lead-index:{leadId}` stores only the date locator, never a duplicated `StoredLead`. Legacy `leads:{YYYY-MM-DD}` arrays are not read or normalized at runtime.
+- Lead lists, delivery-status hashes, lead locator keys and `analytics-events:v1:{YYYY-MM-DD}` hashes use Redis TTL with a 180-day retention window. `/lead <id>` reads its locator and then only the corresponding canonical daily list/status pair; there is no 180-day fallback scan.
+- Production cleanup is never automatic. After deployment, first enumerate existing keys, distinguish legacy `leads:{YYYY-MM-DD}` from `leads:v2:*`, identify canonical/status/analytics keys created before TTL, and show the owner the exact key list or narrowly bounded mask. One-time deletion or retention normalization requires separate approval.
 - Telegram shows the persisted lead ID and original stored submission time. `/stats_*` remains aggregate reporting; `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>` provide detailed stored-lead retrieval, newest-first, within retention.
 - `SearchAction` в JSON-LD есть без реального поиска.
 - P1-06.1 сформировал pricing strategy: `/tseny` сохранена как indexable pricing landing, а Header теперь намеренно содержит `Цены -> /tseny` after `Наши работы`.
@@ -890,13 +891,13 @@ Add or formalize:
 
 1. Validate request.
 2. Assign `leadId`.
-3. Atomically persist lead to `leads:v2:{date}` with `pending_delivery`, and apply the 180-day TTL to the lead and status keys before Telegram delivery.
+3. In the same storage pipeline, persist the lead to `leads:v2:{date}` with `pending_delivery`, write `lead-index:{leadId} -> date`, and apply the 180-day TTL to the lead, status and locator keys before Telegram delivery.
 4. Send Telegram with the same persisted ID and original stored timestamp.
 5. If Telegram fails, keep lead and mark status `telegram_failed`.
 6. Retry/report delivery failures.
 7. Return success once lead is safely stored.
 
-Detailed manager retrieval uses `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>`. Period results are ordered newest-first and sent as separate Telegram messages rather than one unbounded payload. Aggregate `/stats_*` commands remain unchanged in purpose. QZ-07 controlled real lead E2E is the next stage after QZ-06E review and Production merge.
+Detailed manager retrieval uses `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>`. Period results are ordered newest-first and sent as separate Telegram messages rather than one unbounded payload. Single-ID lookup resolves one date through `lead-index:{leadId}` and reads one daily list/status pair. Aggregate `/stats_*` commands remain unchanged in purpose. QZ-07 controlled real lead E2E is the next stage after QZ-06E review and Production merge.
 
 ### Analytics Event Taxonomy
 

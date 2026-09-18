@@ -6,6 +6,7 @@ import type { LeadData } from "@/lib/telegram";
 const MINSK_TIME_ZONE = "Europe/Minsk";
 const LEAD_LIST_KEY_PREFIX = "leads:v2:";
 const LEAD_STATUS_KEY_PREFIX = "lead-statuses:";
+const LEAD_INDEX_KEY_PREFIX = "lead-index:";
 
 export type LeadDeliveryStatus =
   | "pending_delivery"
@@ -54,6 +55,10 @@ function getLeadStatusKeyByDateKey(dateKey: string) {
   return `${LEAD_STATUS_KEY_PREFIX}${dateKey}`;
 }
 
+function getLeadIndexKeyById(id: string) {
+  return `${LEAD_INDEX_KEY_PREFIX}${id}`;
+}
+
 export function getDateKeyFromStorageKey(key: string) {
   if (key.startsWith(LEAD_LIST_KEY_PREFIX)) {
     return key.slice(LEAD_LIST_KEY_PREFIX.length);
@@ -95,6 +100,7 @@ type LeadStoragePipeline = {
     key: string,
     values: Record<string, LeadDeliveryStatus>,
   ): LeadStoragePipeline;
+  set(key: string, value: string): LeadStoragePipeline;
   expire(key: string, seconds: number): LeadStoragePipeline;
   exec(): Promise<unknown>;
 };
@@ -112,6 +118,10 @@ export type LeadReadClient = {
   hgetall<T>(key: string): Promise<T | null>;
 };
 
+export type LeadLookupClient = LeadReadClient & {
+  get<T>(key: string): Promise<T | null>;
+};
+
 export async function appendLeadToStorage(
   lead: LeadData,
   options: {
@@ -126,15 +136,18 @@ export async function appendLeadToStorage(
   const key = getLeadListKeyByDateKey(dateKey);
   const statusKey = getLeadStatusKeyByDateKey(dateKey);
   const record = normalizeStoredLead(lead, options.id, submittedAt);
+  const indexKey = getLeadIndexKeyById(record.id);
   await client
     .pipeline()
     .rpush(key, record)
     .hset(statusKey, { [record.id]: record.status })
+    .set(indexKey, dateKey)
     .expire(key, DATA_RETENTION_SECONDS)
     .expire(statusKey, DATA_RETENTION_SECONDS)
+    .expire(indexKey, DATA_RETENTION_SECONDS)
     .exec();
 
-  return { dateKey, key, record, statusKey };
+  return { dateKey, indexKey, key, record, statusKey };
 }
 
 export async function updateLeadDeliveryStatus({
@@ -195,25 +208,18 @@ export async function getLeadsForDays(
 
 export async function findLeadById(
   id: string,
-  client: LeadReadClient = kv as LeadReadClient,
+  client: LeadLookupClient = kv as LeadLookupClient,
 ) {
-  const keys = getRangeKeys(180).reverse();
-  const batchSize = 30;
-
-  for (let index = 0; index < keys.length; index += batchSize) {
-    const entries = await getLeadsByKeys(
-      keys.slice(index, index + batchSize),
-      client,
-    );
-    const lead = entries
-      .flatMap((entry) => entry.leads)
-      .find((item) => item.id === id);
-    if (lead) {
-      return lead;
-    }
+  const dateKey = await client.get<string>(getLeadIndexKeyById(id));
+  if (!dateKey) {
+    return null;
   }
 
-  return null;
+  const [entry] = await getLeadsByKeys(
+    [getLeadListKeyByDateKey(dateKey)],
+    client,
+  );
+  return entry.leads.find((lead) => lead.id === id) ?? null;
 }
 
 function cityFromSource(source: string) {

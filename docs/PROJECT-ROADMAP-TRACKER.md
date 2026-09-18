@@ -124,11 +124,11 @@ Merge/main SHA: `fa119d75dbf2d8489e8d97424fdfeec0995f6243`.
 
 ### QZ-06E: IMPLEMENTED / AWAITING REVIEW
 
-Lead storage now has one runtime model: records in `leads:v2:{YYYY-MM-DD}` and delivery statuses in `lead-statuses:{YYYY-MM-DD}`. New lead/status keys and `analytics-events:v1:{YYYY-MM-DD}` hashes receive a 180-day Redis TTL. Runtime reads no longer merge or normalize legacy `leads:{YYYY-MM-DD}` arrays.
+Lead storage now has one runtime model: records in `leads:v2:{YYYY-MM-DD}` and delivery statuses in `lead-statuses:{YYYY-MM-DD}`. The lightweight `lead-index:{leadId} -> YYYY-MM-DD` locator contains no duplicated lead data. New lead/status/index keys and `analytics-events:v1:{YYYY-MM-DD}` hashes receive a 180-day Redis TTL. Runtime reads no longer merge or normalize legacy `leads:{YYYY-MM-DD}` arrays.
 
-Telegram messages expose the stored `leadId` in a copy-friendly `<code>` footer and use the original stored submission time. `/stats_today`, `/stats_week` and `/stats_month` remain aggregate reports; `/leads_today`, `/leads_week`, `/leads_month` return stored leads newest-first as separate safe messages, and `/lead <id>` searches within the 180-day retention window.
+Telegram messages expose the stored `leadId` in a copy-friendly `<code>` footer and use the original stored submission time. `/stats_today`, `/stats_week` and `/stats_month` remain aggregate reports; `/leads_today`, `/leads_week`, `/leads_month` return stored leads newest-first as separate safe messages, and `/lead <id>` resolves the date through its locator before reading one canonical daily lead/status pair.
 
-No Production KV keys are deleted by this stage. If physical cleanup is desired after deploy, enumerate and verify only legacy `leads:{YYYY-MM-DD}` keys first, then perform a separately owner-approved one-time deletion; never match `leads:v2:*`.
+No Production KV keys are deleted by this stage. Operational follow-up after Production deployment must: (1) enumerate existing KV keys; (2) identify legacy `leads:{YYYY-MM-DD}` separately and never classify `leads:v2:*` as legacy; (3) identify canonical lead/status/analytics keys created before TTL existed; (4) show the owner the exact key list or narrowly bounded mask before any destructive action; and (5) perform one-time cleanup or retention normalization only after separate approval.
 
 ### QZ-07: NEXT / NOT STARTED
 

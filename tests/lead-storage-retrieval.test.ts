@@ -32,7 +32,6 @@ const retentionModule = await import("../lib/data-retention.ts");
 const {
   appendLeadToStorage,
   findLeadById,
-  getLeadKeyByDate,
   getLeadsByKeys,
   getLeadsForDays,
 } = leadsModule;
@@ -80,6 +79,10 @@ function createPipelineRecorder() {
       commands.push({ name: "hset", args });
       return pipeline;
     },
+    set(...args: unknown[]) {
+      commands.push({ name: "set", args });
+      return pipeline;
+    },
     hincrby(...args: unknown[]) {
       commands.push({ name: "hincrby", args });
       return pipeline;
@@ -97,7 +100,7 @@ function createPipelineRecorder() {
   return { commands, pipeline };
 }
 
-test("lead storage writes only the canonical list and applies both TTLs", async () => {
+test("lead storage writes the canonical list, locator index, and all TTLs", async () => {
   const { commands, pipeline } = createPipelineRecorder();
   const client = { pipeline: () => pipeline };
   const id = baseStoredLead.id;
@@ -114,9 +117,21 @@ test("lead storage writes only the canonical list and applies both TTLs", async 
 
   assert.equal(result.key, "leads:v2:2026-09-18");
   assert.equal(result.statusKey, "lead-statuses:2026-09-18");
+  assert.equal(
+    result.indexKey,
+    `lead-index:${baseStoredLead.id}`,
+  );
   assert.equal(result.record.id, id);
   assert.equal(result.record.time, baseStoredLead.time);
   assert.match(formatStoredLeadMessage(result.record), new RegExp(id));
+  assert.deepEqual(
+    commands.find((command) => command.name === "rpush")?.args,
+    ["leads:v2:2026-09-18", result.record],
+  );
+  assert.deepEqual(
+    commands.find((command) => command.name === "set")?.args,
+    [`lead-index:${id}`, "2026-09-18"],
+  );
   assert.deepEqual(
     commands
       .filter((command) => command.name === "expire")
@@ -124,6 +139,7 @@ test("lead storage writes only the canonical list and applies both TTLs", async 
     [
       ["leads:v2:2026-09-18", DATA_RETENTION_SECONDS],
       ["lead-statuses:2026-09-18", DATA_RETENTION_SECONDS],
+      [`lead-index:${id}`, DATA_RETENTION_SECONDS],
     ],
   );
   assert.equal(
@@ -207,23 +223,53 @@ test("historical lead detail keeps original data, estimate, ID, and time", () =>
   assert.doesNotMatch(message, /КОММЕНТАРИЙ КЛИЕНТА/);
 });
 
-test("lead lookup finds the canonical record inside the retention window", async () => {
-  const lookupLead = { ...baseStoredLead, time: new Date().toISOString() };
-  const targetKey = getLeadKeyByDate(new Date(lookupLead.time));
+test("lead lookup uses its index and reads only one daily lead/status pair", async () => {
+  const calls: string[] = [];
   const client = {
-    pipeline() {
-      throw new Error("not used");
+    async get<T>(key: string) {
+      calls.push(key);
+      return "2026-09-18" as T;
     },
     async lrange<T>(key: string) {
-      return (key === targetKey ? [lookupLead] : []) as T[];
+      calls.push(key);
+      return [baseStoredLead] as T[];
     },
-    async hgetall<T>() {
-      return null as T | null;
+    async hgetall<T>(key: string) {
+      calls.push(key);
+      return { [baseStoredLead.id]: "telegram_sent" } as T;
     },
   };
 
   const result = await findLeadById(baseStoredLead.id, client);
   assert.equal(result?.id, baseStoredLead.id);
+  assert.equal(result?.status, "telegram_sent");
+  assert.deepEqual(calls, [
+    `lead-index:${baseStoredLead.id}`,
+    "leads:v2:2026-09-18",
+    "lead-statuses:2026-09-18",
+  ]);
+});
+
+test("missing lead index returns null without daily reads or fallback scan", async () => {
+  const calls: string[] = [];
+  const client = {
+    async get<T>(key: string) {
+      calls.push(key);
+      return null as T | null;
+    },
+    async lrange<T>(key: string) {
+      calls.push(key);
+      return [] as T[];
+    },
+    async hgetall<T>(key: string) {
+      calls.push(key);
+      return null as T | null;
+    },
+  };
+
+  const result = await findLeadById("missing-id", client);
+  assert.equal(result, null);
+  assert.deepEqual(calls, ["lead-index:missing-id"]);
 });
 
 test("period retrieval orders canonical leads newest-first", async () => {
