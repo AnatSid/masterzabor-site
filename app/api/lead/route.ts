@@ -117,7 +117,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const isSent = await sendToTelegram(validation.lead);
+  const isSent = await sendToTelegram(validation.lead, {
+    id: storedLead.record.id,
+    submittedAt: storedLead.record.time,
+  });
 
   if (!isSent) {
     await updateLeadDeliveryStatus({

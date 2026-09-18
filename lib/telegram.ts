@@ -14,6 +14,11 @@ export type LeadData = {
   source: string;
 };
 
+export type LeadMessageMetadata = {
+  id?: string;
+  submittedAt?: string | Date;
+};
+
 const hasValue = (value?: string) => Boolean(value?.trim());
 const valueOrEmpty = (value?: string) => value?.trim() ?? "";
 
@@ -29,12 +34,18 @@ const escapeValue = (value?: string | number | null) =>
 const SECTION_DIVIDER = "─────────────────";
 const OWN_FUNDS = "Собственные средства";
 
-export function formatLeadMessage(data: LeadData) {
+export function formatLeadMessage(
+  data: LeadData,
+  metadata: LeadMessageMetadata = {},
+) {
+  const submissionDate = metadata.submittedAt
+    ? new Date(metadata.submittedAt)
+    : new Date();
   const submittedAt = new Intl.DateTimeFormat("ru-BY", {
     dateStyle: "medium",
     timeStyle: "short",
     timeZone: "Europe/Minsk",
-  }).format(new Date());
+  }).format(submissionDate);
 
   const lines = [
     "🔔 Новая заявка с masterzabor.by",
@@ -116,9 +127,13 @@ export function formatLeadMessage(data: LeadData) {
   lines.push(
     "",
     SECTION_DIVIDER,
-    `Источник: ${escapeValue(data.source)}`,
-    submittedAt,
   );
+
+  if (hasValue(metadata.id)) {
+    lines.push(`ID заявки: <code>${escapeValue(metadata.id)}</code>`);
+  }
+
+  lines.push(`Источник: ${escapeValue(data.source)}`, submittedAt);
 
   return lines.join("\n");
 }
@@ -174,9 +189,12 @@ async function sendTelegramRequest({
   }
 }
 
-export async function sendToTelegram(data: LeadData): Promise<boolean> {
+export async function sendToTelegram(
+  data: LeadData,
+  metadata?: LeadMessageMetadata,
+): Promise<boolean> {
   return sendTelegramRequest({
-    text: formatLeadMessage(data),
+    text: formatLeadMessage(data, metadata),
     parseMode: "HTML",
   });
 }
@@ -188,6 +206,7 @@ export async function sendTelegramText(text: string): Promise<boolean> {
 export async function sendTelegramTextToChat(
   chatId: string,
   text: string,
+  parseMode?: "HTML",
 ): Promise<boolean> {
-  return sendTelegramRequest({ chatId, text });
+  return sendTelegramRequest({ chatId, text, parseMode });
 }

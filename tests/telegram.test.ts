@@ -45,6 +45,19 @@ test("Quiz lead uses the new semantic blocks", () => {
   assert.match(message, /Источник: home-quiz/);
 });
 
+test("stored lead metadata reuses the same ID and original submission time", () => {
+  const message = formatLeadMessage(baseLead, {
+    id: "58e08bf8-64d6-4b50-a6f0-7fefae80319f",
+    submittedAt: "2026-09-18T11:32:00.000Z",
+  });
+
+  assert.match(
+    message,
+    /ID заявки: <code>58e08bf8-64d6-4b50-a6f0-7fefae80319f<\/code>/,
+  );
+  assert.match(message, /18 сент\. 2026 г\., 14:32/);
+});
+
 test("field rows no longer use the old per-field emoji", () => {
   const message = formatLeadMessage(baseLead);
 
@@ -134,6 +147,16 @@ test("user HTML is escaped while trusted bold markup remains active", () => {
   assert.match(message, /&lt;u&gt;home-quiz&lt;\/u&gt;/);
   assert.match(message, /<b>СОБСТВЕННЫЕ СРЕДСТВА<\/b>/);
   assert.match(message, /<b>ИТОГО: ≈ 10700 BYN<\/b>/);
+});
+
+test("lead ID is HTML-escaped", () => {
+  const message = formatLeadMessage(baseLead, {
+    id: "<unsafe&identifier>",
+    submittedAt: "2026-09-18T11:32:00.000Z",
+  });
+
+  assert.match(message, /<code>&lt;unsafe&amp;identifier&gt;<\/code>/);
+  assert.doesNotMatch(message, /<code><unsafe/);
 });
 
 test("generic LeadForm omits unavailable Quiz sections and estimate", () => {

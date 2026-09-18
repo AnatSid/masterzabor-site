@@ -1,14 +1,13 @@
 import { kv } from "@vercel/kv";
 import { cities } from "@/content/cities";
-import { LeadData } from "@/lib/telegram";
+import { DATA_RETENTION_SECONDS } from "@/lib/data-retention";
+import type { LeadData } from "@/lib/telegram";
 
 const MINSK_TIME_ZONE = "Europe/Minsk";
-const LEAD_KEY_PREFIX = "leads:";
 const LEAD_LIST_KEY_PREFIX = "leads:v2:";
 const LEAD_STATUS_KEY_PREFIX = "lead-statuses:";
 
 export type LeadDeliveryStatus =
-  | "legacy"
   | "pending_delivery"
   | "telegram_sent"
   | "telegram_failed";
@@ -44,7 +43,7 @@ function dateToMinskKey(date: Date) {
 }
 
 export function getLeadKeyByDate(date: Date) {
-  return `${LEAD_KEY_PREFIX}${dateToMinskKey(date)}`;
+  return getLeadListKeyByDateKey(dateToMinskKey(date));
 }
 
 function getLeadListKeyByDateKey(dateKey: string) {
@@ -55,13 +54,9 @@ function getLeadStatusKeyByDateKey(dateKey: string) {
   return `${LEAD_STATUS_KEY_PREFIX}${dateKey}`;
 }
 
-function getDateKeyFromStorageKey(key: string) {
+export function getDateKeyFromStorageKey(key: string) {
   if (key.startsWith(LEAD_LIST_KEY_PREFIX)) {
     return key.slice(LEAD_LIST_KEY_PREFIX.length);
-  }
-
-  if (key.startsWith(LEAD_KEY_PREFIX)) {
-    return key.slice(LEAD_KEY_PREFIX.length);
   }
 
   return key;
@@ -71,9 +66,13 @@ export function getTodayLeadKey() {
   return getLeadKeyByDate(new Date());
 }
 
-function normalizeStoredLead(lead: LeadData): StoredLead {
+function normalizeStoredLead(
+  lead: LeadData,
+  id = crypto.randomUUID(),
+  submittedAt = new Date(),
+): StoredLead {
   return {
-    id: crypto.randomUUID(),
+    id,
     name: lead.name,
     phone: lead.phone,
     city: lead.city?.trim() || "Не указан",
@@ -85,19 +84,55 @@ function normalizeStoredLead(lead: LeadData): StoredLead {
     wicket: lead.wicket?.trim() || "",
     paymentMethod: lead.paymentMethod?.trim() || "",
     comment: lead.comment?.trim() || "",
-    time: new Date().toISOString(),
+    time: submittedAt.toISOString(),
     status: "pending_delivery",
   };
 }
 
-export async function appendLeadToStorage(lead: LeadData) {
-  const dateKey = dateToMinskKey(new Date());
+type LeadStoragePipeline = {
+  rpush(key: string, value: StoredLead): LeadStoragePipeline;
+  hset(
+    key: string,
+    values: Record<string, LeadDeliveryStatus>,
+  ): LeadStoragePipeline;
+  expire(key: string, seconds: number): LeadStoragePipeline;
+  exec(): Promise<unknown>;
+};
+
+export type LeadWriteClient = {
+  pipeline(): LeadStoragePipeline;
+};
+
+export type LeadStatusWriteClient = {
+  hset(key: string, values: Record<string, LeadDeliveryStatus>): Promise<unknown>;
+};
+
+export type LeadReadClient = {
+  lrange<T>(key: string, start: number, end: number): Promise<T[]>;
+  hgetall<T>(key: string): Promise<T | null>;
+};
+
+export async function appendLeadToStorage(
+  lead: LeadData,
+  options: {
+    client?: LeadWriteClient;
+    id?: string;
+    submittedAt?: Date;
+  } = {},
+) {
+  const client = options.client ?? (kv as LeadWriteClient);
+  const submittedAt = options.submittedAt ?? new Date();
+  const dateKey = dateToMinskKey(submittedAt);
   const key = getLeadListKeyByDateKey(dateKey);
   const statusKey = getLeadStatusKeyByDateKey(dateKey);
-  const record = normalizeStoredLead(lead);
-  await kv.pipeline().rpush(key, record).hset(statusKey, {
-    [record.id]: record.status,
-  }).exec();
+  const record = normalizeStoredLead(lead, options.id, submittedAt);
+  await client
+    .pipeline()
+    .rpush(key, record)
+    .hset(statusKey, { [record.id]: record.status })
+    .expire(key, DATA_RETENTION_SECONDS)
+    .expire(statusKey, DATA_RETENTION_SECONDS)
+    .exec();
 
   return { dateKey, key, record, statusKey };
 }
@@ -106,60 +141,79 @@ export async function updateLeadDeliveryStatus({
   dateKey,
   id,
   status,
+  client,
 }: {
   dateKey: string;
   id: string;
-  status: Exclude<LeadDeliveryStatus, "legacy" | "pending_delivery">;
+  status: Exclude<LeadDeliveryStatus, "pending_delivery">;
+  client?: LeadStatusWriteClient;
 }) {
-  await kv.hset(getLeadStatusKeyByDateKey(dateKey), { [id]: status });
+  await (client ?? (kv as LeadStatusWriteClient)).hset(
+    getLeadStatusKeyByDateKey(dateKey),
+    { [id]: status },
+  );
 }
 
-function normalizeLegacyLead(lead: Partial<StoredLead> & Partial<LeadData>): StoredLead {
-  return {
-    id: lead.id || `legacy-${lead.time || crypto.randomUUID()}`,
-    name: lead.name || "",
-    phone: lead.phone || "",
-    city: lead.city?.trim() || "Не указан",
-    source: lead.source || "unknown",
-    fenceType: lead.fenceType?.trim() || "Не указан",
-    length: lead.length?.trim() || "",
-    height: lead.height?.trim() || "",
-    gateType: lead.gateType?.trim() || "",
-    wicket: lead.wicket?.trim() || "",
-    paymentMethod: lead.paymentMethod?.trim() || "",
-    comment: lead.comment?.trim() || "",
-    time: lead.time || new Date().toISOString(),
-    status: lead.status || "legacy",
-  };
-}
-
-export async function getLeadsByKeys(keys: string[]) {
+export async function getLeadsByKeys(
+  keys: string[],
+  client: LeadReadClient = kv as LeadReadClient,
+) {
   const entries = await Promise.all(
     keys.map(async (key) => {
       const dateKey = getDateKeyFromStorageKey(key);
-      const legacyKey = `${LEAD_KEY_PREFIX}${dateKey}`;
       const listKey = getLeadListKeyByDateKey(dateKey);
       const statusKey = getLeadStatusKeyByDateKey(dateKey);
-      const [legacyLeads, currentLeads, statusMap] = await Promise.all([
-        kv.get<StoredLead[]>(legacyKey),
-        kv.lrange<StoredLead>(listKey, 0, -1),
-        kv.hgetall<Record<string, LeadDeliveryStatus>>(statusKey),
+      const [currentLeads, statusMap] = await Promise.all([
+        client.lrange<StoredLead>(listKey, 0, -1),
+        client.hgetall<Record<string, LeadDeliveryStatus>>(statusKey),
       ]);
 
-      const legacy = (legacyLeads ?? []).map(normalizeLegacyLead);
       const current = currentLeads.map((lead) => ({
-        ...normalizeLegacyLead(lead),
-        status: statusMap?.[lead.id] ?? lead.status ?? "pending_delivery",
+        ...lead,
+        status: statusMap?.[lead.id] ?? lead.status,
       }));
 
       return {
         key,
-        leads: [...legacy, ...current],
+        leads: current,
       };
     }),
   );
 
   return entries;
+}
+
+export async function getLeadsForDays(
+  days: number,
+  client: LeadReadClient = kv as LeadReadClient,
+) {
+  const entries = await getLeadsByKeys(getRangeKeys(days), client);
+  return entries
+    .flatMap((entry) => entry.leads)
+    .sort((a, b) => b.time.localeCompare(a.time));
+}
+
+export async function findLeadById(
+  id: string,
+  client: LeadReadClient = kv as LeadReadClient,
+) {
+  const keys = getRangeKeys(180).reverse();
+  const batchSize = 30;
+
+  for (let index = 0; index < keys.length; index += batchSize) {
+    const entries = await getLeadsByKeys(
+      keys.slice(index, index + batchSize),
+      client,
+    );
+    const lead = entries
+      .flatMap((entry) => entry.leads)
+      .find((item) => item.id === id);
+    if (lead) {
+      return lead;
+    }
+  }
+
+  return null;
 }
 
 function cityFromSource(source: string) {

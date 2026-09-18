@@ -1,4 +1,5 @@
 import { kv } from "@vercel/kv";
+import { DATA_RETENTION_SECONDS } from "@/lib/data-retention";
 
 const MINSK_TIME_ZONE = "Europe/Minsk";
 const EVENT_KEY_PREFIX = "analytics-events:v1:";
@@ -42,6 +43,20 @@ export type ConversionEventSummary = {
     paymentStepReached: number;
     contactStepReached: number;
   };
+};
+
+type ConversionEventPipeline = {
+  hincrby(
+    key: string,
+    field: string,
+    increment: number,
+  ): ConversionEventPipeline;
+  expire(key: string, seconds: number): ConversionEventPipeline;
+  exec(): Promise<unknown>;
+};
+
+export type ConversionEventWriteClient = {
+  pipeline(): ConversionEventPipeline;
 };
 
 const emptySummary = (): ConversionEventSummary => ({
@@ -95,14 +110,17 @@ export function isConversionEventType(
   );
 }
 
-export async function recordConversionEvent(event: ConversionEventInput) {
+export async function recordConversionEvent(
+  event: ConversionEventInput,
+  client: ConversionEventWriteClient = kv as ConversionEventWriteClient,
+) {
   const dateKey = dateToMinskKey(new Date());
   const key = getEventKeyByDateKey(dateKey);
   const pagePath = sanitizeFieldValue(event.pagePath);
   const source = sanitizeFieldValue(event.source);
   const location = sanitizeFieldValue(event.location);
 
-  await kv
+  await client
     .pipeline()
     .hincrby(key, "total", 1)
     .hincrby(key, `type:${event.type}`, 1)
@@ -110,6 +128,7 @@ export async function recordConversionEvent(event: ConversionEventInput) {
     .hincrby(key, `source:${source}`, 1)
     .hincrby(key, `location:${location}`, 1)
     .hincrby(key, `type_location:${event.type}:${location}`, 1)
+    .expire(key, DATA_RETENTION_SECONDS)
     .exec();
 }
 
