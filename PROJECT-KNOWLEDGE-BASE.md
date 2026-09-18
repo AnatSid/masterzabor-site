@@ -273,7 +273,7 @@ The implemented internal manager-estimate matrix is:
 
 Gate and wicket additions are `1400 BYN` for swing gates, `4500 BYN` for sliding gates, `0 BYN` when gates are not needed, `1200 BYN` when a wicket is needed, and `0 BYN` when it is not. `paymentMethod` and `city` do not affect the estimate.
 
-The broader owner-provided business model also records `1.0 м = 130 BYN/м.п.`, then `+5 BYN` for each additional `0.1 м`, including `1.2 м = 140 BYN/м.п.`. Those points are business memory, not implemented universal QuizForm options or entries in the current estimate matrix. Public advertising pricing is a separate owner-approved concern.
+The broader owner-provided euro-shtaketnik business pricing model also records `1.0 м = 130 BYN/м.п.`, then `+5 BYN` for each additional `0.1 м`, including `1.2 м = 140 BYN/м.п.`. Those euro-shtaketnik points are business memory, not implemented universal QuizForm options or entries in the current estimate matrix. Public advertising pricing is a separate owner-approved concern.
 
 The only intentional estimate fallback is `Не знаю, нужна консультация` to `1.7 м`. Preserve the client's original answer. Telegram states `Для расчёта принята высота 1.7 м` and describes the estimate as `высоту клиент не знает`. Do not use `1.8 м`, nearest-rate matching or hidden fallbacks for unsupported values.
 

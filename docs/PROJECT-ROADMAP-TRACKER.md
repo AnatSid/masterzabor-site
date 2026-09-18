@@ -73,7 +73,7 @@ The internal manager pricing calculator is in Production. These values are for t
 | Профнастил | 130 BYN/м.п. | 135 BYN/м.п. | 140 BYN/м.п. |
 | Евроштакетник | 155 BYN/м.п. | 165 BYN/м.п. | 180 BYN/м.п. |
 
-The owner-provided business pricing model also records `1.0 м = 130 BYN/м.п.`, then `+5 BYN` for each additional `0.1 м`, including `1.2 м = 140 BYN/м.п.`. These points are not part of the current universal QuizForm or its implemented manager-estimate matrix. Do not add `1.0 м` or `1.2 м` to QuizForm automatically. The universal height options remain `1.5 м`, `1.7 м`, `2.0 м` and `Не знаю, нужна консультация`.
+The owner-provided euro-shtaketnik business pricing model also records `1.0 м = 130 BYN/м.п.`, then `+5 BYN` for each additional `0.1 м`, including `1.2 м = 140 BYN/м.п.`. These euro-shtaketnik values are not part of the current universal QuizForm or its implemented manager-estimate matrix. Do not add `1.0 м` or `1.2 м` to QuizForm automatically. The universal height options remain `1.5 м`, `1.7 м`, `2.0 м` and `Не знаю, нужна консультация`.
 
 Additional internal estimate prices:
 
