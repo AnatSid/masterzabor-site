@@ -8,12 +8,23 @@ import {
 import { getTrafficReportText } from "@/lib/analytics/reporting";
 import {
   getTelegramBotHelpText,
+  normalizeTelegramCommand,
+  resolveLeadId,
+  resolveLeadsPeriod,
   resolveStatsPeriod,
   resolveTrafficPeriod,
 } from "@/lib/telegram-bot-commands";
 import { isVercelProduction } from "@/lib/request-auth";
 import { formatStatsPeriodLabel } from "@/lib/telegram-period";
 import { sendTelegramTextToChat } from "@/lib/telegram";
+import { getAnalyticsDays } from "@/lib/analytics/period";
+import { findLeadById, getLeadsForDays } from "@/lib/leads";
+import {
+  createDetailedLeadMessages,
+  createStoredLeadMessages,
+  LEAD_NOT_FOUND_MESSAGE,
+  type OutgoingTelegramMessage,
+} from "@/lib/lead-retrieval";
 
 export const runtime = "nodejs";
 
@@ -25,19 +36,6 @@ type TelegramUpdate = {
     text?: string;
   };
 };
-
-function normalizeCommand(text: string) {
-  const trimmed = text.trim();
-  if (!trimmed.startsWith("/")) {
-    return { command: "", arg: "" };
-  }
-
-  const [rawCommand, ...rest] = trimmed.split(/\s+/);
-  const command = rawCommand.split("@")[0].toLowerCase();
-  const arg = rest.join(" ").trim().toLowerCase();
-
-  return { command, arg };
-}
 
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
@@ -80,45 +78,82 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  const { command, arg } = normalizeCommand(text);
-  let responseText = "";
+  const { command, arg } = normalizeTelegramCommand(text);
+  let responseMessages: OutgoingTelegramMessage[] = [];
 
   try {
     if (command === "/report") {
       const snapshot = await getDailyReportSnapshot();
-      responseText = snapshot.text;
+      responseMessages = [{ text: snapshot.text }];
     } else {
       const statsPeriod = resolveStatsPeriod(command, arg);
       if (statsPeriod) {
         const stats = await getAggregatedStats(statsPeriod);
-        responseText = formatAggregatedStatsText(
-          stats,
-          formatStatsPeriodLabel(statsPeriod),
-        );
+        responseMessages = [
+          {
+            text: formatAggregatedStatsText(
+              stats,
+              formatStatsPeriodLabel(statsPeriod),
+            ),
+          },
+        ];
       } else {
-        const trafficPeriod = resolveTrafficPeriod(command, arg);
-        if (trafficPeriod) {
-          const traffic = await getTrafficReportText(trafficPeriod);
-          responseText = traffic.text;
-        } else if (command === "/top") {
-          const stats = await getAggregatedStats("today");
-          responseText = `Топ страница за сегодня: ${formatTopSource(stats.bySource)}`;
-        } else if (command === "/help" || command === "/start") {
-          responseText = getTelegramBotHelpText();
+        const leadsPeriod = resolveLeadsPeriod(command);
+        if (leadsPeriod) {
+          const leads = await getLeadsForDays(getAnalyticsDays(leadsPeriod));
+          responseMessages = createDetailedLeadMessages(
+            leads,
+            `Заявки за ${formatStatsPeriodLabel(leadsPeriod)}: ${leads.length}`,
+          );
+        } else if (command === "/lead") {
+          const leadId = resolveLeadId(command, arg);
+          if (!leadId) {
+            responseMessages = [{ text: "Использование: /lead <id>" }];
+          } else {
+            const lead = await findLeadById(leadId);
+            responseMessages = lead
+              ? createStoredLeadMessages(lead)
+              : [{ text: LEAD_NOT_FOUND_MESSAGE }];
+          }
         } else {
-          responseText = getTelegramBotHelpText();
+          const trafficPeriod = resolveTrafficPeriod(command, arg.toLowerCase());
+          if (trafficPeriod) {
+            const traffic = await getTrafficReportText(trafficPeriod);
+            responseMessages = [{ text: traffic.text }];
+          } else if (command === "/top") {
+            const stats = await getAggregatedStats("today");
+            responseMessages = [
+              {
+                text: `Топ страница за сегодня: ${formatTopSource(stats.bySource)}`,
+              },
+            ];
+          } else {
+            responseMessages = [{ text: getTelegramBotHelpText() }];
+          }
         }
       }
     }
   } catch (error) {
     console.error("Telegram webhook command failed", error);
-    responseText = "⚠️ Временная ошибка при обработке команды";
+    responseMessages = [{ text: "⚠️ Временная ошибка при обработке команды" }];
   }
 
-  const sent = await sendTelegramTextToChat(String(chatId), responseText);
-  if (!sent) {
-    console.error("Telegram webhook: failed to send response", { chatId, command });
-    return NextResponse.json({ ok: false, error: "send_failed" }, { status: 502 });
+  for (const message of responseMessages) {
+    const sent = await sendTelegramTextToChat(
+      String(chatId),
+      message.text,
+      message.parseMode,
+    );
+    if (!sent) {
+      console.error("Telegram webhook: failed to send response", {
+        chatId,
+        command,
+      });
+      return NextResponse.json(
+        { ok: false, error: "send_failed" },
+        { status: 502 },
+      );
+    }
   }
 
   return NextResponse.json({ ok: true });

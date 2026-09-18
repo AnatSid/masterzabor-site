@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production baseline: `fa119d75dbf2d8489e8d97424fdfeec0995f6243` (`Merge branch 'codex/QZ-06C-telegram-style'`).
+Latest production baseline: `3b39c63f27afb098ba6d0e175cf2e04a87106f27` (`Merge branch 'codex/QZ-06D-docs-continuity'`).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -106,7 +106,10 @@ architecture changes without separate rationale and user decision.
 
 - P0-03 makes `CRON_SECRET`, `TELEGRAM_WEBHOOK_SECRET` and `TELEGRAM_CHAT_ID` fail-closed in Vercel Production; dashboard env values still need verification.
 - In-memory rate limit слаб для serverless.
-- P0-03 moves new leads to atomic Redis list storage (`leads:v2:{date}` via `rpush`) while keeping legacy `leads:{date}` arrays readable for reports.
+- QZ-06E keeps one canonical lead-storage path: `leads:v2:{YYYY-MM-DD}` via `rpush` plus `lead-statuses:{YYYY-MM-DD}`. `lead-index:{leadId}` stores only the date locator, never a duplicated `StoredLead`. Legacy `leads:{YYYY-MM-DD}` arrays are not read or normalized at runtime.
+- Lead lists, delivery-status hashes, lead locator keys and `analytics-events:v1:{YYYY-MM-DD}` hashes use Redis TTL with a 180-day retention window. `/lead <id>` reads its locator and then only the corresponding canonical daily list/status pair; there is no 180-day fallback scan.
+- Production cleanup is never automatic. After deployment, first enumerate existing keys, distinguish legacy `leads:{YYYY-MM-DD}` from `leads:v2:*`, identify canonical/status/analytics keys created before TTL, and show the owner the exact key list or narrowly bounded mask. One-time deletion or retention normalization requires separate approval.
+- Telegram shows the persisted lead ID and original stored submission time. `/stats_*` remains aggregate reporting; `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>` provide detailed stored-lead retrieval, newest-first, within retention.
 - `SearchAction` в JSON-LD есть без реального поиска.
 - P1-06.1 сформировал pricing strategy: `/tseny` сохранена как indexable pricing landing, а Header теперь намеренно содержит `Цены -> /tseny` after `Наши работы`.
 - P1-06.3 aligned CityPage calculator UX with the approved compact QuizForm flow while preserving one universal CityPage template and city/source lead context.
@@ -351,7 +354,7 @@ Future check protocol after `npm run dev`:
 
 - Главный SEO-риск P0-01 закрыт: sitemap/canonical/OG/JSON-LD/internal links нормализованы на no-slash и проверены после merge.
 - Главный duplicate-риск P0-02 закрыт кодом: `next.config.ts` redirects `masterzabor-site.vercel.app` to `https://www.masterzabor.by`; production `308` проверен.
-- Главный lead-риск P0-03 снижен: новые заявки пишутся атомарно, имеют `leadId` и delivery status; legacy data remains readable.
+- Главный lead-риск снижен: новые заявки пишутся атомарно, имеют один persisted `leadId`, delivery status и 180-day retention; historical retrieval uses the canonical current records only.
 - Главный security-риск P0-03 снижен: cron/stats/webhook secrets fail-closed in Vercel Production; production stats/cron without token return `401`.
 - Главный CRO-риск снижен по P1 pages: homepage, portfolio, services and CityPage use real/project/service visual proof. Page A and Page B now use approved real WebP hero assets; two older blog articles still use generated SVG data URIs.
 - Главный scale-риск для city pages снижен P1-05.1 за счет real proof fallback, но будущие city-local improvements должны добавлять подтвержденные проекты, а не размножать шаблоны.
@@ -888,11 +891,13 @@ Add or formalize:
 
 1. Validate request.
 2. Assign `leadId`.
-3. Atomically persist lead to `leads:v2:{date}` before Telegram delivery.
-4. Send Telegram.
+3. In the same storage pipeline, persist the lead to `leads:v2:{date}` with `pending_delivery`, write `lead-index:{leadId} -> date`, and apply the 180-day TTL to the lead, status and locator keys before Telegram delivery.
+4. Send Telegram with the same persisted ID and original stored timestamp.
 5. If Telegram fails, keep lead and mark status `telegram_failed`.
 6. Retry/report delivery failures.
 7. Return success once lead is safely stored.
+
+Detailed manager retrieval uses `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>`. Period results are ordered newest-first and sent as separate Telegram messages rather than one unbounded payload. Single-ID lookup resolves one date through `lead-index:{leadId}` and reads one daily list/status pair. Aggregate `/stats_*` commands remain unchanged in purpose. QZ-07 controlled real lead E2E is the next stage after QZ-06E review and Production merge.
 
 ### Analytics Event Taxonomy
 

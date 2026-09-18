@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: QZ-06C merge SHA `fa119d75dbf2d8489e8d97424fdfeec0995f6243` (`Merge branch 'codex/QZ-06C-telegram-style'`)
+Текущая production точка отсчета: QZ-06D merge SHA `3b39c63f27afb098ba6d0e175cf2e04a87106f27` (`Merge branch 'codex/QZ-06D-docs-continuity'`)
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production baseline: `fa119d75dbf2d8489e8d97424fdfeec0995f6243` (`Merge branch 'codex/QZ-06C-telegram-style'`).
+- Последний production baseline: `3b39c63f27afb098ba6d0e175cf2e04a87106f27` (`Merge branch 'codex/QZ-06D-docs-continuity'`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -52,7 +52,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - BLOG-DOCS-01 adds `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md` as the permanent editorial and asset workflow for future articles.
 - QZ-04B is DONE: the full approved QuizForm visual asset set is integrated across Steps 1–6; the permanent registry and invariants live in [`docs/QUIZFORM-VISUAL-ASSETS.md`](QUIZFORM-VISUAL-ASSETS.md).
 - QZ-05 is DONE: the approved shared multi-step interaction architecture, including stable navigation geometry, conditional step transitions, mobile task mode and verification requirements, lives in [`docs/QUIZFORM-INTERACTION-PATTERN.md`](QUIZFORM-INTERACTION-PATTERN.md).
-- QZ-06A, TECH-QUIZ-01, QZ-06B and QZ-06C are DONE in Production. Internal manager pricing, the `useWatch` cleanup and the Telegram estimate/presentation contract are recorded below.
+- QZ-06A, TECH-QUIZ-01, QZ-06B, QZ-06C and QZ-06D are DONE in Production. QZ-06E is implemented on its stage branch and awaits review/merge.
 - QZ-07 is NEXT. QZ-08 remains mandatory after QZ-07. The Quiz / Pricing / Lead workstream is not closed until both stages pass.
 - QZ-09 public advertising pricing is FUTURE / DEFERRED and requires separate owner approval of values and presentation.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
@@ -122,6 +122,14 @@ Dynamic/user values are HTML-escaped before insertion. Trusted formatter markup 
 
 Merge/main SHA: `fa119d75dbf2d8489e8d97424fdfeec0995f6243`.
 
+### QZ-06E: IMPLEMENTED / AWAITING REVIEW
+
+Lead storage now has one runtime model: records in `leads:v2:{YYYY-MM-DD}` and delivery statuses in `lead-statuses:{YYYY-MM-DD}`. The lightweight `lead-index:{leadId} -> YYYY-MM-DD` locator contains no duplicated lead data. New lead/status/index keys and `analytics-events:v1:{YYYY-MM-DD}` hashes receive a 180-day Redis TTL. Runtime reads no longer merge or normalize legacy `leads:{YYYY-MM-DD}` arrays.
+
+Telegram messages expose the stored `leadId` in a copy-friendly `<code>` footer and use the original stored submission time. `/stats_today`, `/stats_week` and `/stats_month` remain aggregate reports; `/leads_today`, `/leads_week`, `/leads_month` return stored leads newest-first as separate safe messages, and `/lead <id>` resolves the date through its locator before reading one canonical daily lead/status pair.
+
+No Production KV keys are deleted by this stage. Operational follow-up after Production deployment must: (1) enumerate existing KV keys; (2) identify legacy `leads:{YYYY-MM-DD}` separately and never classify `leads:v2:*` as legacy; (3) identify canonical lead/status/analytics keys created before TTL existed; (4) show the owner the exact key list or narrowly bounded mask before any destructive action; and (5) perform one-time cleanup or retention normalization only after separate approval.
+
 ### QZ-07: NEXT / NOT STARTED
 
 Run one controlled real lead end to end:
@@ -177,6 +185,7 @@ Previously discussed examples such as профнастил `от 100`, евро�
 - TECH-QUIZ-01 migration from `watch()` to `useWatch({ control })` without behavior changes.
 - QZ-06B consultation-height Telegram estimate explanation.
 - QZ-06C semantic Telegram lead-message presentation and safe HTML formatting.
+- QZ-06E canonical lead storage, 180-day retention and detailed Telegram retrieval.
 - SEO-01 Product JSON-LD image and service Offer URLs.
 - SEO-02 semantic deterministic sitemap freshness and Article date semantics.
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
@@ -197,7 +206,7 @@ Previously discussed examples such as профнастил `от 100`, евро�
 - Slash canonical conflict: sitemap/canonical/OG/JSON-LD/internal links приведены к no-slash final URLs.
 - Duplicate Vercel URL: `masterzabor-site.vercel.app` закрыт redirect на canonical host.
 - Redirect loop risk: custom `www -> apex` redirects не используются; `next.config.ts` не должен возвращать host loop.
-- Lead loss risk: новые заявки пишутся атомарно в KV list `leads:v2:{date}` и имеют delivery status.
+- Lead loss risk: новые заявки пишутся атомарно в KV list `leads:v2:{date}`, имеют delivery status and 180-day TTL; legacy runtime reads are removed.
 - Production secret posture: stats/cron/webhook fail-closed in Vercel Production.
 - Contact click analytics: call / Telegram / WhatsApp / Viber считаются.
 - Minimal quiz funnel: started, 2+ steps, contact step reached.
