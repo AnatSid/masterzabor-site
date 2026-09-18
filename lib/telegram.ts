@@ -23,7 +23,7 @@ const escapeHtml = (value: string) =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
 
-function formatLeadMessage(data: LeadData) {
+export function formatLeadMessage(data: LeadData) {
   const submittedAt = new Intl.DateTimeFormat("ru-BY", {
     dateStyle: "medium",
     timeStyle: "short",
@@ -78,6 +78,15 @@ function formatLeadMessage(data: LeadData) {
       "─────────────────",
       "💰 Ориентир (для менеджера):",
       `   Забор: ${estimate.lengthMeters}м × ${estimate.pricePerMeter} BYN/м.п. = ${estimate.fenceSubtotal} BYN`,
+    );
+
+    if (estimate.heightFallbackUsed) {
+      lines.push(
+        `   Для ориентира использована высота ${estimate.calculationHeight}`,
+      );
+    }
+
+    lines.push(
       `   Ворота (${gateLabel}): +${estimate.gatePrice} BYN`,
       `   Калитка (${wicketLabel}): +${estimate.wicketPrice} BYN`,
       `   ≈ ИТОГО: ${estimate.total} BYN`,
