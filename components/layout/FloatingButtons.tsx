@@ -77,12 +77,15 @@ const messengers = [
   { label: "WhatsApp", channel: "click_whatsapp", href: WHATSAPP_LINK, color: "#25D366", icon: WhatsAppIcon },
   { label: "Viber", channel: "click_viber", href: VIBER_LINK, color: "#7360F2", icon: ViberIcon },
 ] as const;
+const QUIZ_TASK_INTERSECTION_RATIO = 0.15;
 
 export function FloatingButtons() {
   const pathname = usePathname();
   const [hasScrolledPastHero, setHasScrolledPastHero] = useState(false);
+  const [hasQuizInTaskArea, setHasQuizInTaskArea] = useState(false);
   const delayOnHomepage = pathname === "/";
-  const isVisible = !delayOnHomepage || hasScrolledPastHero;
+  const isVisible =
+    (!delayOnHomepage || hasScrolledPastHero) && !hasQuizInTaskArea;
 
   useEffect(() => {
     if (!delayOnHomepage) {
@@ -102,13 +105,56 @@ export function FloatingButtons() {
     };
   }, [delayOnHomepage]);
 
+  useEffect(() => {
+    let observer: IntersectionObserver | null = null;
+    const frame = window.requestAnimationFrame(() => {
+      const quizForms = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-quiz-form]"),
+      );
+
+      if (quizForms.length === 0) {
+        setHasQuizInTaskArea(false);
+        return;
+      }
+
+      const formVisibility = new Map<Element, boolean>(
+        quizForms.map((form) => [form, false]),
+      );
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            formVisibility.set(
+              entry.target,
+              entry.isIntersecting &&
+                entry.intersectionRatio >= QUIZ_TASK_INTERSECTION_RATIO,
+            );
+          });
+
+          setHasQuizInTaskArea(
+            Array.from(formVisibility.values()).some(Boolean),
+          );
+        },
+        { threshold: [0, QUIZ_TASK_INTERSECTION_RATIO] },
+      );
+
+      quizForms.forEach((form) => observer?.observe(form));
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer?.disconnect();
+    };
+  }, [pathname]);
+
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-slate-200 bg-white px-3 pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] transition duration-200 md:hidden [padding-bottom:calc(0.5rem+env(safe-area-inset-bottom))] ${
+      aria-hidden={!isVisible}
+      className={`fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-slate-200 bg-white px-3 pt-2 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] transition-[transform,opacity] duration-200 motion-reduce:transition-none md:hidden [padding-bottom:calc(0.5rem+env(safe-area-inset-bottom))] ${
         isVisible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-full opacity-0"
       }`}
+      inert={!isVisible}
     >
       <TrackedContactLink
         channel="click_call"

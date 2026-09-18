@@ -51,6 +51,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Page A and Page B share the current article presentation and `1200×630` WebP hero convention. The same image field supplies article hero, `/blog` card, Open Graph, Twitter and Article JSON-LD.
 - BLOG-DOCS-01 adds `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md` as the permanent editorial and asset workflow for future articles.
 - QZ-04B is ready for review on `codex/QZ-04B-quiz-remaining-assets`: the full approved QuizForm visual asset set is integrated across Steps 1–6; the permanent registry and invariants live in [`docs/QUIZFORM-VISUAL-ASSETS.md`](QUIZFORM-VISUAL-ASSETS.md).
+- QZ-05 is DONE: the approved shared multi-step interaction architecture, including stable navigation geometry, conditional step transitions, mobile task mode and verification requirements, lives in [`docs/QUIZFORM-INTERACTION-PATTERN.md`](QUIZFORM-INTERACTION-PATTERN.md).
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
@@ -85,6 +86,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.3 CityPage calculator compact parity and QuizForm step-count source.
 - P1-06.4 ServicePage visual parity and compact calculator.
 - P1-06.5 nationwide copy cleanup for homepage FAQ and shared ServicePage useful content.
+- QZ-05 QuizForm real-mobile scroll, viewport and task-interaction stabilization.
 - SEO-01 Product JSON-LD image and service Offer URLs.
 - SEO-02 semantic deterministic sitemap freshness and Article date semantics.
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
