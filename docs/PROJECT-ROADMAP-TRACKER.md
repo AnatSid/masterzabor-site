@@ -144,7 +144,7 @@ The submitted business fields were Профнастил, `60 м`, `Не знаю
 
 The real Telegram manager estimate showed fence `8100 BYN`, swing gates `1400 BYN`, wicket `1200 BYN`, and total `10700 BYN`. The original unknown-height answer remained unchanged; the estimate used `1.7 м`, stated `высоту клиент не знает`, and included `Для расчёта принята высота 1.7 м`.
 
-The API returned `success: true`, the persisted lead ID and `deliveryStatus: telegram_sent`. Telegram displayed that ID and original submission time. `/leads_today` and `/lead <id>` returned the same stored submission and estimate without creating another lead. `/stats_today` increased by one. Exact read-only KV verification confirmed the canonical record, `telegram_sent` status, correct index locator, and positive lead/status/index TTLs. Focused tests continue to cover generic LeadForm compatibility.
+The Production QuizForm completed submission successfully, and the lead appeared in Telegram with its exact persisted ID and original submission time. The current `/api/lead` contract returns `leadId` and `deliveryStatus`, but its response body was not directly captured during QZ-07. `/leads_today` and `/lead <id>` returned the same stored submission and estimate without creating another lead. `/stats_today` increased by one. Exact read-only KV verification confirmed the canonical record, `telegram_sent` status, correct index locator, and positive lead/status/index TTLs. Focused tests continue to cover generic LeadForm compatibility.
 
 ### Telegram command menu: SYNCED / OPERATIONAL
 
