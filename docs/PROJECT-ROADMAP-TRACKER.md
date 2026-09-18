@@ -1,10 +1,10 @@
 # PROJECT ROADMAP TRACKER / HANDOFF: MASTERZABOR
 
-Дата handoff: 2026-09-14
+Дата handoff: 2026-09-18
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: PRICING-UI-01 merge SHA `529acfccd39bbecdeb928983940beb0cc442d06a`
+Текущая production точка отсчета: QZ-06C merge SHA `fa119d75dbf2d8489e8d97424fdfeec0995f6243` (`Merge branch 'codex/QZ-06C-telegram-style'`)
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production implementation/UI baseline: `529acfccd39bbecdeb928983940beb0cc442d06a` (`Merge PRICING-UI-01 secondary CTA`).
+- Последний production baseline: `fa119d75dbf2d8489e8d97424fdfeec0995f6243` (`Merge branch 'codex/QZ-06C-telegram-style'`).
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -50,13 +50,99 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - BLOG-SEO-01C is complete and in Production: Page B covers height/neighbour intent at `/blog/vysota-zabora-mezhdu-sosedyami-v-belarusi` and uses an approved real hero asset.
 - Page A and Page B share the current article presentation and `1200×630` WebP hero convention. The same image field supplies article hero, `/blog` card, Open Graph, Twitter and Article JSON-LD.
 - BLOG-DOCS-01 adds `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md` as the permanent editorial and asset workflow for future articles.
-- QZ-04B is ready for review on `codex/QZ-04B-quiz-remaining-assets`: the full approved QuizForm visual asset set is integrated across Steps 1–6; the permanent registry and invariants live in [`docs/QUIZFORM-VISUAL-ASSETS.md`](QUIZFORM-VISUAL-ASSETS.md).
+- QZ-04B is DONE: the full approved QuizForm visual asset set is integrated across Steps 1–6; the permanent registry and invariants live in [`docs/QUIZFORM-VISUAL-ASSETS.md`](QUIZFORM-VISUAL-ASSETS.md).
 - QZ-05 is DONE: the approved shared multi-step interaction architecture, including stable navigation geometry, conditional step transitions, mobile task mode and verification requirements, lives in [`docs/QUIZFORM-INTERACTION-PATTERN.md`](QUIZFORM-INTERACTION-PATTERN.md).
+- QZ-06A, TECH-QUIZ-01, QZ-06B and QZ-06C are DONE in Production. Internal manager pricing, the `useWatch` cleanup and the Telegram estimate/presentation contract are recorded below.
+- QZ-07 is NEXT. QZ-08 remains mandatory after QZ-07. The Quiz / Pricing / Lead workstream is not closed until both stages pass.
+- QZ-09 public advertising pricing is FUTURE / DEFERRED and requires separate owner approval of values and presentation.
 - Standard service photo workflow: `source folder -> hero selection -> gallery selection -> optimize production copies -> update service data -> localhost desktop/mobile visual approval -> commit/push -> production smoke`.
 - Do not redesign the shared ServicePage layout for each service; per-service changes should normally be limited to image assets, descriptive `alt`, and optional focal/object-position.
 - For square ServicePage hero, a composition prepared for 1:1 is preferred when the full object must stay visible. Important elements should not sit on the very edges of the source image; normal photos are still fine when `480x480 object-cover` works visually.
 - Service photo library is separate from the `content/projects.ts` portfolio/project model; homepage, `/nashi-raboty`, city pages and blog are not part of this workflow.
 - Остаток после cleanup-попытки: `.tmp/` частично осталась как untracked локальная папка; Chrome держал lock-файлы. Это не production asset и не нужно коммитить.
+
+## QUIZ / PRICING / LEAD WORKSTREAM
+
+### QZ-06A: DONE
+
+The internal manager pricing calculator is in Production. These values are for the manager estimate only and are not public advertising prices.
+
+| Тип забора | 1.5 м | 1.7 м | 2.0 м |
+| --- | ---: | ---: | ---: |
+| Сетка-рабица | 65 BYN/м.п. | 70 BYN/м.п. | 75 BYN/м.п. |
+| Профнастил | 130 BYN/м.п. | 135 BYN/м.п. | 140 BYN/м.п. |
+| Евроштакетник | 155 BYN/м.п. | 165 BYN/м.п. | 180 BYN/м.п. |
+
+The owner-provided business pricing model also records `1.0 м = 130 BYN/м.п.`, then `+5 BYN` for each additional `0.1 м`, including `1.2 м = 140 BYN/м.п.`. These points are not part of the current universal QuizForm or its implemented manager-estimate matrix. Do not add `1.0 м` or `1.2 м` to QuizForm automatically. The universal height options remain `1.5 м`, `1.7 м`, `2.0 м` and `Не знаю, нужна консультация`.
+
+Additional internal estimate prices:
+
+- Распашные ворота: `1400 BYN`
+- Откатные ворота: `4500 BYN`
+- Ворота не нужны: `0 BYN`
+- Калитка нужна: `1200 BYN`
+- Калитка не нужна: `0 BYN`
+
+`paymentMethod` and `city` do not affect the estimate.
+
+For `Не знаю, нужна консультация`, preserve the client's answer and calculate the manager estimate at `1.7 м`. Telegram must state that the calculation uses `1.7 м`. Do not use `1.8 м`.
+
+Unknown values must not use a nearest-rate or hidden fallback. The only intentional fallback is `Не знаю, нужна консультация` to `1.7 м`.
+
+Implementation commit: `28e24ed63a8c77ea659c9fde3041ec8f12bcdcc7`; merge/main SHA: `63d24dc9b2ba15cc7558a6878e3957c33cd6f458`.
+
+### TECH-QUIZ-01: DONE
+
+`react-hook-form watch()` was replaced with `useWatch({ control })`. Quiz behavior did not change, the React Compiler warning is gone, and the QZ-05 focus/scroll interaction architecture remains intact.
+
+Merge/main SHA: `79228ff5e7fa765746010dd822d916af9b4cae9b`.
+
+### QZ-06B: DONE
+
+Telegram preserves the main answer `Не знаю, нужна консультация`, calculates the manager estimate at `1.7 м`, and adds a manager-facing explanation for that assumption.
+
+Merge/main SHA: `2c476a74bab5b42348b49141184551dcf8e91501`.
+
+### QZ-06C: DONE
+
+Telegram lead messages use semantic blocks:
+
+- `КЛИЕНТ`
+- `ЗАБОР`
+- `ОПЛАТА`
+- `КОММЕНТАРИЙ КЛИЕНТА`, only when `comment` is present
+- `ОРИЕНТИР ДЛЯ МЕНЕДЖЕРА`, only when the existing pricing logic returns a calculated estimate
+- source/date footer
+
+Emoji belong primarily to block headings rather than individual fields. `Собственные средства` uses a distinct payment block and bold value but does not affect pricing. The manager estimate repeats length, fence type, height, gate type and wicket answer; it also highlights the total.
+
+For a regular height, the fence line follows `Забор: 60 м (Профнастил, 1.7 м) × …`. For consultation height, it follows `Забор: 60 м (Профнастил, высоту клиент не знает) × …` and adds `Для расчёта принята высота 1.7 м`.
+
+Dynamic/user values are HTML-escaped before insertion. Trusted formatter markup remains separate. Generic LeadForm submissions omit unavailable Quiz fields and empty blocks.
+
+Merge/main SHA: `fa119d75dbf2d8489e8d97424fdfeec0995f6243`.
+
+### QZ-07: NEXT / NOT STARTED
+
+Run one controlled real lead end to end:
+
+`QuizForm -> /api/lead -> KV -> Telegram -> deliveryStatus -> manager estimate`
+
+Verify the selected Quiz fields, name, phone, city, `paymentMethod`, optional `comment`, KV persistence, Telegram delivery and layout, manager estimate, `deliveryStatus`, and LeadForm regression. Include the consultation-height `1.7 м` behavior when relevant. Do not mark QZ-07 complete without real end-to-end confirmation.
+
+### QZ-08: REQUIRED AFTER QZ-07 / NOT STARTED
+
+Close analytics and cross-surface regression after QZ-07. Verify the quiz funnel, homepage, `/tseny`, representative ServicePage and CityPage routes, `/kontakty`, relevant blog surfaces, LeadForm behavior, Production behavior, and final docs synchronization.
+
+The Quiz / Pricing / Lead workstream is complete only after QZ-08 passes.
+
+### QZ-09: FUTURE / DEFERRED
+
+Public advertising pricing is a separate owner-guided commercial and visual stage. Do not mix public prices with the internal manager estimate.
+
+Potential public surfaces include homepage content and metadata, homepage FAQ, CityPage hero, service/product cards, `/tseny`, ServicePage, meta descriptions, Product/Offer JSON-LD, and semantic sitemap freshness when crawler-visible content changes.
+
+Previously discussed examples such as профнастил `от 100`, евроштакетник `от 120` and рабица `от 65` are not approved canonical public prices. Before QZ-09, the owner must review every public price surface and approve the values and presentation.
 
 ## COMPLETED
 
@@ -87,6 +173,10 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.4 ServicePage visual parity and compact calculator.
 - P1-06.5 nationwide copy cleanup for homepage FAQ and shared ServicePage useful content.
 - QZ-05 QuizForm real-mobile scroll, viewport and task-interaction stabilization.
+- QZ-06A internal manager pricing calculator.
+- TECH-QUIZ-01 migration from `watch()` to `useWatch({ control })` without behavior changes.
+- QZ-06B consultation-height Telegram estimate explanation.
+- QZ-06C semantic Telegram lead-message presentation and safe HTML formatting.
 - SEO-01 Product JSON-LD image and service Offer URLs.
 - SEO-02 semantic deterministic sitemap freshness and Article date semantics.
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
@@ -141,7 +231,6 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - `/otzyvy` содержит текстовые отзывы без внешнего proof: Google/Yandex screenshots, ссылки, фото объекта, город/тип работ.
 - City pages remain templated, but P1-05.1 reduced doorway/thin risk by adding truthful real proof blocks. Future work can add more confirmed local projects, but starter/demo records must not be used as local proof.
 - Dependencies still use several `latest` ranges in `package.json` (`tailwindcss`, `eslint`, `typescript`, types). Not urgent, but hurts reproducibility.
-- Known lint warning: `components/forms/QuizForm.tsx` React Hook Form `watch()` / React Compiler compatibility. Не blocker сейчас.
 - `.tmp/` local scratch is ignored in `.gitignore`; if it contains Chrome lock files, do not force-delete while Chrome/processes are running.
 - Root `PROJECT-ROADMAP-TRACKER.md` has been removed to avoid two competing roadmap sources; use `docs/PROJECT-ROADMAP-TRACKER.md`.
 - Future copy audit: CityPage and blog still contain older "за 5 минут" wording. Audit/update only in a separate approved content stage.
