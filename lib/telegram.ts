@@ -1,3 +1,5 @@
+import { calculateManagerEstimate } from "@/lib/lead-pricing";
+
 export type LeadData = {
   name: string;
   phone: string;
@@ -20,41 +22,6 @@ const escapeHtml = (value: string) =>
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
-
-const PRICE_PER_METER: Record<string, number> = {
-  Профнастил: 120,
-  Евроштакетник: 130,
-  "Сетка-рабица": 50,
-};
-
-const GATE_PRICE: Record<string, number> = {
-  Распашные: 1200,
-  Откатные: 3000,
-  "Не нужны": 0,
-};
-
-const WICKET_PRICE: Record<string, number> = {
-  "Калитка с замком": 600,
-  "Калитка без замка": 400,
-  "Калитка не нужна": 0,
-  "Нет, не нужна": 0,
-};
-
-function parseLengthMeters(length?: string) {
-  if (!length) {
-    return null;
-  }
-
-  const normalized = length.replace(",", ".");
-  const match = normalized.match(/\d+(\.\d+)?/);
-
-  if (!match) {
-    return null;
-  }
-
-  const numeric = Number(match[0]);
-  return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
-}
 
 function formatLeadMessage(data: LeadData) {
   const submittedAt = new Intl.DateTimeFormat("ru-BY", {
@@ -101,31 +68,19 @@ function formatLeadMessage(data: LeadData) {
     `⏰ ${submittedAt}`,
   );
 
-  const lengthMeters = parseLengthMeters(data.length);
-  const pricePerMeter = data.fenceType ? PRICE_PER_METER[data.fenceType] : undefined;
+  const estimate = calculateManagerEstimate(data);
 
-  if (lengthMeters && pricePerMeter) {
-    const gatePrice = data.gateType ? (GATE_PRICE[data.gateType] ?? 0) : 0;
-    const wicketPrice = data.wicket ? WICKET_PRICE[data.wicket] : 0;
+  if (estimate.status === "calculated") {
     const gateLabel = data.gateType?.trim() || "не выбраны";
     const wicketLabel = data.wicket?.trim() || "не выбрана";
-    const subtotal = Math.round(lengthMeters * pricePerMeter);
-    const knownWicketPrice = wicketPrice ?? 0;
-    const total = subtotal + gatePrice + knownWicketPrice;
-    const wicketEstimateLine =
-      wicketPrice === undefined
-        ? `   Калитка (${wicketLabel}): стоимость не включена`
-        : `   Калитка (${wicketLabel}): +${wicketPrice} BYN`;
-    const totalLabel =
-      wicketPrice === undefined ? "   ≈ ИТОГО БЕЗ КАЛИТКИ:" : "   ≈ ИТОГО:";
 
     lines.push(
       "─────────────────",
       "💰 Ориентир (для менеджера):",
-      `   Забор: ${lengthMeters}м × ${pricePerMeter} BYN/м.п. = ${subtotal} BYN`,
-      `   Ворота (${gateLabel}): +${gatePrice} BYN`,
-      wicketEstimateLine,
-      `${totalLabel} ${total} BYN`,
+      `   Забор: ${estimate.lengthMeters}м × ${estimate.pricePerMeter} BYN/м.п. = ${estimate.fenceSubtotal} BYN`,
+      `   Ворота (${gateLabel}): +${estimate.gatePrice} BYN`,
+      `   Калитка (${wicketLabel}): +${estimate.wicketPrice} BYN`,
+      `   ≈ ИТОГО: ${estimate.total} BYN`,
     );
   }
 
