@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { QuizForm } from "@/components/forms/QuizForm";
 import { QUIZ_TOTAL_STEPS } from "@/components/forms/quiz-form-config";
 import { SiteContainer } from "@/components/layout/SiteContainer";
+import { HeroPicture } from "@/components/media/HeroPicture";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
 import { BenefitTrustSection } from "@/components/sections/BenefitTrustSection";
 import { cities, type City } from "@/content/cities";
@@ -33,7 +33,6 @@ type CityPageProps = {
 const fenceServices = services.slice(0, 3);
 const gateServices = services.slice(3);
 const cityHeroImage = {
-  src: "/images/hero/homepage-fence-with-logo.jpeg",
   alt: "Забор из профнастила на участке в Беларуси",
 };
 
@@ -144,20 +143,8 @@ export function CityPage({ city }: CityPageProps) {
       ))}
 
       <section className="relative overflow-hidden bg-[#F6F8F5]">
-        <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block">
-          <Image
-            alt={cityHeroImage.alt}
-            className="object-cover object-center"
-            fill
-            priority
-            sizes="58vw"
-            src={cityHeroImage.src}
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#F6F8F5_0%,rgba(246,248,245,0.82)_14%,rgba(246,248,245,0.2)_36%,rgba(246,248,245,0)_58%)]" />
-        </div>
-
-        <SiteContainer className="relative py-6 pb-5 sm:pb-10 sm:pt-16 lg:pb-8 lg:pt-20">
-          <div className="max-w-2xl lg:max-w-[48%]">
+        <SiteContainer className="relative pb-0 pt-6 sm:pb-10 sm:pt-16 lg:static lg:pb-8 lg:pt-20">
+          <div className="relative z-10 max-w-2xl lg:max-w-[48%]">
             <nav aria-label="Хлебные крошки" className="text-sm text-slate-500">
               <ol className="flex flex-wrap gap-2">
                 {breadcrumbs.map((item, index) => (
@@ -219,27 +206,13 @@ export function CityPage({ city }: CityPageProps) {
             </div>
           </div>
 
-          <div className="mt-5 rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-xl shadow-green-950/10 backdrop-blur sm:p-5 lg:hidden">
-            <p className="text-lg font-bold leading-tight text-[#06321F]">
-              Бесплатный расчёт сегодня
-            </p>
-            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-semibold leading-tight text-slate-700 sm:text-sm">
-              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Гарантия на работы</span>
-              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Договор и смета</span>
-              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Свои бригады</span>
-              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Расчёт по телефону</span>
-            </div>
-          </div>
-
-          <div className="relative mt-5 aspect-[16/10] overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-xl shadow-green-950/10 lg:hidden">
-            <Image
+          <div className="relative -mx-4 mt-1 aspect-[16/10] overflow-hidden bg-slate-100 sm:-mx-6 sm:mt-3 lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:mt-0 lg:w-[58%]">
+            <HeroPicture
               alt={cityHeroImage.alt}
-              className="object-cover object-center"
-              fill
-              priority
-              sizes="100vw"
-              src={cityHeroImage.src}
+              mobile
             />
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-12 bg-[linear-gradient(to_bottom,#F6F8F5_0%,rgba(246,248,245,0.3)_20%,rgba(246,248,245,0)_72%)] sm:hidden" />
+            <div className="absolute inset-0 hidden bg-[linear-gradient(90deg,#F6F8F5_0%,rgba(246,248,245,0.82)_14%,rgba(246,248,245,0.2)_36%,rgba(246,248,245,0)_58%)] lg:block" />
           </div>
         </SiteContainer>
       </section>
@@ -356,12 +329,8 @@ export function CityPage({ city }: CityPageProps) {
             </Link>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {cityProof.projects.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                priority={index === 0}
-                project={project}
-              />
+            {cityProof.projects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
             ))}
           </div>
         </SiteContainer>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { QuizForm } from "@/components/forms/QuizForm";
 import { SiteContainer } from "@/components/layout/SiteContainer";
+import { HeroPicture } from "@/components/media/HeroPicture";
 import { services, type Service } from "@/content/services";
 import { PHONE, PHONE_DISPLAY } from "@/lib/constants";
 import {
@@ -173,13 +174,9 @@ export default function TsenyPage() {
 
       <section className="relative overflow-hidden bg-[#F6F8F5]">
         <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block">
-          <Image
+          <HeroPicture
             alt="Забор из профнастила на участке в Беларуси"
-            className="object-cover object-center"
-            fill
-            preload
-            sizes="58vw"
-            src="/images/hero/homepage-fence-with-logo.jpeg"
+            mobile={false}
           />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,#F6F8F5_0%,rgba(246,248,245,0.78)_14%,rgba(246,248,245,0.18)_34%,rgba(246,248,245,0)_56%)]" />
         </div>
@@ -238,15 +235,6 @@ export default function TsenyPage() {
             </div>
           </div>
 
-          <div className="relative mt-6 aspect-[4/3] overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-xl shadow-green-950/10 lg:hidden">
-            <Image
-              alt="Забор из профнастила на участке в Беларуси"
-              className="object-cover object-center"
-              fill
-              sizes="100vw"
-              src="/images/hero/homepage-fence-with-logo.jpeg"
-            />
-          </div>
         </SiteContainer>
       </section>
 

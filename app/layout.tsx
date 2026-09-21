@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { FloatingButtons } from "@/components/layout/FloatingButtons";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { COORDINATES } from "@/lib/constants";
@@ -107,12 +106,11 @@ export default function RootLayout({
         ) : null}
       </head>
       <body
-        className={`${inter.className} min-h-screen bg-white pb-[calc(5rem+env(safe-area-inset-bottom))] text-slate-900 antialiased md:pb-0`}
+        className={`${inter.className} min-h-screen bg-white text-slate-900 antialiased`}
       >
         <Header />
         {children}
         <Footer />
-        <FloatingButtons />
       </body>
     </html>
   );
