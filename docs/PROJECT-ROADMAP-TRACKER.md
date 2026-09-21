@@ -344,11 +344,13 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 ### CURRENT PARALLEL STAGE
 
 1. `MOBILE-HERO-01-mobile-hero-responsive-images`
-   - Статус: IN PROGRESS.
+   - Статус: DONE.
    - Цель: mobile hero design + responsive image architecture без визуального изменения desktop hero.
    - Route families in scope: `/`, `/tseny`, `/[city]`.
    - Protected / out of scope: `ServicePage`; `QuizForm` / `LeadForm` behavior or loading; analytics events; GA4; Yandex Metrika; domain/canonical/SEO architecture; unrelated JS refactors; public pricing changes.
-   - Stage не считать DONE до отдельной PERF verification после implementation.
+   - Verification: visual mobile review APPROVED; independent PERF verification PASS; Production smoke PASS на mobile `/`, `/tseny`, `/lida`, `/zabory-iz-setki-rabitsy` и desktop `/`, `/tseny`.
+   - UX closeout: mobile floating contact bar удалён вместе с её layout compensation; обычные Header/Footer/CTA/contact links сохранены.
+   - Merge/main SHA: `031dcbc64f937412210231ff2f64368d565006b7`; Production deployment ID: `dpl_DRUnKPUhSBDd3ooqDr9gegVAkYL1`.
 
 ### TOOLING / FUTURE / deferred
 
