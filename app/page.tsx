@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { LeadForm } from "@/components/forms/LeadForm";
 import { QuizForm } from "@/components/forms/QuizForm";
 import { QUIZ_TOTAL_STEPS } from "@/components/forms/quiz-form-config";
+import { HeroPicture } from "@/components/media/HeroPicture";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
 import { BenefitTrustSection } from "@/components/sections/BenefitTrustSection";
 import { cities } from "@/content/cities";
@@ -113,20 +113,8 @@ export default function Home() {
       />
 
       <section className="relative overflow-hidden bg-[#F6F8F5]">
-        <div className="absolute inset-y-0 right-0 hidden w-[58%] lg:block">
-          <Image
-            alt="Забор из профнастила на участке в Беларуси"
-            className="object-cover object-center"
-            fill
-            preload
-            sizes="58vw"
-            src="/images/hero/homepage-fence-with-logo.jpeg"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#F6F8F5_0%,rgba(246,248,245,0.78)_14%,rgba(246,248,245,0.18)_34%,rgba(246,248,245,0)_56%)]" />
-        </div>
-
-        <div className="relative mx-auto max-w-7xl px-4 pb-4 pt-6 sm:px-6 sm:pb-10 sm:pt-16 lg:px-8 lg:pb-8 lg:pt-20">
-          <div className="max-w-2xl lg:max-w-[48%]">
+        <div className="relative mx-auto max-w-7xl px-4 pb-4 pt-6 sm:px-6 sm:pb-10 sm:pt-16 lg:static lg:px-8 lg:pb-8 lg:pt-20">
+          <div className="relative z-10 max-w-2xl lg:max-w-[48%]">
             <h1 className="text-balance text-[1.9rem] font-extrabold leading-[1.08] tracking-tight text-[#202020] sm:text-6xl lg:text-[3.25rem]">
               Установка заборов в Беларуси{" "}
               <span className="text-[#0A5633]">под ключ</span>
@@ -164,16 +152,13 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-5 rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-xl shadow-green-950/10 backdrop-blur sm:p-5 lg:hidden">
-            <p className="text-lg font-bold leading-tight text-[#06321F]">Бесплатный расчёт сегодня</p>
-            <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-semibold leading-tight text-slate-700 sm:text-sm">
-              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Гарантия на работы</span>
-              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Договор и смета</span>
-              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Свои бригады</span>
-              <span className="rounded-full bg-[#F0F6F1] px-3 py-2">Расчёт по телефону</span>
-            </div>
+          <div className="relative mt-5 aspect-[16/10] overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-xl shadow-green-950/10 lg:absolute lg:inset-y-0 lg:right-0 lg:mt-0 lg:w-[58%] lg:rounded-none lg:border-0 lg:shadow-none">
+            <HeroPicture
+              alt="Забор из профнастила на участке в Беларуси"
+              mobile
+            />
+            <div className="absolute inset-0 hidden bg-[linear-gradient(90deg,#F6F8F5_0%,rgba(246,248,245,0.78)_14%,rgba(246,248,245,0.18)_34%,rgba(246,248,245,0)_56%)] lg:block" />
           </div>
-
         </div>
       </section>
 

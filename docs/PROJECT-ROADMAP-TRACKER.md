@@ -341,6 +341,15 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 
 ## NEXT PRIORITIES
 
+### CURRENT PARALLEL STAGE
+
+1. `MOBILE-HERO-01-mobile-hero-responsive-images`
+   - Статус: IN PROGRESS.
+   - Цель: mobile hero design + responsive image architecture без визуального изменения desktop hero.
+   - Route families in scope: `/`, `/tseny`, `/[city]`.
+   - Protected / out of scope: `ServicePage`; `QuizForm` / `LeadForm` behavior or loading; analytics events; GA4; Yandex Metrika; domain/canonical/SEO architecture; unrelated JS refactors; public pricing changes.
+   - Stage не считать DONE до отдельной PERF verification после implementation.
+
 ### TOOLING / FUTURE / deferred
 
 - `ai-seo`: revisit when there is a stable flow of articles and a clear need for separate AI search / answer-engine optimization.
