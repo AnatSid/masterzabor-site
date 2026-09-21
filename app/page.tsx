@@ -152,11 +152,12 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative mt-5 aspect-[16/10] overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-xl shadow-green-950/10 lg:absolute lg:inset-y-0 lg:right-0 lg:mt-0 lg:w-[58%] lg:rounded-none lg:border-0 lg:shadow-none">
+          <div className="relative -mx-4 mt-2 aspect-[16/10] overflow-hidden bg-slate-100 sm:-mx-6 sm:mt-3 lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:mt-0 lg:w-[58%]">
             <HeroPicture
               alt="Забор из профнастила на участке в Беларуси"
               mobile
             />
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-8 bg-gradient-to-b from-[#F6F8F5] via-[#F6F8F5]/45 to-transparent lg:hidden" />
             <div className="absolute inset-0 hidden bg-[linear-gradient(90deg,#F6F8F5_0%,rgba(246,248,245,0.78)_14%,rgba(246,248,245,0.18)_34%,rgba(246,248,245,0)_56%)] lg:block" />
           </div>
         </div>
