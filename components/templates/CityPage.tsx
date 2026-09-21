@@ -143,7 +143,7 @@ export function CityPage({ city }: CityPageProps) {
       ))}
 
       <section className="relative overflow-hidden bg-[#F6F8F5]">
-        <SiteContainer className="relative py-6 pb-5 sm:pb-10 sm:pt-16 lg:static lg:pb-8 lg:pt-20">
+        <SiteContainer className="relative pb-0 pt-6 sm:pb-10 sm:pt-16 lg:static lg:pb-8 lg:pt-20">
           <div className="relative z-10 max-w-2xl lg:max-w-[48%]">
             <nav aria-label="Хлебные крошки" className="text-sm text-slate-500">
               <ol className="flex flex-wrap gap-2">
@@ -206,12 +206,12 @@ export function CityPage({ city }: CityPageProps) {
             </div>
           </div>
 
-          <div className="relative -mx-4 mt-2 aspect-[16/10] overflow-hidden bg-slate-100 sm:-mx-6 sm:mt-3 lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:mt-0 lg:w-[58%]">
+          <div className="relative -mx-4 mt-1 aspect-[16/10] overflow-hidden bg-slate-100 sm:-mx-6 sm:mt-3 lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:mt-0 lg:w-[58%]">
             <HeroPicture
               alt={cityHeroImage.alt}
               mobile
             />
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-8 bg-gradient-to-b from-[#F6F8F5] via-[#F6F8F5]/45 to-transparent lg:hidden" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-12 bg-[linear-gradient(to_bottom,#F6F8F5_0%,rgba(246,248,245,0.3)_20%,rgba(246,248,245,0)_72%)] sm:hidden" />
             <div className="absolute inset-0 hidden bg-[linear-gradient(90deg,#F6F8F5_0%,rgba(246,248,245,0.82)_14%,rgba(246,248,245,0.2)_36%,rgba(246,248,245,0)_58%)] lg:block" />
           </div>
         </SiteContainer>
