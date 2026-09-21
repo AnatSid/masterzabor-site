@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element -- Next.js getImageProps art-direction pattern requires the underlying img. */
 import { getImageProps } from "next/image";
 
 const DESKTOP_BREAKPOINT = "(min-width: 1024px)";
@@ -50,7 +49,7 @@ export function HeroPicture({ alt, mobile }: HeroPictureProps) {
           decoding="async"
           fetchPriority="high"
           height={desktopHero.height}
-          loading="lazy"
+          loading="eager"
           src={TRANSPARENT_PIXEL}
           width={desktopHero.width}
         />
@@ -58,11 +57,10 @@ export function HeroPicture({ alt, mobile }: HeroPictureProps) {
     );
   }
 
-  const {
-    props: { srcSet: mobileSrcSet, ...mobileProps },
-  } = getImageProps({
+  const { props: mobileProps } = getImageProps({
     alt,
     height: mobileHero.height,
+    loading: "eager",
     sizes: MOBILE_HERO_SIZES,
     src: mobileHero.src,
     width: mobileHero.width,
@@ -77,9 +75,9 @@ export function HeroPicture({ alt, mobile }: HeroPictureProps) {
       />
       <img
         {...mobileProps}
+        alt={alt}
         className="absolute inset-0 h-full w-full object-cover object-center"
         fetchPriority="high"
-        srcSet={mobileSrcSet}
       />
     </picture>
   );
