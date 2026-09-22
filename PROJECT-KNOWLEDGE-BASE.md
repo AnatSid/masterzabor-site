@@ -731,14 +731,40 @@ Unverified source filenames: none for the six completed ServicePage sets based o
 
 ## Performance Notes
 
-- `next/font` для Inter - правильное решение.
-- GA/Yandex scripts подключены `afterInteractive`.
-- `Image` используется, но `fill` images требуют `sizes`.
-- После добавления реальных фото проверить LCP.
+### Performance by architecture, not benchmark hacks
+
+Поддерживать хорошую базовую архитектуру заранее:
+
+- использовать Server Components там, где клиентская интерактивность не нужна;
+- сохранять минимальные и осознанные client boundaries;
+- использовать корректную responsive image architecture и правильные `priority` / `eager` / `lazy` semantics;
+- сохранять нормальные cache semantics и не создавать duplicate resources или preload conflicts;
+- analytics must not materially degrade the critical rendering path or conversion path; changes to analytics loading require reproducible benefit and acceptable measurement trade-offs.
+
+Не добавлять специальные loaders, manual critical CSS, сложные font branches и другие отдельные механизмы только ради небольшого или нестабильного synthetic Lighthouse gain. Такая оптимизация допустима, только если одновременно есть:
+
+1. воспроизводимая проблема;
+2. измеримый устойчивый выигрыш;
+3. приемлемые UX/analytics trade-offs;
+4. maintenance cost, соразмерный пользе.
+
+Single Lighthouse/PSI score сам по себе не является acceptance criterion. Серия synthetic runs используется как diagnostic signal, а не как абсолютная характеристика Production. Performance work следует возобновлять при наличии sufficient field/CrUX data, reproducible controlled traces либо нового воспроизводимого user-visible performance regression после будущих изменений.
+
+### Current production decisions
+
+- MOBILE-HERO-01 реализовал responsive mobile/desktop hero architecture. Mobile hero обнаруживается в initial HTML, загружается одним правильным responsive request (`w=750` для проверенного mobile profile), использует `loading="eager"`, `fetchPriority="high"` и `decoding="async"`; desktop hero на mobile не скачивается. Дополнительный manual hero preload не нужен без новых доказательств.
+- `/tseny` mobile hero удалён, а below-fold image priority у `ProjectCard` устранён. `ProjectCard` затем переведён в Server Component в PERF-03A.
+- PERF-04A удалил ручной duplicate viewport meta; единственный корректный viewport генерирует Next.js 16.
+- `next/font` Inter сохраняет текущий preload. A/B с `preload:false` улучшил median FCP примерно на `256ms`, но LCP только примерно на `84ms` и добавил first paint на fallback font, последующий Inter swap и небольшой layout shift.
 - Large source PNG photos should be converted/optimized before committing to `public/`; P1-02.2 converted service thumbnails to ~170-340 KB JPEGs instead of committing multi-megabyte PNG copies.
-- `next build` завис во время аудита и был остановлен; нужна отдельная диагностика.
-- `next lint` deprecated; перед Next 16 заменить на ESLint CLI.
-- Yandex Webvisor может ухудшить INP/TTI, проверять в Lighthouse/CrUX после запуска трафика.
+
+### PERF discovery conclusions
+
+- Один и тот же Production показывал mobile PSI от low `60s/70s` до `99`, включая отдельные LCP около `6.3–6.6s`. Controlled traces не воспроизвели постоянный `4–6s` post-load render stall или другой детерминированный site-side defect; в controlled Production runs LCP был примерно `2.9–3.8s`, а hero обычно становился LCP практически сразу после загрузки. PSI `61–66` не считается «исправленным», точная причина не доказана, synthetic/lab variance остаётся существенной.
+- `decoding="sync"` A/B ухудшил median LCP примерно на `776ms`; Production остаётся с `decoding="async"`.
+- Early GA preload создаёт network contention, но вариант без него дал нестабильное улучшение median LCP примерно на `236ms`, не улучшил FCP и увеличил variance. Production analytics loading не изменён.
+- HTML, основной CSS и mobile hero наблюдались с `X-Vercel-Cache: HIT`; cold image optimizer / cold edge и late resource discovery не объяснили многосекундный PSI degradation. Два font preload также не объяснили этот провал.
+- PERF-02 delayed analytics startup остаётся `DEFERRED / NOT MERGED`: branch `codex/PERF-02-delayed-analytics-startup`, commit `1d058a344f3b40398c8354f1cdf912573e8489a3`. Эксперимент технически рабочий, но текущие A/B не обосновывают production change; ветку не merge и не удалять.
 
 ## SEO Notes
 

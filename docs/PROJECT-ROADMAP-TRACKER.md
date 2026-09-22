@@ -1,10 +1,10 @@
 # PROJECT ROADMAP TRACKER / HANDOFF: MASTERZABOR
 
-Дата handoff: 2026-09-18
+Дата handoff: 2026-09-22
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: `1cb268db73258c296589845f4a6dbcd6cf7434cb` (QZ-07 docs closeout merge)
+Текущая production точка отсчета: `e08d2d916801efa7e36b3b29cd74da9641fa73cf` (PERF-04A merge)
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,8 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production baseline: `1cb268db73258c296589845f4a6dbcd6cf7434cb` (QZ-07 docs closeout merge; application runtime remains the QZ-06E implementation).
+- Последний production baseline: `e08d2d916801efa7e36b3b29cd74da9641fa73cf` (PERF-04A merge).
+- Текущий PERF discovery / optimization stage закрыт; после PERF-04A дополнительные discovery-этапы PERF-05A/05B/06 не потребовали нового production patch: дальнейшие изменения требуют новых воспроизводимых доказательств.
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
 - `npm run lint` использует `eslint .`.
@@ -210,6 +211,9 @@ Previously discussed examples such as профнастил `от 100`, евро�
 - BLOG-SEO-01B permission pillar update and real Page A hero.
 - BLOG-SEO-01C height/neighbour Page B with real hero, metadata, schema and contextual links.
 - BLOG-DOCS-01 permanent blog editorial and asset workflow.
+- MOBILE-HERO-01 responsive mobile/desktop hero architecture and Production smoke.
+- PERF-03A `ProjectCard` cleanup from unnecessary Client Component to Server Component.
+- PERF-04A duplicate manual viewport cleanup; Next.js 16 now emits the single viewport meta.
 
 ## AUDITS COMPLETED
 
@@ -218,6 +222,32 @@ Previously discussed examples such as профнастил `от 100`, евро�
 - `docs/AUDIT-ANALYTICS-DOMAIN-CONSISTENCY.md`: подтвердил, что domain/analytics architecture согласована на `www`; GA server warning связан с env/OAuth, не с доменом.
 - `docs/ANALYTICS.md`: production runbook для Telegram/analytics/cron/env.
 - `docs/GOOGLE-OAUTH-RECOVERY.md`: восстановление GA OAuth refresh token.
+
+## PERFORMANCE CLOSEOUT
+
+### DONE IN PRODUCTION
+
+- `MOBILE-HERO-01`: реализована responsive mobile/desktop hero architecture с правильным mobile asset; устранены лишние mobile/desktop downloads. Mobile hero использует `loading="eager"` и `fetchPriority="high"`; mobile hero на `/tseny` удалён; below-fold priority у `ProjectCard` устранён. Production smoke пройден.
+- `PERF-03A`: `ProjectCard` переведён из лишнего Client Component в Server Component. Production DONE.
+- `PERF-04A`: ручной дублирующий viewport meta удалён; Next.js 16 генерирует единственный корректный viewport. Production DONE.
+
+### DISCOVERY / NO PRODUCTION CHANGE
+
+- `PERF-05A — mobile LCP render-delay`: mobile PSI периодически показывал LCP около `6.3–6.6s`, но controlled traces не воспроизвели детерминированный `4–6s` post-load render stall. Hero обнаруживается сразу, выбирается правильный `w=750`, загружается один mobile request, desktop hero не скачивается; `loading="eager"` и `fetchPriority="high"` корректны. `decoding="sync"` ухудшил median LCP примерно на `776ms`, поэтому Production остаётся с `decoding="async"`.
+- `PERF-05B — GA preload/network contention`: ранний GA preload действительно конкурирует за early network. A/B без раннего preload дал median LCP примерно `−236ms`, но не улучшил FCP, увеличил variance и не показал устойчивого production benefit. Production patch rejected.
+- `PERF-06 — Vercel/Next Image/cache/critical path`: HTML, основной CSS и mobile hero приходили с `X-Vercel-Cache: HIT`; признаков cold image optimizer / cold edge или late resource discovery как причины многосекундного PSI degradation не найдено. В controlled Production runs LCP был примерно `2.9–3.8s`, hero обычно становился LCP практически сразу после окончания загрузки; PSI pattern около `6.5s` не воспроизвёлся. Два font preload добавляют early traffic, но не объясняют многосекундный провал.
+- `next/font preload:false` A/B: median FCP улучшился примерно на `256ms`, LCP — только примерно на `84ms`; первый paint происходил на fallback font, затем следовали Inter swap и небольшой layout shift. Trade-off не оправдан, Production сохраняет текущий preload.
+
+### DEFERRED
+
+- `PERF-02 delayed analytics startup`: branch `codex/PERF-02-delayed-analytics-startup`, commit `1d058a344f3b40398c8354f1cdf912573e8489a3`. Технически эксперимент рабочий, но A/B не дал достаточных оснований менять Production analytics loading. Статус: `DEFERRED / NOT MERGED`; ветку не merge и не удалять.
+
+### INTERPRETATION AND REOPEN CRITERIA
+
+- Один и тот же Production показывал mobile PSI от low `60s/70s` до `99`. Это не означает, что PSI `61–66` «исправлен» или что его точная причина доказана.
+- Controlled traces не выявили постоянного site-side defect, объясняющего многосекундные PSI degradation; synthetic/lab variance остаётся существенной.
+- Single Lighthouse/PSI score сам по себе не является acceptance criterion. Серия synthetic runs используется как diagnostic signal, а не как абсолютная характеристика Production.
+- PERF можно возобновить при наличии sufficient field/CrUX data, reproducible controlled traces либо нового воспроизводимого user-visible performance regression после будущих изменений.
 
 ## FIXED ISSUES
 
@@ -341,7 +371,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 
 ## NEXT PRIORITIES
 
-### CURRENT PARALLEL STAGE
+### RECENT COMPLETED STAGE
 
 1. `MOBILE-HERO-01-mobile-hero-responsive-images`
    - Статус: DONE.
@@ -529,11 +559,11 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Зачем: текущие 4 TS-string статьи не масштабируются до 500+.
    - Как проверить: новые статьи добавляются без копирования page code; sitemap обновляется.
 
-2. `P2-image-sitemap-and-performance`
-   - Что сделать: после реальных фото добавить image sitemap и Lighthouse checks.
+2. `P2-image-sitemap`
+   - Что сделать: отдельно оценить необходимость image sitemap для реальных фото. Не открывать новый synthetic performance implementation без PERF reopen criteria.
    - Где: `app/sitemap.ts` или отдельный sitemap route, images.
-   - Зачем: фото работ могут дать SEO и ухудшить LCP, нужно контролировать оба.
-   - Как проверить: Lighthouse mobile, image URLs 200, sitemap valid.
+   - Зачем: фото работ могут дать дополнительный SEO discovery signal.
+   - Как проверить: image URLs 200, sitemap valid; performance проверять по воспроизводимым traces и field data, а не по одиночному Lighthouse score.
 
 3. `P2-true-vector-benefits-icons`
    - Что сделать: заменить embedded-raster SVG wrappers на true vector SVG.
