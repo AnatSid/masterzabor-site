@@ -17,9 +17,9 @@ import {
 import { generateBreadcrumbJsonLd, generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-  title: "Контакты МастерЗабор — Гомель | Телефон и адрес",
+  title: "Контакты МастерЗабор - телефон, мессенджеры и реквизиты",
   description:
-    "Контакты МастерЗабор: телефон, мессенджеры, адрес в Гомеле, реквизиты и график работы. Оставьте заявку, чтобы получить расчёт стоимости забора.",
+    "Контакты МастерЗабор: телефон, Telegram, WhatsApp и Viber, режим работы и реквизиты. Свяжитесь с нами для бесплатного расчёта стоимости забора по Беларуси.",
   path: "/kontakty",
 });
 
@@ -59,7 +59,7 @@ export default function KontaktyPage() {
           </nav>
 
           <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
-            Контакты МастерЗабор — Гомель
+            Контакты МастерЗабор
           </h1>
           <p className="mt-5 max-w-3xl text-lg text-slate-200">
             Свяжитесь с нами удобным способом. Рассчитаем стоимость забора по

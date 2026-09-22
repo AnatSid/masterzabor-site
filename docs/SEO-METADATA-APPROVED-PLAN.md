@@ -156,7 +156,7 @@ Notes:
 
 ---
 
-## B. Permission article — final review candidate
+## B. Permission article — approved / final
 
 Route: `/blog/nuzhno-li-razreshenie-na-ustanovku-zabora-v-rb`
 
@@ -201,7 +201,7 @@ Status: APPROVED / NOT YET IMPLEMENTED.
 
 ### SEO-META-01 — final decision pass
 Before coding:
-- finish the permission article metadata;
+- permission article metadata is approved/final and is no longer an open task;
 - review remaining individual blog-article metadata only if needed;
 - confirm that approved wording is still exactly what the owner wants.
 

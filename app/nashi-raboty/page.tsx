@@ -4,9 +4,9 @@ import { projectFilters, projects } from "@/content/projects";
 import { generateBreadcrumbJsonLd, generatePageMetadata } from "@/lib/seo";
 
 export const metadata = generatePageMetadata({
-  title: "Наши работы — фото установленных заборов | МастерЗабор",
+  title: "Наши работы - фото установленных заборов по Беларуси",
   description:
-    "Реальные фото установленных заборов, ворот и калиток в Беларуси. Смотрите материалы, решения для участков и примеры готового монтажа.",
+    "Фото установленных заборов, ворот и калиток по Беларуси. Профнастил, евроштакетник, сетка-рабица и готовые решения для частных участков.",
   path: "/nashi-raboty",
 });
 
