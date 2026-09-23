@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import {
-  ADDRESS,
   CITY,
   COMPANY_NAME,
-  COORDINATES,
   LOGO_PATH,
   PHONE,
   SITE_NAME,
   SITE_URL,
-  UNP,
-  WORKING_HOURS,
 } from "@/lib/constants";
 import { canonicalUrl } from "@/lib/url";
 
@@ -48,6 +44,12 @@ type ArticleJsonLdInput = {
   updatedAt?: string;
   url: string;
   image?: string;
+};
+
+type CityServiceJsonLdInput = {
+  slug: string;
+  name: string;
+  namePrepositional: string;
 };
 
 const DEFAULT_IMAGE = "/images/og-masterzabor.jpg";
@@ -138,37 +140,6 @@ export function generatePageMetadata({
   };
 }
 
-export function generateLocalBusinessJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": `${SITE_URL}/#localbusiness`,
-    name: COMPANY_NAME,
-    url: SITE_URL,
-    telephone: PHONE,
-    priceRange: "$$",
-    taxID: UNP,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "пр. Речицкий, 7А, оф. 5.11",
-      addressLocality: CITY,
-      postalCode: "246027",
-      addressCountry: "BY",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: COORDINATES.lat,
-      longitude: COORDINATES.lng,
-    },
-    openingHours: "Mo-Su 10:00-19:00",
-    description: `${COMPANY_NAME}: установка заборов, ворот и калиток под ключ в Беларуси. ${ADDRESS}. Режим работы: ${WORKING_HOURS}.`,
-    areaServed: {
-      "@type": "Country",
-      name: "Беларусь",
-    },
-  };
-}
-
 export function generateOrganizationJsonLd() {
   return {
     "@context": "https://schema.org",
@@ -186,7 +157,34 @@ export function generateOrganizationJsonLd() {
       postalCode: "246027",
       addressCountry: "BY",
     },
-    areaServed: "BY",
+    areaServed: {
+      "@type": "Country",
+      name: "Беларусь",
+    },
+  };
+}
+
+export function generateCityServiceJsonLd({
+  slug,
+  name,
+  namePrepositional,
+}: CityServiceJsonLdInput) {
+  const url = canonicalUrl(`/${slug}`);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${url}#service`,
+    url,
+    name: `Установка заборов в ${namePrepositional}`,
+    serviceType: "Установка заборов",
+    provider: {
+      "@id": `${SITE_URL}/#organization`,
+    },
+    areaServed: {
+      "@type": "City",
+      name,
+    },
   };
 }
 
@@ -201,11 +199,6 @@ export function generateWebsiteJsonLd() {
       "@id": `${SITE_URL}/#organization`,
     },
     inLanguage: "ru-BY",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${canonicalUrl("/blog")}?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
   };
 }
 

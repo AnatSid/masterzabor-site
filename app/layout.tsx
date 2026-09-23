@@ -5,7 +5,6 @@ import "./globals.css";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import {
-  generateLocalBusinessJsonLd,
   generateOrganizationJsonLd,
   generatePageMetadata,
   generateWebsiteJsonLd,
@@ -30,7 +29,6 @@ export const metadata: Metadata = {
   },
 };
 
-const localBusinessJsonLd = generateLocalBusinessJsonLd();
 const organizationJsonLd = generateOrganizationJsonLd();
 const websiteJsonLd = generateWebsiteJsonLd();
 const ymId = process.env.NEXT_PUBLIC_YM_ID;
@@ -44,15 +42,6 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(localBusinessJsonLd).replaceAll(
-              "<",
-              "\\u003c",
-            ),
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
