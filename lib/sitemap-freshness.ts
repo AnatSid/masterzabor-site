@@ -28,16 +28,17 @@ type SitemapFreshnessRegistry = {
 export const sitemapFreshness: SitemapFreshnessRegistry = {
   groups: {},
   templates: {
-    homepage: "2026-09-22",
-    servicePage: "2026-09-14",
-    cityPage: "2026-09-22",
-    pricesPage: "2026-09-22",
-    portfolioPage: "2026-09-22",
-    blogIndex: "2026-09-22",
-    blogArticle: "2026-09-14",
+    homepage: "2026-09-23",
+    servicePage: "2026-09-23",
+    cityPage: "2026-09-23",
+    pricesPage: "2026-09-23",
+    portfolioPage: "2026-09-23",
+    blogIndex: "2026-09-23",
+    blogArticle: "2026-09-23",
   },
   static: {
-    "/kontakty": "2026-09-22",
+    "/otzyvy": "2026-09-23",
+    "/kontakty": "2026-09-23",
   },
 };
 

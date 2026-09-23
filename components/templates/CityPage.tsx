@@ -15,16 +15,11 @@ import {
   CITY_PROOF_LIMIT,
   getCityProjectProof,
 } from "@/lib/city-project-proof";
+import { PHONE, PHONE_DISPLAY } from "@/lib/constants";
 import {
-  ADDRESS,
-  COMPANY_NAME,
-  PHONE,
-  PHONE_DISPLAY,
-  UNP,
-  WORKING_HOURS,
-} from "@/lib/constants";
-import { generateBreadcrumbJsonLd } from "@/lib/seo";
-import { canonicalUrl } from "@/lib/url";
+  generateBreadcrumbJsonLd,
+  generateCityServiceJsonLd,
+} from "@/lib/seo";
 
 type CityPageProps = {
   city: City;
@@ -85,37 +80,6 @@ function citySeoText(city: City) {
   ];
 }
 
-function generateCityLocalBusinessJsonLd(city: City) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": `${canonicalUrl(`/${city.slug}`)}#localbusiness`,
-    name: `${COMPANY_NAME} — заборы в ${city.namePrepositional}`,
-    url: canonicalUrl(`/${city.slug}`),
-    telephone: PHONE_DISPLAY,
-    priceRange: "$$",
-    taxID: UNP,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: ADDRESS,
-      addressLocality: city.name,
-      addressRegion: city.oblast,
-      addressCountry: "BY",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: city.coords.lat,
-      longitude: city.coords.lng,
-    },
-    openingHours: "Mo-Su 10:00-19:00",
-    description: `Установка заборов, ворот и калиток под ключ в ${city.namePrepositional}. ${WORKING_HOURS}.`,
-    areaServed: {
-      "@type": "City",
-      name: city.name,
-    },
-  };
-}
-
 export function CityPage({ city }: CityPageProps) {
   const relatedCities = getRelatedCities(city, cities);
   const cityProof = getCityProjectProof(city, projects);
@@ -126,7 +90,7 @@ export function CityPage({ city }: CityPageProps) {
     { name: `Заборы в ${city.namePrepositional}`, url: `/${city.slug}` },
   ];
   const jsonLd = [
-    generateCityLocalBusinessJsonLd(city),
+    generateCityServiceJsonLd(city),
     generateBreadcrumbJsonLd(breadcrumbs),
   ];
 
