@@ -215,15 +215,37 @@ Discovery-only candidates:
 - nationwide service area;
 - target locality и coordinates конкретной city page.
 
-Целевая гипотеза: одна реальная organization/service-area business entity, честные
-service areas и city pages как страницы зоны обслуживания, а не 40 физических филиалов.
-Нельзя создавать fake offices, addresses или map pins.
+Approved target: одна canonical `Organization /#organization`, честные service areas и
+city pages как `Service -> provider /#organization + areaServed City`, а не 40
+физических филиалов. Нельзя создавать fake offices, addresses или map pins.
 
-Это не разрешение менять schema. `LOCAL-SEO-01B` сначала выполняет read-only audit и
-design; implementation возможен только после отдельного owner approval. SearchAction
-без реального поиска остаётся отдельным tracked issue.
+`LOCAL-SEO-01B` audit/design завершён и утверждён. Следующий отдельный подэтап —
+ограниченная implementation утверждённой migration, включая удаление недостоверных
+city `LocalBusiness` и WebSite `SearchAction`.
 
-## 10. Measurement model
+## 10. Search-engine strategy and measurement
+
+### 10.1 Постоянный принцип
+
+- Google — текущий приоритет №1 для диагностики слабой видимости, индексации и
+  дальнейшего роста.
+- Yandex — обязательный параллельный SEO-контур, а не второстепенная задача. По уже
+  собранным наблюдениям MasterZabor по некоторым локальным запросам показывает себя в
+  Yandex лучше, поэтому улучшение Google не должно происходить ценой необоснованной
+  потери Yandex visibility.
+- Изменения metadata, schema, city architecture, internal linking и regional SEO
+  оцениваются с точки зрения обоих поисковиков.
+- Google measurement опирается прежде всего на GSC; Yandex measurement — прежде всего
+  на Yandex Webmaster и документированные SERP observations.
+- Google-specific structured-data feature не считается автоматически полезной для
+  Yandex, и наоборот. Различия требований или наблюдаемого поведения поисковиков
+  фиксируются отдельно.
+- Measurement после Grodno/Vitebsk pilot обязательно включает Google и Yandex.
+
+Это не создаёт новый Yandex implementation stage. Отдельный аудит настроек
+региональности и данных Yandex Webmaster остаётся последующей задачей.
+
+### 10.2 Measurement model
 
 - Google: GSC impressions/clicks и page/query data — основной first-party signal.
 - Yandex: Yandex Webmaster query/impression data предпочтительнее общих Metrika
@@ -271,16 +293,26 @@ design; implementation возможен только после отдельно
 
 ### `LOCAL-SEO-01B` — entity/schema design
 
-Статус: **NEXT / DESIGN FIRST**.
+Статус: **DONE / APPROVED DESIGN**.
 
-Read-only audit фактического JSON-LD и design целевой entity/service-area модели.
-Результат: точная карта текущих конфликтов, approved target model, affected surfaces,
-migration/QA plan и список данных, которых не хватает. Никакого implementation до
-отдельного approval.
+Read-only audit фактического JSON-LD завершён. Зафиксированы главный city-location
+conflict, approved Organization-first target, affected surfaces, migration/QA plan и
+open business questions.
+
+### `LOCAL-SEO-01B implementation` — approved schema migration
+
+Статус: **NEXT**.
+
+Удалить duplicate global `/#localbusiness`, оставить один canonical
+`Organization /#organization`, заменить city-specific `LocalBusiness` на shared city
+`Service -> provider + areaServed` и удалить WebSite `SearchAction`. Не менять
+Product/Offer, metadata, canonical, HTML geo meta, UI или regional content. После
+implementation обязательны Preview QA, owner review и отдельное approval перед
+Production.
 
 ### `LOCAL-SEO-01C` — shared CityPage/content-model refinement
 
-Статус: **AFTER 01B**.
+Статус: **AFTER 01B IMPLEMENTATION / PRODUCTION QA**.
 
 Спроектировать минимальные shared fields/sections для useful local differentiation,
 service areas и proof. Сохранить один `CityPage`; не писать 40 отдельных текстов и не
@@ -333,7 +365,7 @@ locations и projects остаются текущим no-go.
   доступа.
 - **OPEN QUESTION:** нужен ли отдельный business phone для MasterZabor.
 
-Минимальный следующий источник для `LOCAL-SEO-01B` — repository/Production JSON-LD и
-подтверждённые business facts. Массовый внешний research для этого не нужен. Свежие
-GSC/Yandex exports становятся обязательными перед финальным pilot selection и при
-`LOCAL-SEO-01E`, но не блокируют design-first schema audit.
+Для `LOCAL-SEO-01B implementation` достаточно repository/Production JSON-LD,
+утверждённого design и подтверждённых business facts; массовый внешний research не
+нужен. Свежие GSC/Yandex exports становятся обязательными перед финальным pilot
+selection и при `LOCAL-SEO-01E`, но не блокируют утверждённую schema migration.
