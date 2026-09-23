@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { COORDINATES } from "@/lib/constants";
 import {
   generateLocalBusinessJsonLd,
   generateOrganizationJsonLd,
@@ -28,8 +27,6 @@ export const metadata: Metadata = {
   other: {
     "geo.region": "BY",
     "geo.placename": "Беларусь",
-    "geo.position": `${COORDINATES.lat};${COORDINATES.lng}`,
-    ICBM: `${COORDINATES.lat}, ${COORDINATES.lng}`,
   },
 };
 
