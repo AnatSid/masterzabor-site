@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { COORDINATES } from "@/lib/constants";
 import {
   generateLocalBusinessJsonLd,
   generateOrganizationJsonLd,
@@ -19,16 +18,15 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   ...generatePageMetadata({
-    title: "Заборы в Гомеле — установка под ключ | МастерЗабор",
+    title:
+      "Установка заборов в Беларуси под ключ — профнастил, штакетник, сетка-рабица",
     description:
-      "Установка заборов в Гомеле и по Беларуси под ключ. Профнастил, евроштакетник, сетка-рабица, ворота и калитки с гарантией.",
+      "Устанавливаем заборы по всей Беларуси: профнастил, евроштакетник и сетка-рабица. Бесплатный расчёт, доставка и монтаж под ключ. Гарантия, рассрочка и оплата частями.",
     path: "/",
   }),
   other: {
     "geo.region": "BY",
-    "geo.placename": "Гомель, Беларусь",
-    "geo.position": `${COORDINATES.lat};${COORDINATES.lng}`,
-    ICBM: `${COORDINATES.lat}, ${COORDINATES.lng}`,
+    "geo.placename": "Беларусь",
   },
 };
 

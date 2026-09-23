@@ -111,7 +111,6 @@ export function generatePageMetadata({
       "евроштакетник",
       "сетка-рабица",
       "ворота",
-      "Гомель",
       ...keywords,
     ],
     openGraph: {

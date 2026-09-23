@@ -115,6 +115,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: canonicalUrl("/blog/" + post.slug),
     ...withLastModified(
       latestMeaningfulDate(
+        post.metadataUpdatedAt,
         post.updatedAt ?? post.publishedAt,
         sitemapFreshness.templates.blogArticle,
       ),

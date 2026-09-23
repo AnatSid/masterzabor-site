@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { CityPage } from "@/components/templates/CityPage";
 import { cities, getCityBySlug } from "@/content/cities";
+import { getDistrictPrepositional } from "@/lib/city-metadata";
 import { generatePageMetadata } from "@/lib/seo";
 
 type CityRouteParams = {
@@ -29,8 +30,8 @@ export async function generateMetadata({ params }: CityRouteProps) {
 
   return {
     ...generatePageMetadata({
-      title: `Заборы в ${city.namePrepositional} — купить и установить | МастерЗабор`,
-      description: `Установка заборов в ${city.namePrepositional} и ${city.oblastGenitive}. Профнастил, штакетник, сетка-рабица. Цены от 30 BYN/м.п. Гарантия 20 лет.`,
+      title: `Установка заборов в ${city.namePrepositional} под ключ - профнастил, штакетник, рабица`,
+      description: `Устанавливаем заборы в ${city.namePrepositional} и ${getDistrictPrepositional(city.name)} районе: профнастил, евроштакетник и сетка-рабица. Бесплатный расчёт стоимости, доставка и монтаж под ключ. Гарантия, рассрочка и удобная оплата частями.`,
       path: `/${city.slug}`,
     }),
     other: {
