@@ -2,7 +2,7 @@
 
 Дата аудита: 2026-09-23
 
-Статус: **READ-ONLY AUDIT + TARGET DESIGN / NO IMPLEMENTATION**
+Статус: **APPROVED DESIGN / IMPLEMENTATION NOT STARTED**
 
 Repository baseline: `3f763cb893bd32b38efb29eec1d5636e3503dbd2`
 
