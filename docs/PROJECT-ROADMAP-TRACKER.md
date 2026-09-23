@@ -1,10 +1,10 @@
 # PROJECT ROADMAP TRACKER / HANDOFF: MASTERZABOR
 
-Дата handoff: 2026-09-22
+Дата handoff: 2026-09-23
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: `e08d2d916801efa7e36b3b29cd74da9641fa73cf` (PERF-04A merge)
+Текущая production точка отсчета: `2805ebcfdca171186cde4c1acd91872083c9f24c` (SEO-META-02 merge)
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production baseline: `e08d2d916801efa7e36b3b29cd74da9641fa73cf` (PERF-04A merge).
+- Последний production baseline: `2805ebcfdca171186cde4c1acd91872083c9f24c` (SEO-META-02 merge).
 - Текущий PERF discovery / optimization stage закрыт; после PERF-04A дополнительные discovery-этапы PERF-05A/05B/06 не потребовали нового production patch: дальнейшие изменения требуют новых воспроизводимых доказательств.
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
@@ -47,6 +47,11 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - P1-06.5 nationwide copy cleanup is complete: homepage and shared ServicePage commercial copy now use neutral Belarus-wide wording instead of implying "we travel from Gomel"; legitimate Gomel-local context in city/contact/review surfaces is preserved.
 - SEO-01 Product JSON-LD is complete: all ServicePage Product schema now includes absolute service hero `image`, and Product `offers.url` points to the canonical service page instead of homepage. `/tseny` also emits six Product objects with each service's own image and Offer URL.
 - SEO-02 semantic sitemap freshness remains active: sitemap dates come only from explicit semantic record/group/template/static sources, unknown dates are omitted, and strict calendar-valid `YYYY-MM-DD` validation fails loudly. After Page B publication, `/blog`, Page A and Page B use honest `2026-09-12` lastmod values; the two older articles retain `2026-05-18`.
+- SEO-03 Google discovery audit and SEO-04 balanced city internal-link architecture are complete. No common technical indexability blocker was found; the former array-order-biased related-city graph was replaced with deterministic balanced regional coverage.
+- SEO-META-01 through SEO-META-04 are complete in Production. Approved metadata, city grammar, canonical and representative Production routes passed QA. SEO-META-05 is monitoring after recrawl, not an implementation stage.
+- Current Production sitemap contains 56 canonical URLs.
+- Global Gomel metadata cleanup is complete: nationwide/root metadata no longer carries Gomel-only fallback wording, the global default keyword `Гомель`, or Gomel `geo.position` / `ICBM`; root keeps `geo.region: BY` and `geo.placename: Беларусь`, while city pages keep their own city geo metadata. The real Gomel address, `/gomel` and factual organization details remain valid.
+- Local SEO discovery/reconciliation is substantially complete. The active staged plan, evidence labels, retired recommendations and next dependency are maintained in [`docs/SEO-INDEXING-LOCAL-SEO-MASTER-PLAN.md`](SEO-INDEXING-LOCAL-SEO-MASTER-PLAN.md).
 - BLOG-SEO-01B is complete: Page A remains the permission/documentation pillar at `/blog/nuzhno-li-razreshenie-na-ustanovku-zabora-v-rb` and uses an approved real hero asset.
 - BLOG-SEO-01C is complete and in Production: Page B covers height/neighbour intent at `/blog/vysota-zabora-mezhdu-sosedyami-v-belarusi` and uses an approved real hero asset.
 - Page A and Page B share the current article presentation and `1200×630` WebP hero convention. The same image field supplies article hero, `/blog` card, Open Graph, Twitter and Article JSON-LD.
@@ -207,6 +212,13 @@ Previously discussed examples such as профнастил `от 100`, евро�
 - QZ-07 controlled real Production lead E2E.
 - SEO-01 Product JSON-LD image and service Offer URLs.
 - SEO-02 semantic deterministic sitemap freshness and Article date semantics.
+- SEO-03 Google discovery/indexability audit.
+- SEO-04 balanced city internal-link architecture.
+- SEO-META-01 approved metadata decisions and independent review.
+- SEO-META-02 approved metadata implementation and global Gomel metadata cleanup.
+- SEO-META-03 pre-production metadata QA.
+- SEO-META-04 Production rollout and metadata smoke.
+- LOCAL-SEO-01A discovery reconciliation (substantially complete).
 - TOOLING-01 Codex persistent instructions / workflow cleanup.
 - BLOG-SEO-01B permission pillar update and real Page A hero.
 - BLOG-SEO-01C height/neighbour Page B with real hero, metadata, schema and contextual links.
@@ -541,15 +553,23 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Production sitemap: membership remains 55 URLs; 13 URLs have lastmod: the nine city routes above use `2026-09-07`, while `/blog` and its three articles retain `2026-05-18`.
    - Commits: implementation `91c53636763e86aa1bdffd243099d6ab5689a01b`; merge/main `39d40365fa061b0dce21a7b5f718208b549fc243`; Production `dpl_HaVPZw4bcYJ16ekxbUaFfZVr7taH` (`Ready`).
 
-15. `LOCAL-SEO-01-regional-low-frequency-expansion-discovery`
-   - Статус: FUTURE / NOT STARTED. Только discovery; не создавать city pages до отдельного решения по результатам исследования.
-   - Гипотеза: небольшие города, посёлки и активные населённые пункты Гродненской, Витебской и Минской областей могут иметь коммерческий спрос на монтаж заборов при более слабой локальной конкуренции и реалистичной логистике для MasterZabor.
-   - Candidate set: собрать примерно 40-60 населённых пунктов, но отбирать их не по одному порогу населения. Population является только одним signal наряду с типом населённого пункта, частным сектором, коттеджной/дачной активностью, логистикой, installation competition, отличием продажи материалов от монтажа под ключ, локальными SERP и наличием подтверждённого MasterZabor proof.
-   - Discovery output: оценить запросы `забор + населённый пункт`, `установка забора + населённый пункт`, `забор под ключ + населённый пункт`; выбрать примерно 15-25 Tier A кандидатов, где сочетаются commercial demand, private-sector relevance, слабая конкуренция по монтажу, пригодная логистика и возможность сделать полезную локальную landing page.
-   - Quality gate: учитывать выводы SEO-03 по сходству и internal-link architecture текущих 40 city pages. Не расширять географию, если новая страница будет отличаться только названием; при выявленной CityPage-слабости сначала закрыть её.
-   - Architecture: сохранить один shared `CityPage` и data-driven routes. Future discovery может предложить расширение city content model для честной локальной уникальности; отдельные шаблоны для каждого населённого пункта не создавать. Приоритет у мест с exact-city/районным/сильным regional project proof.
-   - Rollout if validated: pilot 10-20 новых населённых пунктов -> deploy/index -> наблюдение за crawl, indexation и impressions -> решение о следующем batch. Не запускать сразу 50-100 страниц.
-   - Non-goals сейчас: не проводить SERP research, не создавать кандидатов/страницы, не менять code/content/canonical/sitemap/robots и не начинать implementation.
+15. `SEO-META-01` — `SEO-META-05`
+   - `SEO-META-01`: DONE — approved decisions and independent review.
+   - `SEO-META-02`: DONE — metadata implementation, city description generation and Global Gomel metadata cleanup.
+   - `SEO-META-03`: DONE — lint/build, rendered metadata and full route-family QA before Production.
+   - `SEO-META-04`: DONE — Production rollout and representative metadata smoke. Merge/main SHA: `2805ebcfdca171186cde4c1acd91872083c9f24c`; Production deployment: `dpl_Fg1kw43mUrfJKEgkFUp6Zh5LLf8z` (`READY`).
+   - Production result: 56 canonical sitemap URLs; nationwide/root metadata does not inherit Gomel-only fallback wording or Gomel coordinates; city pages retain their own geo metadata.
+   - `SEO-META-05`: MONITORING AFTER RECRAWL — compare GSC/Yandex data and real desktop/mobile snippets, title rewrites and truncation. It is not an open implementation stage.
+
+16. `LOCAL-SEO-01A` — `LOCAL-SEO-01E`
+   - Master plan: [`docs/SEO-INDEXING-LOCAL-SEO-MASTER-PLAN.md`](SEO-INDEXING-LOCAL-SEO-MASTER-PLAN.md).
+   - `LOCAL-SEO-01A-discovery-reconciliation`: **DONE / SUBSTANTIALLY COMPLETE**. GSC evidence, Yandex/SERP observations, competitor patterns, proof inventory, candidate prioritization, CityPage gap analysis and rollout principles have been reconciled. The former `LOCAL-SEO-01 = FUTURE / NOT STARTED` entry is superseded.
+   - Current conclusion: there is no evidence of a general technical indexability blocker. Google knows individual city pages; commercial visibility is uneven. Query rows and one-session rank snapshots must not be treated as complete or stable demand/rank data.
+   - `LOCAL-SEO-01B-entity-schema-design`: **NEXT / DESIGN FIRST**. Perform a read-only audit and design a truthful one-organization/service-area model before any schema implementation. Do not create physical `LocalBusiness` entities, offices, addresses or map pins for every city.
+   - `LOCAL-SEO-01C-shared-citypage-content-model`: **AFTER 01B**. Design only minimally useful shared local fields/sections while retaining one data-driven `CityPage`; do not mass-rewrite 40 pages or add mandatory word counts/blocks.
+   - `LOCAL-SEO-01D-regional-pilot`: **AFTER DESIGN APPROVAL**. Pilot 3-5 existing routes plus 3-5 new exact-proof opportunities in Grodno/Vitebsk regions; candidate routes are not pre-approved for creation.
+   - `LOCAL-SEO-01E-measurement`: **AFTER PILOT / RECRAWL**. Evaluate GSC, Yandex Webmaster and documented SERP observations before approving a later Minsk -> Gomel -> Brest -> Mogilev rollout; order can change with evidence.
+   - Keep separate: SearchAction, old starter/demo project provenance, Google Business Profile/entity strategy, a possible dedicated MasterZabor phone, Yandex Webmaster data workflow, SEO-META-05 and QZ-09.
 
 ### P2 - улучшения позже
 
@@ -591,5 +611,6 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
 - `AUDIT-MASTERZABOR-2026.md`: valuable audit, but several P0/P1/SEO-01 findings are now fixed. Still current for real photos, SearchAction, city thin risk, blog scale, tests.
 - `docs/AUDIT-PRODUCTION-HOST-DOMAIN.md`: domain strategy remains valid. Some "docs drift" notes are historical because docs were later synchronized.
 - `docs/AUDIT-ANALYTICS-DOMAIN-CONSISTENCY.md`: still valid for GA server env/OAuth warning diagnosis.
-- `PROJECT-KNOWLEDGE-BASE.md`: mostly current, but benefit icon size line still may mention old `32/40`; new selected size is `44/52`.
+- `docs/SEO-METADATA-APPROVED-PLAN.md`: approved wording remains the decision record, but its `NOT YET IMPLEMENTED` stage labels are historical; `SEO-META-01` — `04` are DONE and `SEO-META-05` is monitoring.
+- `PROJECT-KNOWLEDGE-BASE.md`: mostly current, but its old `LOCAL-SEO-01 = future / not started` direction and pilot-size assumptions are superseded by [`docs/SEO-INDEXING-LOCAL-SEO-MASTER-PLAN.md`](SEO-INDEXING-LOCAL-SEO-MASTER-PLAN.md); benefit icon size may also mention old `32/40`, while the selected size is `44/52`.
 - Root `PROJECT-ROADMAP-TRACKER.md`: removed. Source of truth is `docs/PROJECT-ROADMAP-TRACKER.md`.
