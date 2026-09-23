@@ -247,10 +247,10 @@ design; implementation возможен только после отдельно
 | Balanced city internal linking | **DONE** | Закрыто `SEO-04`; старый array-order defect устранён. |
 | Approved metadata rollout | **DONE** | `SEO-META-01` — `04` закрыты; `05` — monitoring. |
 | Старый `LOCAL-SEO-01 = FUTURE / NOT STARTED` | **SUPERSEDED** | Discovery/reconciliation substantially complete; работа разделена на `01A` — `01E`. |
-| Physical `LocalBusiness` для каждого города | **RETIRED / DISPROVED** | Противоречит фактам: нет 40 физических офисов. Не возрождать без новых реальных филиалов. |
-| Обязательные 300–500 уникальных слов на city page | **RETIRED / DISPROVED** | Нет подтверждённого порога; сначала usefulness и proof. |
-| Массовый rollout десятков geo pages | **RETIRED / DISPROVED** | Только небольшой измеряемый pilot после design approval. |
-| Обязательный отдельный price/FAQ block только ради SEO | **RETIRED / DISPROVED** | Текущие страницы уже покрывают intent; новый блок требует пользовательской функции. |
+| Physical `LocalBusiness` для каждого города | **RETIRED / NOT APPLICABLE FOR CURRENT BUSINESS FACTS** | У MasterZabor нет 40 подтверждённых физических офисов. Не возвращать эту модель без новых реальных филиалов. |
+| Обязательные 300–500 уникальных слов на city page | **SUPERSEDED / UNSUPPORTED AS A REQUIREMENT** | Подтверждённого обязательного порога нет; сначала usefulness и proof. |
+| Массовый rollout десятков geo pages | **RETIRED FOR CURRENT STRATEGY** | Текущая стратегия допускает только небольшой измеряемый pilot после design approval. |
+| Обязательный отдельный price/FAQ block только ради SEO | **SUPERSEDED / NOT REQUIRED** | Текущие страницы уже покрывают intent; новый блок требует самостоятельной пользовательской функции. |
 | Shared CityPage/content model refinements | **FUTURE** | После entity/schema design и отдельного approval. |
 | SearchAction без поиска | **FUTURE** | Отдельная schema issue, не объяснение текущей indexation. |
 | Provenance starter/demo portfolio records | **FUTURE** | Отдельная content/proof задача. |
@@ -313,6 +313,14 @@ Mogilev остаётся рабочим порядком, а не жёстким
 - никакой «идеальной» сложной архитектуры без доказанной пользы;
 - schema, CityPage, content, routes и sitemap меняются только в отдельно утверждённых
   implementation stages.
+
+Купленные/арендованные ссылки, PBN и expired-domain links, behavioral/click
+manipulation, fake reviews/locations и parasite/site-reputation tactics не входят в
+текущий approved implementation. Их возможный анализ требует отдельного evidence/risk
+stage: наблюдаемую корреляцию нельзя выдавать за доказанную ranking cause, необходимо
+оценивать риск санкций и нестабильности, а high-risk tactics нельзя применять к
+основному бренду без отдельного owner decision. Fake offices, map pins, reviews,
+locations и projects остаются текущим no-go.
 
 ## 14. Что требует дополнительных данных
 
