@@ -223,7 +223,29 @@ service areas и city pages как страницы зоны обслужива�
 design; implementation возможен только после отдельного owner approval. SearchAction
 без реального поиска остаётся отдельным tracked issue.
 
-## 10. Measurement model
+## 10. Search-engine strategy and measurement
+
+### 10.1 Постоянный принцип
+
+- Google — текущий приоритет №1 для диагностики слабой видимости, индексации и
+  дальнейшего роста.
+- Yandex — обязательный параллельный SEO-контур, а не второстепенная задача. По уже
+  собранным наблюдениям MasterZabor по некоторым локальным запросам показывает себя в
+  Yandex лучше, поэтому улучшение Google не должно происходить ценой необоснованной
+  потери Yandex visibility.
+- Изменения metadata, schema, city architecture, internal linking и regional SEO
+  оцениваются с точки зрения обоих поисковиков.
+- Google measurement опирается прежде всего на GSC; Yandex measurement — прежде всего
+  на Yandex Webmaster и документированные SERP observations.
+- Google-specific structured-data feature не считается автоматически полезной для
+  Yandex, и наоборот. Различия требований или наблюдаемого поведения поисковиков
+  фиксируются отдельно.
+- Measurement после Grodno/Vitebsk pilot обязательно включает Google и Yandex.
+
+Это не создаёт новый Yandex implementation stage. Отдельный аудит настроек
+региональности и данных Yandex Webmaster остаётся последующей задачей.
+
+### 10.2 Measurement model
 
 - Google: GSC impressions/clicks и page/query data — основной first-party signal.
 - Yandex: Yandex Webmaster query/impression data предпочтительнее общих Metrika

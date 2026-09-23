@@ -11,8 +11,8 @@ Production: `https://www.masterzabor.by`
 ## 1. Scope и система доказательств
 
 Цель этапа — проверить фактический JSON-LD и выбрать одну правдивую модель для
-MasterZabor: одна компания, реальный адрес в Гомеле, работа по Беларуси, city pages как
-страницы зон обслуживания, а не филиалы.
+MasterZabor: одна компания, реальный административный/внутренний адрес в Гомеле,
+работа по Беларуси, city pages как страницы зон обслуживания, а не филиалы.
 
 Метки в документе:
 
@@ -151,6 +151,11 @@ telephone и Gomel address, но разные `@id` и не связаны ме�
 подтипом `Organization` и `Place`. Проблема — identity ambiguity и ненужное
 дублирование: crawler видит два node identifiers там, где подтверждён один бизнес.
 
+При текущем подтверждённом статусе Gomel address как прежде всего
+administrative/internal office консолидация должна вести к `Organization`. Тип
+`LocalBusiness` допустим позднее только после подтверждения реальной публичной
+customer-facing location.
+
 ### P3 — Article publisher/author фрагментируют identity
 
 **VERIFIED FACT:** Article создаёт ещё два anonymous Organization objects с тем же
@@ -182,14 +187,17 @@ pages, а не category/list pages.
 шести Product на `/tseny` следует при необходимости рассматривать отдельным Product
 schema stage; она не должна расширять LOCAL-SEO-01B implementation.
 
-## 4. Harmless / redundant items
+## 4. Контекст и элементы без автоматического redesign
 
 Не исправлять автоматически:
 
-1. **VERIFIED FACT:** глобальные Gomel address и geo согласованы между собой и с
-   `/kontakty`. Они не являются Gomel-only targeting error.
+1. **VERIFIED FACT:** глобальные гомельские address и geo технически согласованы между
+   собой и с `/kontakty`. Реальность адреса подтверждена, но это само по себе не
+   подтверждает публичную customer-facing location и не обосновывает `LocalBusiness.geo`.
 2. **OFFICIAL GUIDANCE:** `areaServed` означает географию, где предоставляется услуга.
-   Поэтому физический Gomel address + `areaServed: Беларусь` не противоречат друг другу.
+   Поэтому реальный organization/legal/postal address в Гомеле и
+   `areaServed: Беларусь` не противоречат друг другу. Это не требует объявлять адрес
+   публичной точкой посещения.
 3. `Organization.areaServed: "BY"` допустим как Schema.org `Text`, хотя Country object
    читается яснее. После консолидации останется один canonical representation.
 4. Organization markup повторяется на всех страницах. Google рекомендует homepage или
@@ -207,24 +215,31 @@ schema stage; она не должна расширять LOCAL-SEO-01B implemen
 
 ## 5. Target entity model
 
-### 5.1 Один canonical business node
+### 5.1 Один canonical business node: Organization-first
 
-**DESIGN RECOMMENDATION:** использовать один global node с текущим стабильным
-`@id: https://www.masterzabor.by/#organization` и `@type: LocalBusiness`.
+**DESIGN RECOMMENDATION на текущих business facts:** использовать один global node с
+текущим стабильным `@id: https://www.masterzabor.by/#organization` и
+`@type: Organization`.
 
-Schema.org `LocalBusiness` уже наследует `Organization`; отдельный дублирующий
-`#localbusiness` не нужен. Node описывает одну компанию и единственную подтверждённую
-Gomel location:
+Node описывает одну nationwide service-area organization:
 
-- `name`, root `url`, logo/image, telephone, taxID;
-- только реальный Gomel PostalAddress;
-- только реальные coordinates Gomel location;
-- реальные opening hours после owner confirmation;
-- `areaServed: { "@type": "Country", "name": "Беларусь" }`.
+- `name`, root `url`, logo/image, telephone и taxID — только подтверждённые данные;
+- реальный Gomel address можно сохранять как factual organization/legal/postal
+  address, если такое представление корректно;
+- `areaServed: { "@type": "Country", "name": "Беларусь" }`;
+- не использовать `geo` как декларацию публичной клиентской точки;
+- не использовать location `openingHours`, если `Пн-Вс 10:00-19:00` — часы обработки
+  звонков или выездной работы, а не работы физической точки.
 
 Выбор старого `#organization` как canonical ID минимизирует churn: на него уже
 ссылается `WebSite.publisher`. Старый `#localbusiness` после migration не должен
 остаться отдельной entity.
+
+Условный будущий вариант: если новыми evidence будет подтверждено, что Gomel address —
+реальная публичная customer-facing business location, допустим один canonical
+`LocalBusiness` с тем же `/#organization`, реальным адресом, реальными coordinates,
+реальными часами именно этой location и nationwide `areaServed`. До такого
+подтверждения этот вариант не является target design.
 
 ### 5.2 WebSite
 
@@ -271,8 +286,8 @@ byline. Иначе нужен правдивый visible Person/Organization aut
 
 | Route family | Рекомендуемые nodes |
 | --- | --- |
-| `/` | canonical `LocalBusiness` (`#organization`) + `WebSite` + `FAQPage`. |
-| `/kontakty` | те же global nodes + `BreadcrumbList`; address/map остаются Gomel. |
+| `/` | canonical `Organization` (`#organization`) + `WebSite` + `FAQPage`. |
+| `/kontakty` | те же global nodes + `BreadcrumbList`; factual address остаётся Gomel. |
 | city | global business + `WebSite` + city `Service` + `BreadcrumbList`. |
 | service | global business + `WebSite` + существующие `Product`, `FAQPage`, `BreadcrumbList`. |
 | `/tseny` | global business + `WebSite` + `BreadcrumbList`; Product-list вопрос отдельно. |
@@ -296,7 +311,7 @@ Google больше не показывает sitelinks search box. `WebSite` и
 
 | File / function | Будущее изменение |
 | --- | --- |
-| `lib/seo.ts` — `generateLocalBusinessJsonLd()` / `generateOrganizationJsonLd()` | Консолидировать в один canonical business generator с `@id /#organization`; убрать второй business identity. |
+| `lib/seo.ts` — `generateLocalBusinessJsonLd()` / `generateOrganizationJsonLd()` | Консолидировать в один canonical `Organization` generator с `@id /#organization`; убрать второй business identity, `LocalBusiness.geo` и неподтверждённые location hours. |
 | `lib/seo.ts` — `generateWebsiteJsonLd()` | Сохранить WebSite/publisher, удалить SearchAction. |
 | `lib/seo.ts` — новый shared city-service generator | Централизовать truthful `Service -> provider -> areaServed` model. |
 | `app/layout.tsx` | Вставлять один business node и WebSite вместо двух business nodes + WebSite. |
@@ -320,29 +335,35 @@ Google больше не показывает sitelinks search box. `WebSite` и
 
 ## 8. Migration plan
 
-1. Получить ответы на blocking business questions из раздела 10.
-2. Зафиксировать before-snapshots rendered JSON-LD representative routes.
-3. Консолидировать global `#localbusiness` + `#organization` в один
-   `LocalBusiness #organization`, не меняя фактические Gomel данные.
-4. Удалить WebSite SearchAction, сохранить WebSite и publisher reference.
-5. Заменить shared city `LocalBusiness` на shared city `Service` без address/geo.
-6. При подтверждённом author decision связать Article publisher/author; иначе не
+1. Зафиксировать before-snapshots rendered JSON-LD representative routes.
+2. Консолидировать global `#localbusiness` + `#organization` в один
+   `Organization #organization`: сохранить только подтверждённые organization facts,
+   nationwide `areaServed` и при корректности factual address; не переносить
+   неподтверждённые public-location geo/opening hours.
+3. Удалить WebSite SearchAction, сохранить WebSite и publisher reference.
+4. Заменить shared city `LocalBusiness` на shared city `Service` без
+   address/geo/openingHours.
+5. При подтверждённом author decision связать Article publisher/author; иначе не
    смешивать это с обязательным city fix.
-7. Не менять Product/Offer, FAQ, Breadcrumb, metadata, geo meta tags или UI.
-8. Preview QA -> owner approval -> отдельный merge/deploy -> Production schema smoke.
+6. Не менять Product/Offer, FAQ, Breadcrumb, metadata, geo meta tags или UI.
+7. Preview QA -> owner approval -> отдельный merge/deploy -> Production schema smoke.
 
-Такой порядок сначала удаляет ложные city locations, а optional identity polish не
-блокирует критическую correction.
+Удаление ложных city locations и переход на city `Service` не зависят от окончательного
+решения о статусе Gomel office. Открытые вопросы о публичном посещении, location hours,
+legal name, author и `sameAs` не должны блокировать эту correction.
 
 ## 9. QA plan для будущего implementation
 
 ### Automated rendered checks
 
 - parse every `script[type="application/ld+json"]` on representative routes;
-- assert один global business `@id /#organization` и отсутствие `/#localbusiness`;
+- assert один global `Organization` с `@id /#organization` и отсутствие
+  `/#localbusiness`;
 - assert city routes не содержат city-specific `LocalBusiness`, address или geo;
 - assert city `Service.provider.@id = /#organization` и правильный `areaServed`;
-- assert global address/geo остаются Gomel, а `areaServed` остаётся Беларусь;
+- assert factual Gomel address сохраняется только в согласованной роли, global node не
+  содержит неподтверждённые public-location geo/opening hours, а `areaServed` остаётся
+  Беларусь;
 - assert WebSite не содержит SearchAction;
 - assert Product/Offer image, price, currency, availability и canonical URL не изменились;
 - assert Article dates/image/mainEntityOfPage и Breadcrumb/FAQ counts не регрессировали.
@@ -353,7 +374,7 @@ Representative routes: `/`, `/kontakty`, `/lida`, `/grodno`, `/vitebsk`,
 
 ### Validators
 
-- Google Rich Results Test: homepage/contact LocalBusiness, service Product,
+- Google Rich Results Test: homepage/contact Organization, service Product,
   permission Article и Breadcrumb routes;
 - Schema.org Validator: полный graph и generic city `Service`, поскольку Service не
   является самостоятельным Google rich-result promise;
@@ -372,12 +393,14 @@ Representative routes: `/`, `/kontakty`, `/lida`, `/grodno`, `/vitebsk`,
 
 ## 10. Open business questions
 
-1. **OPEN QUESTION / BLOCKING:** Гомельский адрес — реально действующее физическое
-   business location, где уместны public map, business hours и LocalBusiness, или только
-   юридический/почтовый адрес? Если второе, тот же canonical `#organization` должен быть
-   `Organization`, без LocalBusiness geo/opening hours.
-2. **OPEN QUESTION / BLOCKING:** `Пн-Вс 10:00-19:00` — реальные часы именно Gomel
-   location или только часы обработки звонков/выездной работы?
+1. **OPEN QUESTION / BLOCKING ТОЛЬКО ДЛЯ БУДУЩЕГО `LocalBusiness`:** является ли
+   реальный Гомельский адрес обычной публичной customer-facing точкой посещения
+   клиентов? По текущим facts это прежде всего administrative/internal office, поэтому
+   target остаётся `Organization` без location geo. Ответ не блокирует удаление fake
+   city `LocalBusiness` nodes.
+2. **OPEN QUESTION / BLOCKING ТОЛЬКО ДЛЯ LOCATION HOURS:** `Пн-Вс 10:00-19:00` —
+   часы работы физической Gomel location или contact/service hours обработки звонков и
+   выездной работы? До подтверждения не использовать их как location `openingHours`.
 3. **OPEN QUESTION:** `МастерЗабор` — legal entity name или consumer brand? Если это
    бренд, какое подтверждённое legal name соответствует УНП `491386585`? Не добавлять
    `legalName` без ответа.
@@ -390,23 +413,35 @@ Representative routes: `/`, `/kontakty`, `/lida`, `/grodno`, `/vitebsk`,
 6. **OPEN QUESTION / NON-BLOCKING:** есть ли подтверждённые official profile URLs для
    `sameAs`? Не создавать и не угадывать их в этом stage.
 
-## 11. Альтернатива и почему она хуже сейчас
+## 11. Два допустимых сценария
 
-Альтернатива: оставить global `Organization #organization` и создать отдельный
-`LocalBusiness #gomel-location`, связав location через `parentOrganization`.
+### A. Подтверждённая публичная Gomel location
 
-Это допустимо и станет предпочтительным, если появятся несколько реальных филиалов или
-если юридическая organization и customer-facing Gomel branch действительно различаются.
-При текущем факте «одна компания + один адрес» модель создаёт две сущности, добавляет
-relationship maintenance и сохраняет вопрос, что именно является publisher/provider.
-Поэтому сейчас рекомендуется один canonical `LocalBusiness #organization`, а не две
-равноправные business identities.
+Если будет подтверждено, что Gomel address — реальная публичная customer-facing
+business location, допустим canonical `LocalBusiness #organization` с реальными
+address, coordinates и часами работы именно этой location, а также nationwide
+`areaServed`.
+
+### B. Текущие facts: administrative/internal office
+
+Пока обычное customer-facing посещение не подтверждено, preferred target — один
+canonical `Organization #organization`. Реальный address можно сохранять как factual
+organization/legal/postal address, но `LocalBusiness.geo` и location `openingHours`
+не используются. География обслуживания описывается через truthful `areaServed`, а
+city pages — через `Service.provider -> /#organization` и соответствующий City в
+`Service.areaServed`, без city address, geo или openingHours.
+
+Если позднее юридическая organization и подтверждённая customer-facing Gomel branch
+окажутся разными сущностями, можно отдельно оценить `Organization #organization` плюс
+`LocalBusiness #gomel-location` с явной связью. Сейчас такая сложность не подтверждена.
 
 ## 12. Финальный рекомендуемый target design
 
-1. Один canonical `LocalBusiness` с `@id /#organization`; он одновременно является
-   Organization по Schema.org inheritance.
-2. В нём только реальный Gomel address/geo и nationwide `areaServed: Беларусь`.
+1. Один canonical `Organization` с `@id /#organization` как nationwide service-area
+   business entity.
+2. В нём только подтверждённые organization facts, factual Gomel address при
+   корректном представлении и nationwide `areaServed: Беларусь`; без public-location
+   geo/openingHours на текущих facts.
 3. Отдельный `/#localbusiness` удалить; fake city business entities не создавать.
 4. `WebSite.publisher` и page-level provider/publisher ссылаются на `/#organization`.
 5. City pages описываются как `Service` с `provider` и city `areaServed`, без city
@@ -418,5 +453,7 @@ relationship maintenance и сохраняет вопрос, что именно
    byline decision.
 9. Root repetition на первом migration step оставить как harmless implementation
    trade-off, чтобы references разрешались в каждом rendered HTML.
-10. Никакого ranking promise: цель — точность, стабильная identity и отсутствие fake
-    locations.
+10. Возможный будущий canonical `LocalBusiness` для Gomel допустим только после
+    подтверждения реальной публичной customer-facing location и её реальных часов.
+11. Никакого ranking promise для Google или Yandex: цель — точность, стабильная
+    identity, правдивая service geography и отсутствие fake locations.
