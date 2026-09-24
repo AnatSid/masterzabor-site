@@ -2,11 +2,27 @@
 
 Дата аудита: 2026-09-23
 
-Статус: **APPROVED DESIGN / IMPLEMENTATION NOT STARTED**
+Статус: **IMPLEMENTED / PRODUCTION VERIFIED**
 
 Repository baseline: `3f763cb893bd32b38efb29eec1d5636e3503dbd2`
 
 Production: `https://www.masterzabor.by`
+
+## Implementation closeout
+
+- Production baseline: `58daf03b7503d5fc441b1807235f6bf674734fd7`.
+- Production deployment: `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` (`READY`).
+- Удалены ложные city-specific `LocalBusiness` и global `/#localbusiness`; оставлен один
+  canonical `Organization /#organization`.
+- City pages используют `Service -> provider /#organization + areaServed City`;
+  WebSite `SearchAction` удалён.
+- Product/Offer, Article identity, metadata, canonical, HTML geo meta и visible UI не
+  менялись.
+- Все 40 city routes прошли schema QA. Sitemap содержит 56 canonical URLs; 56/56 имеют
+  `lastmod = 2026-09-23`.
+
+Ниже сохранён утверждённый design и его исходная система доказательств; он не
+переписывается задним числом после implementation.
 
 ## 1. Scope и система доказательств
 
