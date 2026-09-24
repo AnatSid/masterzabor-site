@@ -123,16 +123,19 @@ plan, закрытый `LOCAL-SEO-01B` и официальные рекомен�
 **DESIGN RECOMMENDATION:** заменить его компактной секцией, которую можно просмотреть
 по подзаголовкам/строкам, а не добавлять ещё текст.
 
-### Gap 2 — service area не имеет правдивой pilot data model
+### Gap 2 — service area не имеет явной fallback-модели
 
 **VERIFIED FACT:** для Лиды, Гродно, Слонима, Новогрудка, Сморгони, Глубокого и Лепеля
 нет `districts`; пользователь видит только общую фразу `и рядом с городом`.
 
-**OPEN QUESTION:** какие конкретные nearby settlements действительно обслуживаются
-из каждого pilot hub и есть ли различия в условиях выезда/доставки между областями.
+**USER/BUSINESS FACT:** MasterZabor работает по Беларуси. Поэтому правдивая базовая
+география для CityPage — целевой город и его область; отдельный список соседних
+населённых пунктов не нужен для подтверждения этой зоны обслуживания.
 
-**DESIGN RECOMMENDATION:** публиковать только короткий owner-confirmed список, без
-улиц, без fake addresses и без автоматического создания routes.
+**DESIGN RECOMMENDATION:** по умолчанию выводить `город + область`. Если позднее есть
+короткий owner-confirmed список meaningful nearby settlements, его можно показать как
+enhancement. Не генерировать settlements автоматически, не брать случайные названия с
+карты, не добавлять улицы/fake addresses и не создавать для settlements routes.
 
 ### Gap 3 — proof достоверный, но provenance encoded в строке ID
 
@@ -180,8 +183,8 @@ layer и более ясной proof hierarchy.
 3. **Новый компактный H2:**
    `Работаем в <городе> и рядом: расчёт, доставка и монтаж`.
    Внутри не более четырёх коротких смысловых строк:
-   - `Зона выезда` — город, city districts при наличии и owner-confirmed nearby
-     settlements;
+   - `Зона выезда` — по умолчанию город + область; при наличии можно дополнить
+     реальными city districts и owner-confirmed nearby settlements;
    - `До выезда` — примерная длина, высота, материал, ворота/калитка и особенности
      подъезда/участка;
    - `Выезд и доставка` — только подтверждённая shared business wording: детали и
@@ -217,7 +220,7 @@ layer и более ясной proof hierarchy.
 ```ts
 type CityServiceArea = {
   cityDistricts?: string[];
-  nearbySettlements: string[];
+  nearbySettlements?: string[];
 };
 
 type CityLocalContentV2 = {
@@ -250,9 +253,17 @@ cleanup, когда все поддерживаемые city records будут 
 **DESIGN RECOMMENDATION:** существующее `districts` механически мигрирует в
 `serviceArea.cityDistricts`; одно и то же значение больше не выводится дважды.
 
-**USER/BUSINESS FACT:** `nearbySettlements` заполняется только после подтверждения
-владельца, что выезд туда фактически выполняется. Это labels, не links и не обещание
-фиксированной цены/срока.
+**DESIGN RECOMMENDATION:** rendering rule для `serviceArea`:
+
+- если есть подтверждённые meaningful `nearbySettlements`, вывести их после базовой
+  географии;
+- если списка нет, использовать честную shared формулировку `город + область`;
+- не генерировать settlements автоматически и не брать случайные названия с карты;
+- не создавать для settlements routes автоматически.
+
+**USER/BUSINESS FACT:** `nearbySettlements` — optional enhancement. Если поле
+заполняется, владелец подтверждает фактический выезд в перечисленные населённые пункты.
+Значения остаются labels, а не links или обещанием фиксированной цены/срока.
 
 ### 5.2 Explicit project proof status
 
@@ -293,8 +304,9 @@ records:
 
 1. **VERIFIED FACT / existing:** slug, формы названия, область, coordinates и
    semantic `updatedAt`.
-2. **USER/BUSINESS FACT / new:** подтверждённые `nearbySettlements` и, где применимо,
-   реальные `cityDistricts`.
+2. **USER/BUSINESS FACT / new:** где применимо, реальные `cityDistricts`; optional
+   `nearbySettlements` добавляются только как подтверждённое enhancement. Без этого
+   списка CityPage использует город + область.
 3. **VERIFIED FACT / derived:** exact/regional/nationwide project proof из
    `content/projects.ts`; не отдельный city copy field.
 4. **USER/BUSINESS FACT / conditional:** только реальное исключение в логистике.
@@ -334,16 +346,17 @@ provenance или отдельные templates.
   старый starter record с `city.slug = lida` правильно исключён из local proof.
 - **VERIFIED FACT:** текущий mode — `oblast`; первые supporting records приходят из
   подтверждённых проектов Гродненской области.
-- **OPEN QUESTION:** финальный owner-confirmed список nearby settlements для Лидского
-  hub. Названия не следует угадывать в design doc или генерировать по карте.
+- **DESIGN RECOMMENDATION:** nearby settlements для первой v2 не обязательны. Если
+  позднее появится короткий owner-confirmed список, его можно добавить без изменения
+  template; названия нельзя угадывать или генерировать по карте.
 
 ### Visible v2 structure
 
 1. Hero: `Установка заборов в Лиде под ключ`; `Стартовый ориентир от 30 BYN/м.п.`.
 2. Shared trust section.
 3. `Работаем в Лиде и рядом: расчёт, доставка и монтаж`:
-   - Лида;
-   - подтверждённые nearby settlements после business approval;
+   - fallback geography: Лида + Гродненская область;
+   - optional подтверждённые nearby settlements можно добавить позднее;
    - shared estimate/visit/delivery/pricing facts.
 4. `Наши работы в Гродненской области`:
    - каждая card показывает фактический город;
@@ -366,16 +379,17 @@ provenance или отдельные templates.
   `real-green-profnastil-glubokoe`; current mode — `exact`.
 - **VERIFIED FACT:** после exact project current selection может дополняться
   confirmed records из Постав и Лепеля в рамках limit 3.
-- **OPEN QUESTION:** финальный owner-confirmed список nearby settlements для
-  Глубокского hub.
+- **DESIGN RECOMMENDATION:** nearby settlements для первой v2 не обязательны. Если
+  позднее появится короткий owner-confirmed список, его можно добавить без изменения
+  template; названия нельзя угадывать или генерировать по карте.
 
 ### Visible v2 structure
 
 1. Hero: `Установка заборов в Глубоком под ключ`; `Стартовый ориентир от 30 BYN/м.п.`.
 2. Shared trust section.
 3. `Работаем в Глубоком и рядом: расчёт, доставка и монтаж`:
-   - Глубокое;
-   - подтверждённые nearby settlements после business approval;
+   - fallback geography: Глубокое + Витебская область;
+   - optional подтверждённые nearby settlements можно добавить позднее;
    - те же shared estimate/visit/delivery/pricing facts, без искусственной rewrite.
 4. `Наши работы в Глубоком`:
    - first card: exact confirmed project, label `Объект в Глубоком`;
@@ -403,7 +417,8 @@ provenance или отдельные templates.
 
 Implementation boundaries:
 
-1. добавить `localContent` только этим records после owner confirmation service areas;
+1. добавить `localContent` только этим records; отсутствие `nearbySettlements` не
+   блокирует v2, базовый output использует город + область;
 2. добавить explicit `proofStatus` всем существующим project records без изменения
    их текста/assets;
 3. в одном `CityPage` render v2 по `localContent.version`, без slug conditions;
@@ -413,9 +428,11 @@ Implementation boundaries:
 7. semantic `updatedAt` менять только у реально изменённых pilot routes и только в
    implementation stage.
 
-**OPEN QUESTION / BLOCKING FOR IMPLEMENTATION:** owner-confirmed nearby settlements и
-точная shared wording условий выезда/доставки. Без них можно реализовать proof status,
-но нельзя честно заявить, что service-area gap закрыт.
+**OPEN QUESTION / NON-BLOCKING:** есть ли фактические региональные отличия в условиях
+выезда/доставки, которые когда-либо потребуется отразить отдельным shared operational
+profile. Для первой v2 implementation неизвестных blocking business claims не
+остаётся, если wording ограничена утверждённым nationwide service fact и существующим
+правилом уточнять условия после предварительного расчёта и согласования.
 
 ## 11. QA и measurement plan
 
@@ -433,7 +450,8 @@ Implementation boundaries:
 - все 40 city routes остаются `200`; pilot uses v2, остальные legacy shared output;
 - один H1; логичная H2 hierarchy; city grammar проверена вручную;
 - zero fake office/address/review/project/street claims;
-- every nearby settlement совпадает с owner-approved source list;
+- если `nearbySettlements` заполнены, every value совпадает с owner-approved source
+  list; отсутствие списка корректно выводит город + область;
 - exact/regional/nationwide labels совпадают с фактическим `project.city`;
 - starter projects ни при каких IDs не попадают в proof;
 - service cards сохраняют shared price/link/image data;
@@ -481,8 +499,9 @@ contours и business usefulness.
 2. Для pilot подключать v2 через `city.localContent`, не через hardcoded slugs.
 3. Заменить generic `citySeoText()` и отдельный `districts` block одним компактным
    service-area/commercial section.
-4. Добавить только owner-confirmed nearby settlements; не добавлять улицы, адреса или
-   автоматические routes.
+4. Использовать город + область как честный fallback; owner-confirmed nearby
+   settlements остаются optional enhancement. Не добавлять улицы, случайные названия
+   с карты, адреса или автоматические routes.
 5. Сохранить shared services/prices и лишь уточнить, что цена — стартовый ориентир,
    а не city tariff.
 6. Локализовать только H2 `Типы заборов` и `Ворота и калитки`; cards не дублировать.
