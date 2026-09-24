@@ -4,7 +4,7 @@
 
 Статус: **ACTIVE SOURCE OF TRUTH FOR NEXT LOCAL SEO STAGES**
 
-Current main: `b9c6e521cdbf38524990ac340024d65302e2d563` (approved docs-only merge финального `LOCAL-SEO-01C` design; application implementation not started)
+Approved `LOCAL-SEO-01C` design baseline before docs reconciliation: `b9c6e521cdbf38524990ac340024d65302e2d563` (application implementation not started)
 
 Canonical host: `https://www.masterzabor.by`
 

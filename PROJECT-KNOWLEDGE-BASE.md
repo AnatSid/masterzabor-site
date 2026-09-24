@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Current main baseline: `b9c6e521cdbf38524990ac340024d65302e2d563` (approved docs-only merge финального `LOCAL-SEO-01C` design; application implementation not started).
+Approved `LOCAL-SEO-01C` design baseline before docs reconciliation: `b9c6e521cdbf38524990ac340024d65302e2d563` (application implementation not started).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -774,18 +774,22 @@ Single Lighthouse/PSI score сам по себе не является acceptanc
 - Sitemap/canonical/OpenGraph/JSON-LD/internal links должны совпадать с final 200 URL.
 - `SearchAction` removed and Production verified in `LOCAL-SEO-01B`; do not list it as a future removal task.
 - Product JSON-LD для услуг должен содержать реальный service hero `image`; Product Offer URL должен быть canonical URL конкретной услуги, не homepage и не `/tseny`.
-- City pages требуют уникальных proof-assets, иначе doorway/thin risk.
+- City pages требуют truthful meaningful proof и полезной local differentiation, но
+  уникальный photo set для каждого города не является requirement. Confirmed regional
+  projects можно переиспользовать на нескольких city pages своей области; exact-city
+  proof остаётся приоритетом/bonus, а не prerequisite. Подробная target-модель — в
+  approved `LOCAL-SEO-01C` proof model.
 - Blog должен перейти на MDX/CMS/data model перед ростом до 500+ статей.
 
 ### Google Discovery Audit
 
-SEO-03 confirmed that all 55 canonical URLs are technically indexable and found no
-common technical blocker. The strongest quality weakness is city-page similarity and
-limited local proof: 28/40 city pages use nationwide project fallback. The related-city
-graph is asymmetric; `/petrikov` is the clearest near-orphan with one incoming city
-source. Blog URLs are discoverable from Footer navigation, but article content provides
-weak contextual discovery for commercial and city pages. Google's actual crawl/indexing
-decision remains unknown without current GSC/API data and Googlebot evidence.
+SEO-03 confirmed that all 55 canonical URLs were technically indexable and found no
+common technical blocker. Historical findings at that time included city-page similarity,
+limited local proof, an asymmetric related-city graph and `/petrikov` as the clearest
+near-orphan. SEO-04 subsequently fixed the related-city defect; current selection is
+deterministic and balanced, so asymmetry and the `/petrikov` near-orphan state are not
+current issues. Blog contextual discovery and Google's actual crawl/indexing decisions
+remain separate questions that require current first-party evidence.
 
 ### Balanced city internal linking
 

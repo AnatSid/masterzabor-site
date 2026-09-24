@@ -4,7 +4,7 @@
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Current main: `b9c6e521cdbf38524990ac340024d65302e2d563` (approved docs-only merge финального LOCAL-SEO-01C design)
+Approved `LOCAL-SEO-01C` design baseline before docs reconciliation: `b9c6e521cdbf38524990ac340024d65302e2d563`
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Current main baseline: `b9c6e521cdbf38524990ac340024d65302e2d563`; последнее изменение — approved docs-only merge финального `LOCAL-SEO-01C` design. Application implementation `LOCAL-SEO-01C` ещё не выполнялся.
+- Approved `LOCAL-SEO-01C` design baseline before docs reconciliation: `b9c6e521cdbf38524990ac340024d65302e2d563`. Application implementation `LOCAL-SEO-01C` ещё не выполнялся.
 - Последний application/schema Production baseline: `58daf03b7503d5fc441b1807235f6bf674734fd7` (`LOCAL-SEO-01B` implementation merge).
 - `LOCAL-SEO-01B` design и implementation завершены; Production deployment `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` имеет статус `READY`.
 - Текущий PERF discovery / optimization stage закрыт; после PERF-04A дополнительные discovery-этапы PERF-05A/05B/06 не потребовали нового production patch: дальнейшие изменения требуют новых воспроизводимых доказательств.
@@ -571,7 +571,7 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Current conclusion: there is no evidence of a general technical indexability blocker. Google knows individual city pages; commercial visibility is uneven. Query rows and one-session rank snapshots must not be treated as complete or stable demand/rank data.
    - `LOCAL-SEO-01B-entity-schema-design`: **DONE / APPROVED DESIGN**. Audit и target entity model зафиксированы в [`docs/LOCAL-SEO-01B-ENTITY-SCHEMA-DESIGN.md`](LOCAL-SEO-01B-ENTITY-SCHEMA-DESIGN.md). Подтверждён главный defect: city-specific fake/composite `LocalBusiness` locations. Approved target: один canonical `Organization /#organization` и city `Service -> provider /#organization + areaServed City`.
    - `LOCAL-SEO-01B-implementation`: **DONE / PRODUCTION VERIFIED**. Удалены ложные city-specific `LocalBusiness` и global `/#localbusiness`; оставлен один canonical `Organization /#organization`; city pages используют `Service -> provider /#organization + areaServed City`; WebSite `SearchAction` удалён. Product/Offer, Article identity, metadata, canonical, HTML geo meta и visible UI не менялись. Все 40 city routes прошли schema QA. Production deployment `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` — `READY`; sitemap содержит 56 canonical URLs, 56/56 имеют `lastmod = 2026-09-23`.
-   - `LOCAL-SEO-01C-design`: **DONE / APPROVED / MERGED** in current main `b9c6e521cdbf38524990ac340024d65302e2d563`. Final architecture is documented in [`docs/LOCAL-SEO-01C-CITYPAGE-CONTENT-MODEL-DESIGN.md`](LOCAL-SEO-01C-CITYPAGE-CONTENT-MODEL-DESIGN.md); no application code was changed by the design merge.
+   - `LOCAL-SEO-01C-design`: **DONE / APPROVED / MERGED** at design baseline `b9c6e521cdbf38524990ac340024d65302e2d563`. Final architecture is documented in [`docs/LOCAL-SEO-01C-CITYPAGE-CONTENT-MODEL-DESIGN.md`](LOCAL-SEO-01C-CITYPAGE-CONTENT-MODEL-DESIGN.md); no application code was changed by the design merge.
    - `LOCAL-SEO-01C-implementation-pilot`: **NEXT**. Existing routes only: `/lida`, `/grodno`, `/slonim`, `/glubokoe`, `/lepel`; no new routes. Preserve one shared data-driven `CityPage` and one refined connected `citySeoText()` in its current position/approximate length; remove `за 5 минут` and unsupported regional popularity; retain approved business facts and natural `профнастил (металлопрофиль)` wording; add contextual links to `/zabory-iz-profnastila`, `/zabory-iz-evroshtaketnika`, `/zabory-iz-setki-rabitsy` and `/tseny`; localize H2 for fence types and gates/wickets. Do not add mandatory word count, FAQ, a second price/text block, slug templates or city × material URLs.
    - Approved proof target for `01C` implementation: `content/projects.ts` remains the only registry; add explicit `proofStatus: "confirmed" | "starter"` and optional `proofPriority`; select about three cards deterministically as exact-city confirmed first, then same-oblast confirmed, then nationwide only when regional proof is insufficient. Exact-city proof is a bonus, not a prerequisite; one confirmed project may support several city pages in its oblast; 3–6 strong confirmed projects per oblast is an orientation, not a quota. Do not create a second manual project-ID registry.
    - `LOCAL-SEO-01D-new-route-regional-expansion`: **AFTER 01C IMPLEMENTATION / MEASUREMENT APPROVAL**. No new-route rollout until the existing-route pilot is implemented, recrawled, measured in Google and Yandex, and separately approved by the owner.
