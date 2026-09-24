@@ -3,7 +3,7 @@
 Дата начала базы знаний: 2026-06-03  
 Проект: `masterzabor`  
 Production: https://www.masterzabor.by
-Latest production baseline: `1cb268db73258c296589845f4a6dbcd6cf7434cb` (QZ-07 docs closeout merge; application runtime remains the QZ-06E implementation).
+Approved `LOCAL-SEO-01C` design baseline before docs reconciliation: `b9c6e521cdbf38524990ac340024d65302e2d563` (application implementation not started).
 Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d9140ea` (`feat(service): add real kalitki photography`)
 
 ## Рабочие файлы проекта
@@ -111,7 +111,7 @@ architecture changes without separate rationale and user decision.
 - QZ-06F completed the separately approved one-time Production normalization: legacy `leads:{date}` keys are gone, pre-QZ-06E canonical/status/analytics keys have date-derived retention, missing indexes are backfilled, and no target key remains without expiry. Final anomalies were zero missing indexes and zero wrong/orphan locators. QZ-06F changed no code, commit or deployment.
 - Telegram shows the persisted lead ID and original stored submission time. `/stats_*` remains aggregate reporting; `/leads_today`, `/leads_week`, `/leads_month` and `/lead <id>` provide detailed stored-lead retrieval, newest-first, within retention.
 - The Telegram command menu was synchronized through `scripts/set-telegram-bot.ts`. `setMyCommands` registered `/report`, three `/stats_*`, three `/leads_*`, `/lead`, three `/traffic_*`, `/top`, and `/help`. The webhook remains `https://www.masterzabor.by/api/telegram-webhook` with zero pending updates at sync time.
-- `SearchAction` в JSON-LD есть без реального поиска.
+- `SearchAction` удалён в `LOCAL-SEO-01B` и Production verified; это больше не open issue или technical debt.
 - P1-06.1 сформировал pricing strategy: `/tseny` сохранена как indexable pricing landing, а Header теперь намеренно содержит `Цены -> /tseny` after `Наши работы`.
 - P1-06.3 aligned CityPage calculator UX with the approved compact QuizForm flow while preserving one universal CityPage template and city/source lead context.
 - P1-06.4 aligned the shared ServicePage template with the approved homepage/`/tseny` commercial visual system and intentionally switched ServicePage to compact QuizForm presentation while preserving service routes, metadata/schema and lead behavior.
@@ -163,7 +163,7 @@ architecture changes without separate rationale and user decision.
 ## Repository Map
 
 - `app/` - App Router pages, layout, metadata routes, API routes.
-- `app/layout.tsx` - global metadata, LocalBusiness/Organization/WebSite JSON-LD, GA/Yandex scripts, Header/Footer/FloatingButtons.
+- `app/layout.tsx` - global metadata, canonical Organization/WebSite JSON-LD, GA/Yandex scripts, Header/Footer/FloatingButtons.
 - `app/page.tsx` - homepage, hero, trust, services, works, quiz, reviews, geography, lead form, FAQ.
 - `app/[city]/page.tsx` - 40 city pages from `content/cities.ts`; `dynamicParams = false`.
 - `app/blog/page.tsx` - blog index.
@@ -380,7 +380,8 @@ Future check protocol after `npm run dev`:
 - Homepage hero image source after P1-02.2: `C:\DiscD\проекты сайта\Фото типов забора\Исходник с логотипом.png`, optimized into `public/images/hero/homepage-fence-with-logo.jpeg`; keep it as visual-only background while the hero H1/text stays real HTML for SEO and accessibility.
 - ServicePage photo workflow is complete for all six service pages: real service photos were added one category at a time using `source folder -> hero selection -> gallery -> optimization -> service data -> localhost -> desktop/mobile visual approval -> commit/push/production`. Do not redesign the shared layout per service; tune only image assets, human `alt`, and optional focal/object-position.
 - CityPage visual parity and proof are complete after P1-05.1. All 40+ city URLs still use one route/template chain: `app/[city]/page.tsx -> components/templates/CityPage.tsx -> content/cities.ts`. CityPage reuses `BenefitTrustSection`, real service thumbnails and `ProjectCard` proof cards.
-- City proof selection after P1-05.1 is deterministic: confirmed projects are `content/projects.ts` records with `id.startsWith("real-")`; older starter/demo records are excluded from truthful local proof. Selection order is exact city -> same oblast -> nationwide, preserving featured-first/source order inside each bucket.
+- Current Production city proof selection after P1-05.1 is deterministic: confirmed projects are still identified by `content/projects.ts` records with `id.startsWith("real-")`; older starter/demo records are excluded. This is the current implementation, not the final content-model target.
+- Approved but not yet implemented `LOCAL-SEO-01C` target: `content/projects.ts` remains the single source of truth, with explicit `proofStatus: "confirmed" | "starter"` and optional `proofPriority`. Selection stays deterministic at about three cards: exact-city confirmed first, then same-oblast confirmed, nationwide only when regional proof is insufficient. Material diversity is desirable, not mandatory; one confirmed project may support several city pages in its oblast; 3–6 strong confirmed projects per oblast is an orientation, not a quota; no second manual project-ID registry.
 - City proof reference behavior after P1-05.1: `/slonim` shows exact-city heading `Наши работы в Слониме`; `/lida` shows oblast heading `Наши работы в Гродненской области`; `/gomel` shows nationwide fallback heading `Примеры наших работ по Беларуси` and does not claim works in Gomel.
 - `/zabory-iz-evroshtaketnika` is the first approved real-photo ServicePage reference; `/zabory-iz-profnastila` is the second; `/zabory-iz-setki-rabitsy` is the third; `/vorota-raspashnye` is the fourth; `/vorota-otkatnye` is the fifth; `/kalitki` is the sixth and final P1-04 page. Homepage, `/nashi-raboty`, city pages and blog are outside this service-photo workflow.
 - For square ServicePage hero, prefer a source composition prepared for 1:1 when the full object must stay visible. Keep important visual elements away from the source image edges; ordinary photos are still acceptable when `480x480 object-cover` looks good.
@@ -408,7 +409,7 @@ Superseded old P1-06 scope:
 
 - The old stage idea `commercial pages visual polish` for `/tseny`, `/otzyvy`, `/kontakty` should not be treated as three automatically required redesigns anymore.
 - `/otzyvy` should not be redesigned now without real review proof: screenshots, external sources, confirmed objects.
-- `/kontakty` does not need a separate redesign now; the current functional page remains as is. A soft polish can be considered later only as a separate decision.
+- `/kontakty` is not a current SEO blocker; metadata/H1 Gomel cleanup is DONE. The owner has a separate visual-polish backlog for this page, so icons/visual refinement may be considered only in a future scoped UI stage.
 
 P1-06.1 implementation commit: `559b21a55ab9c6056ec7d7b03adbe553be49f1a1`.
 
@@ -771,20 +772,24 @@ Single Lighthouse/PSI score сам по себе не является acceptanc
 - `www` как canonical host подтверждён историей и production.
 - URL policy должна быть no-slash.
 - Sitemap/canonical/OpenGraph/JSON-LD/internal links должны совпадать с final 200 URL.
-- `SearchAction` удалить или реализовать поиск.
+- `SearchAction` removed and Production verified in `LOCAL-SEO-01B`; do not list it as a future removal task.
 - Product JSON-LD для услуг должен содержать реальный service hero `image`; Product Offer URL должен быть canonical URL конкретной услуги, не homepage и не `/tseny`.
-- City pages требуют уникальных proof-assets, иначе doorway/thin risk.
+- City pages требуют truthful meaningful proof и полезной local differentiation, но
+  уникальный photo set для каждого города не является requirement. Confirmed regional
+  projects можно переиспользовать на нескольких city pages своей области; exact-city
+  proof остаётся приоритетом/bonus, а не prerequisite. Подробная target-модель — в
+  approved `LOCAL-SEO-01C` proof model.
 - Blog должен перейти на MDX/CMS/data model перед ростом до 500+ статей.
 
 ### Google Discovery Audit
 
-SEO-03 confirmed that all 55 canonical URLs are technically indexable and found no
-common technical blocker. The strongest quality weakness is city-page similarity and
-limited local proof: 28/40 city pages use nationwide project fallback. The related-city
-graph is asymmetric; `/petrikov` is the clearest near-orphan with one incoming city
-source. Blog URLs are discoverable from Footer navigation, but article content provides
-weak contextual discovery for commercial and city pages. Google's actual crawl/indexing
-decision remains unknown without current GSC/API data and Googlebot evidence.
+SEO-03 confirmed that all 55 canonical URLs were technically indexable and found no
+common technical blocker. Historical findings at that time included city-page similarity,
+limited local proof, an asymmetric related-city graph and `/petrikov` as the clearest
+near-orphan. SEO-04 subsequently fixed the related-city defect; current selection is
+deterministic and balanced, so asymmetry and the `/petrikov` near-orphan state are not
+current issues. Blog contextual discovery and Google's actual crawl/indexing decisions
+remain separate questions that require current first-party evidence.
 
 ### Balanced city internal linking
 
@@ -796,16 +801,40 @@ ring with at most eight peers per page. Do not restore the former
 `.filter(...).slice(0, 8)` array-order behavior. Future LOCAL-SEO expansion must retain
 balanced peer coverage as the city dataset grows.
 
-### Future Local SEO Expansion Direction
+### Current staged Local SEO direction
 
-`LOCAL-SEO-01-regional-low-frequency-expansion-discovery` принят как future / not
-started направление для Гродненской, Витебской и Минской областей. До создания новых
-city pages нужно исследовать 40-60 небольших городов/посёлков по совокупности спроса,
-частного сектора, логистики, installation competition, SERP и доступного подтверждённого
-MasterZabor proof, затем выбрать только 15-25 Tier A кандидатов. Population не является
-самостоятельным порогом. Расширение допустимо только через общий data-driven `CityPage`,
-после учёта SEO-03 weaknesses и pilot batch 10-20 URL; doorway-like страницы, которые
-отличаются только названием населённого пункта, не создавать.
+Старая модель `future / not started`, research `40–60` населённых пунктов, shortlist
+`15–25 Tier A` и pilot `10–20 URL` **SUPERSEDED** текущим master plan:
+
+- `LOCAL-SEO-01A` discovery/reconciliation — DONE;
+- `LOCAL-SEO-01B` design + implementation — DONE / PRODUCTION VERIFIED;
+- `LOCAL-SEO-01C design` — DONE / APPROVED / MERGED;
+- `LOCAL-SEO-01C implementation pilot` — NEXT, только existing routes `/lida`,
+  `/grodno`, `/slonim`, `/glubokoe`, `/lepel`;
+- `LOCAL-SEO-01D` new-route/regional expansion — только после 01C implementation,
+  recrawl, Google + Yandex measurement и отдельного owner approval;
+- `LOCAL-SEO-01E` measurement/rollout decision — после recrawl и достаточных данных.
+
+Google остаётся priority #1 для диагностики слабой visibility/growth; Yandex —
+обязательный параллельный контур. Нельзя ухудшать уже работающий Yandex ради
+теоретического Google improvement; pilot measurement обязателен по обоим поисковикам.
+
+Отдельно остаются future/deferred: starter/demo portfolio provenance, Yandex Webmaster
+regionality/data audit, GBP/entity strategy, possible dedicated MasterZabor phone, blog
+expansion/CMS, `/kontakty` visual polish, `SEO-META-05` и `QZ-09`.
+
+Новые routes в текущем pilot не создаются. Doorway-like pages, fake locations и
+city-specific hardcoded templates запрещены; подробный active source —
+`docs/SEO-INDEXING-LOCAL-SEO-MASTER-PLAN.md`.
+
+`2026-09-24` owner Yandex screenshot по `заборы из профнастила лида` показал
+MasterZabor первым organic result после ads в одной конкретной сессии. Yandex snippet
+сохранял старый title, хотя live Production HTML и canonical уже были актуальными.
+Это `SEO-META-05` stale/rewrite observation, а не стабильный ranking conclusion и не
+основание снова менять metadata до recrawl. GSC подтвердил `/lida` в индексе и принял
+Request Indexing; Yandex Webmaster показал `/lida` и `/grodno` как `Заявка обработана`,
+`/volkovysk` как `В очереди` и две видимые заявки `/lida`. Полный 12-URL batch не считать
+обработанным без доказательств.
 
 ## Target Architecture
 
@@ -951,7 +980,11 @@ Current decision:
 - Daily Telegram `/report` shows conversion analytics in separated sections: daily contact clicks, month-to-date contact clicks, daily quiz funnel and month-to-date quiz funnel.
 - Daily Telegram `/report` date labels omit the Russian `г.` suffix after years.
 
-## Roadmap Summary
+## Historical Roadmap Summary
+
+Этот нижний список сохраняет ранний audit context и не является current roadmap.
+Актуальные статусы находятся в `docs/PROJECT-ROADMAP-TRACKER.md`; выполненные пункты
+ниже не переоткрывать автоматически.
 
 Critical now:
 
@@ -960,7 +993,7 @@ Critical now:
 - Close `masterzabor-site.vercel.app` duplicate surface.
 - Make lead storage atomic.
 - Fail-close cron/webhook secrets.
-- Remove or implement `SearchAction`.
+- `SearchAction` removal: DONE / PRODUCTION VERIFIED in `LOCAL-SEO-01B`.
 - Add image `sizes`.
 - Keep lint/build/MCP checks in every stage to catch regressions.
 
@@ -1005,7 +1038,7 @@ Desirable:
 
 Удалить или заменить:
 
-- Фальшивый `SearchAction`, если поиск не реализован.
+- `SearchAction`: already removed in `LOCAL-SEO-01B`; historical resolved item.
 - Placeholder visuals как production portfolio.
 - `latest` dependency pins.
 - `next lint` script после проверки текущей версии tooling.

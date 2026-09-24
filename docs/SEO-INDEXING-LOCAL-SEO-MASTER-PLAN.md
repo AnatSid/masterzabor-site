@@ -4,7 +4,7 @@
 
 Статус: **ACTIVE SOURCE OF TRUTH FOR NEXT LOCAL SEO STAGES**
 
-Production baseline: `58daf03b7503d5fc441b1807235f6bf674734fd7`
+Approved `LOCAL-SEO-01C` design baseline before docs reconciliation: `b9c6e521cdbf38524990ac340024d65302e2d563` (application implementation not started)
 
 Canonical host: `https://www.masterzabor.by`
 
@@ -67,6 +67,8 @@ repository и не превращает старые snapshots в вечную �
 - **VERIFIED FACT:** `SEO-03` не обнаружил общего technical indexability blocker:
   проверенные canonical routes отдавали `200`, self-canonical и не были закрыты
   robots/noindex. Это не доказывает, что Google обязан индексировать каждую страницу.
+- **VERIFIED FACT:** `LOCAL-SEO-01C` final design утверждён и merged в current main;
+  application implementation ещё не выполнялся.
 
 ## 4. Что показывают поисковые данные
 
@@ -99,13 +101,28 @@ GSC query rows могут быть thresholded. Отсутствие строк�
 
 - **DIRECT SERP OBSERVATION:** `заборы гродно` — около позиции 5 в одной сессии.
 - **DIRECT SERP OBSERVATION:** Лида и Витебск не попали в top 10 в одном check.
-- **OWNER OBSERVATION:** `заборы из профнастила лида` — позиция 1.
+- **OWNER OBSERVATION / older undated snapshot:** `заборы из профнастила лида` — позиция 1; dated context приведён в 4.3.
 - **DIRECT SERP OBSERVATION:** тот же запрос — примерно top 6 в независимой проверке.
 - **VERIFIED FACT:** автоматизированные Google checks встретили CAPTCHA; точную
   позицию после этого нельзя честно заявлять.
 
 Любой будущий rank snapshot должен фиксировать дату, поисковик, устройство, регион и
 персонализацию. Разовое место не является стабильным rank.
+
+### 4.3 Recrawl и snippet snapshots от 2026-09-24
+
+- **OWNER OBSERVATION / YANDEX:** screenshot по запросу `заборы из профнастила лида`
+  показал MasterZabor первым organic result после рекламных блоков в этой конкретной
+  сессии. Это dated observation, не доказательство стабильной позиции или ranking cause.
+- **OWNER OBSERVATION / SEO-META-05:** Yandex snippet всё ещё показывал старый title
+  `Заборы в Лиде — купить и установить | МастерЗабор`, хотя live Production HTML уже
+  отдавал `Установка заборов в Лиде под ключ - профнастил, штакетник, рабица` и
+  canonical `https://www.masterzabor.by/lida`. Считать это stale/rewrite observation;
+  metadata сейчас повторно не менять, продолжать monitoring после recrawl.
+- **FIRST-PARTY DATA / GSC:** `/lida` была в индексе; manual Request Indexing принят.
+- **FIRST-PARTY DATA / YANDEX WEBMASTER:** `/lida` и `/grodno` — `Заявка обработана`;
+  `/volkovysk` — `В очереди` на момент screenshot; видны две заявки `/lida`.
+- Нет доказательства, что полный 12-URL batch уже обработан; такой вывод не делать.
 
 ## 5. Рабочая интерпретация indexing и Local SEO
 
@@ -200,8 +217,9 @@ records без подтверждённого provenance не считаются
 3. Поставы, Щучин, Островец, Ошмяны;
 4. Витебск, Орша, Полоцк, Новополоцк, Волковыск.
 
-Strong new-route candidates: Поставы, Щучин, Островец и Ошмяны. Это shortlist для
-pilot approval, а не разрешение создавать routes.
+Поставы, Щучин, Островец и Ошмяны остаются возможными future new-route candidates,
+но не входят в первый `LOCAL-SEO-01C` implementation pilot. Текущий pilot использует
+только существующие `/lida`, `/grodno`, `/slonim`, `/glubokoe`, `/lepel`.
 
 Discovery-only candidates:
 
@@ -279,14 +297,17 @@ migration не менялись.
 | Старый `LOCAL-SEO-01 = FUTURE / NOT STARTED` | **SUPERSEDED** | Discovery/reconciliation substantially complete; работа разделена на `01A` — `01E`. |
 | Physical `LocalBusiness` для каждого города | **RETIRED / NOT APPLICABLE FOR CURRENT BUSINESS FACTS** | У MasterZabor нет 40 подтверждённых физических офисов. Не возвращать эту модель без новых реальных филиалов. |
 | Обязательные 300–500 уникальных слов на city page | **SUPERSEDED / UNSUPPORTED AS A REQUIREMENT** | Подтверждённого обязательного порога нет; сначала usefulness и proof. |
-| Массовый rollout десятков geo pages | **RETIRED FOR CURRENT STRATEGY** | Текущая стратегия допускает только небольшой измеряемый pilot после design approval. |
+| Массовый rollout десятков geo pages | **RETIRED FOR CURRENT STRATEGY** | Сейчас разрешён только измеряемый pilot на пяти existing routes; новые routes требуют recrawl, measurement и отдельного approval. |
 | Обязательный отдельный price/FAQ block только ради SEO | **SUPERSEDED / NOT REQUIRED** | Текущие страницы уже покрывают intent; новый блок требует самостоятельной пользовательской функции. |
-| Shared CityPage/content model refinements | **FUTURE** | После entity/schema design и отдельного approval. |
-| SearchAction без поиска | **FUTURE** | Отдельная schema issue, не объяснение текущей indexation. |
+| Shared CityPage/content model design | **DONE / APPROVED / MERGED** | Финальный `LOCAL-SEO-01C` design зафиксирован; application pilot ещё не реализован. |
+| SearchAction без поиска | **DONE / REMOVED** | Исправлено и Production verified в `LOCAL-SEO-01B`; не является current issue. |
 | Provenance starter/demo portfolio records | **FUTURE** | Отдельная content/proof задача. |
 | Google Business Profile/entity strategy | **FUTURE** | Нужны доступ и business decision. |
 | Отдельный телефон MasterZabor | **OPEN QUESTION** | Нужна бизнес-информация; не придумывать. |
 | Yandex Webmaster API/data workflow | **FUTURE** | Подключать только для измеримой задачи. |
+| Blog expansion / CMS | **FUTURE** | Отдельный content/platform stage; не смешивать с CityPage pilot. |
+| `/kontakty` visual polish/icons | **FUTURE UI** | Не current SEO blocker; metadata/H1 cleanup DONE. Только отдельный UI stage. |
+| `SEO-META-05` | **MONITORING AFTER RECRAWL** | Наблюдать реальные snippets/rewrites; не менять metadata по одному snapshot. |
 | QZ-09 public advertising prices | **FUTURE / DEFERRED** | Не смешивать с Local SEO. |
 
 ## 12. Этапы и зависимости
@@ -319,25 +340,47 @@ city routes прошли schema QA. Production deployment
 `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` — `READY`; sitemap содержит 56 canonical URLs,
 56/56 имеют `lastmod = 2026-09-23`.
 
-### `LOCAL-SEO-01C` — shared CityPage/content-model refinement
+### `LOCAL-SEO-01C design` — shared CityPage/content-model refinement
 
-Статус: **NEXT / DESIGN FIRST**.
+Статус: **DONE / APPROVED / MERGED**.
 
-Спроектировать минимальные shared fields/sections для useful local differentiation,
-service areas и proof. Сохранить один `CityPage`; не писать 40 отдельных текстов и не
-добавлять блоки без функции.
+Финальный design сохраняет один shared data-driven `CityPage`, один связный refined
+`citySeoText()` примерно текущего объёма и позиции, contextual links и localized H2.
+Он не вводит 40 ручных текстов, обязательный word count, FAQ, второй pricing/text block
+или city-specific templates.
 
-### `LOCAL-SEO-01D` — regional pilot
+### `LOCAL-SEO-01C implementation pilot` — existing routes only
 
-Статус: **AFTER DESIGN APPROVAL**.
+Статус: **NEXT**.
 
-Ориентир: 3–5 existing routes и 3–5 новых exact-proof opportunities в Гродненской и
-Витебской областях. Финальный набор утверждается по свежим данным и доступному proof.
-Pilot не означает автоматическое создание всех discovery candidates.
+Pilot routes: `/lida`, `/grodno`, `/slonim`, `/glubokoe`, `/lepel`. Новые routes не
+создавать. Убрать `за 5 минут` и неподтверждённую региональную популярность материалов;
+сохранить подтверждённые business facts про расчёт, выезд, доставку, монтаж,
+комплектацию, смету, договор, гарантийные условия и собственные постоянные бригады.
+Естественно использовать `профнастил (металлопрофиль)`, contextual links на
+`/zabory-iz-profnastila`, `/zabory-iz-evroshtaketnika`,
+`/zabory-iz-setki-rabitsy` и `/tseny`, H2 `Типы заборов в <городе>` и
+`Ворота и калитки в <городе>`.
+
+`content/projects.ts` остаётся единственным proof registry. Approved target — explicit
+`proofStatus: "confirmed" | "starter"`, optional `proofPriority` и deterministic selection
+около трёх cards: exact-city confirmed first, затем same-oblast confirmed, nationwide
+fallback только при нехватке regional proof. Exact-city project — bonus, не prerequisite;
+один confirmed project может использоваться на нескольких city pages области; ориентир
+3–6 сильных confirmed projects на область не является квотой. Второй ручной registry
+project IDs запрещён.
+
+### `LOCAL-SEO-01D` — new-route / regional expansion
+
+Статус: **AFTER 01C IMPLEMENTATION / MEASUREMENT APPROVAL**.
+
+Новые regional routes допустимы только после implementation существующего 01C pilot,
+recrawl, Google + Yandex measurement и отдельного owner approval. Discovery candidates
+не являются pre-approved URLs.
 
 ### `LOCAL-SEO-01E` — measurement and rollout decision
 
-Статус: **AFTER PILOT / RECRAWL**.
+Статус: **AFTER RECRAWL AND SUFFICIENT DATA**.
 
 Сопоставить GSC, Yandex Webmaster и документированные SERP observations. Решить, что
 сработало, что надо изменить и разрешён ли следующий регион. Minsk -> Gomel -> Brest ->
@@ -374,7 +417,7 @@ locations и projects остаются текущим no-go.
   доступа.
 - **OPEN QUESTION:** нужен ли отдельный business phone для MasterZabor.
 
-`LOCAL-SEO-01B implementation` завершён и не требует повторного внешнего research для
-closeout. Свежие GSC/Yandex exports становятся обязательными перед финальным pilot
-selection и при `LOCAL-SEO-01E`, но не блокируют следующий design-first этап
-`LOCAL-SEO-01C`.
+`LOCAL-SEO-01B` и `LOCAL-SEO-01C design` завершены. Перед 01C implementation следует
+сохранить доступный pre-change baseline; решение о новом regional rollout требует
+подтверждённого recrawl и достаточных GSC/Yandex данных. Недостаточная выборка не
+компенсируется массовым созданием routes или общими ranking assumptions.
