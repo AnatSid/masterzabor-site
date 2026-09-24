@@ -1,10 +1,10 @@
 # SEO / Indexing / Local SEO: master plan
 
-Дата сверки: 2026-09-23
+Дата сверки: 2026-09-24
 
 Статус: **ACTIVE SOURCE OF TRUTH FOR NEXT LOCAL SEO STAGES**
 
-Production baseline: `2805ebcfdca171186cde4c1acd91872083c9f24c`
+Production baseline: `58daf03b7503d5fc441b1807235f6bf674734fd7`
 
 Canonical host: `https://www.masterzabor.by`
 
@@ -57,6 +57,13 @@ repository и не превращает старые snapshots в вечную �
   city coordinates.
 - **VERIFIED FACT:** реальный адрес компании в Гомеле, route `/gomel` и фактические
   сведения об организации не являются ошибками и не подлежат глобальному удалению.
+- **VERIFIED FACT:** `LOCAL-SEO-01B` schema migration завершена и проверена в
+  Production deployment `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` (`READY`). Один canonical
+  `Organization /#organization` заменил duplicate global `/#localbusiness`; city pages
+  используют `Service -> provider /#organization + areaServed City`, а ложные
+  city-specific `LocalBusiness` и WebSite `SearchAction` удалены.
+- **VERIFIED FACT:** все 40 city routes прошли schema QA. Sitemap содержит 56 canonical
+  URLs; 56/56 имеют `lastmod = 2026-09-23`.
 - **VERIFIED FACT:** `SEO-03` не обнаружил общего technical indexability blocker:
   проверенные canonical routes отдавали `200`, self-canonical и не были закрыты
   robots/noindex. Это не доказывает, что Google обязан индексировать каждую страницу.
@@ -207,21 +214,22 @@ Discovery-only candidates:
 Эти списки — **HYPOTHESIS**, не automatic rollout и не правило «все города больше
 5000 жителей».
 
-## 9. Entity/schema: отдельный design-first этап
+## 9. Entity/schema: утверждённая и внедрённая модель
 
-Текущую structured-data модель нужно отдельно проверить на смешение:
+До `LOCAL-SEO-01B` structured-data модель смешивала:
 
 - одной реальной организации и адреса в Гомеле;
 - nationwide service area;
 - target locality и coordinates конкретной city page.
 
-Approved target: одна canonical `Organization /#organization`, честные service areas и
-city pages как `Service -> provider /#organization + areaServed City`, а не 40
-физических филиалов. Нельзя создавать fake offices, addresses или map pins.
+Approved target реализован: одна canonical `Organization /#organization`, честные
+service areas и city pages как `Service -> provider /#organization + areaServed City`,
+а не 40 физических филиалов. Global `/#localbusiness`, недостоверные city-specific
+`LocalBusiness` и WebSite `SearchAction` удалены. Нельзя создавать fake offices,
+addresses или map pins.
 
-`LOCAL-SEO-01B` audit/design завершён и утверждён. Следующий отдельный подэтап —
-ограниченная implementation утверждённой migration, включая удаление недостоверных
-city `LocalBusiness` и WebSite `SearchAction`.
+Product/Offer, Article identity, metadata, canonical, HTML geo meta и visible UI в этой
+migration не менялись.
 
 ## 10. Search-engine strategy and measurement
 
@@ -301,18 +309,19 @@ open business questions.
 
 ### `LOCAL-SEO-01B implementation` — approved schema migration
 
-Статус: **NEXT**.
+Статус: **DONE / PRODUCTION VERIFIED**.
 
-Удалить duplicate global `/#localbusiness`, оставить один canonical
-`Organization /#organization`, заменить city-specific `LocalBusiness` на shared city
-`Service -> provider + areaServed` и удалить WebSite `SearchAction`. Не менять
-Product/Offer, metadata, canonical, HTML geo meta, UI или regional content. После
-implementation обязательны Preview QA, owner review и отдельное approval перед
-Production.
+Удалены duplicate global `/#localbusiness`, city-specific `LocalBusiness` и WebSite
+`SearchAction`. Оставлен один canonical `Organization /#organization`; city pages
+используют shared `Service -> provider /#organization + areaServed City`. Product/Offer,
+Article identity, metadata, canonical, HTML geo meta и visible UI не менялись. Все 40
+city routes прошли schema QA. Production deployment
+`dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` — `READY`; sitemap содержит 56 canonical URLs,
+56/56 имеют `lastmod = 2026-09-23`.
 
 ### `LOCAL-SEO-01C` — shared CityPage/content-model refinement
 
-Статус: **AFTER 01B IMPLEMENTATION / PRODUCTION QA**.
+Статус: **NEXT / DESIGN FIRST**.
 
 Спроектировать минимальные shared fields/sections для useful local differentiation,
 service areas и proof. Сохранить один `CityPage`; не писать 40 отдельных текстов и не
@@ -365,7 +374,7 @@ locations и projects остаются текущим no-go.
   доступа.
 - **OPEN QUESTION:** нужен ли отдельный business phone для MasterZabor.
 
-Для `LOCAL-SEO-01B implementation` достаточно repository/Production JSON-LD,
-утверждённого design и подтверждённых business facts; массовый внешний research не
-нужен. Свежие GSC/Yandex exports становятся обязательными перед финальным pilot
-selection и при `LOCAL-SEO-01E`, но не блокируют утверждённую schema migration.
+`LOCAL-SEO-01B implementation` завершён и не требует повторного внешнего research для
+closeout. Свежие GSC/Yandex exports становятся обязательными перед финальным pilot
+selection и при `LOCAL-SEO-01E`, но не блокируют следующий design-first этап
+`LOCAL-SEO-01C`.

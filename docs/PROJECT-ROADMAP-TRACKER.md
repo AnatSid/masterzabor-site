@@ -1,10 +1,10 @@
 # PROJECT ROADMAP TRACKER / HANDOFF: MASTERZABOR
 
-Дата handoff: 2026-09-23
+Дата handoff: 2026-09-24
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
-Текущая production точка отсчета: `2805ebcfdca171186cde4c1acd91872083c9f24c` (SEO-META-02 merge)
+Текущая production точка отсчета: `58daf03b7503d5fc441b1807235f6bf674734fd7` (LOCAL-SEO-01B schema implementation merge)
 
 Этот файл - единственный главный handoff/roadmap-документ для нового чата. Он фиксирует текущее состояние после последних P0/P1 этапов и уточняет, какие старые документы являются историей, а какие пункты еще актуальны.
 
@@ -13,7 +13,8 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
-- Последний production baseline: `2805ebcfdca171186cde4c1acd91872083c9f24c` (SEO-META-02 merge).
+- Последний production baseline: `58daf03b7503d5fc441b1807235f6bf674734fd7` (LOCAL-SEO-01B schema implementation merge).
+- `LOCAL-SEO-01B` design и implementation завершены; Production deployment `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` имеет статус `READY`.
 - Текущий PERF discovery / optimization stage закрыт; после PERF-04A дополнительные discovery-этапы PERF-05A/05B/06 не потребовали нового production patch: дальнейшие изменения требуют новых воспроизводимых доказательств.
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
 - Next.js обновлен до `16.2.9`; React `19.2.7`.
@@ -409,10 +410,9 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Как проверить: `git status --short --branch` не показывает `.tmp/`; `npm run dev` не падает на `.tmp/chrome-*`.
 
 2. `P0-JSONLD-fake-searchaction`
-   - Что сделать: убрать `SearchAction` из WebSite JSON-LD или реализовать реальный поиск. Практичнее сейчас убрать.
-   - Где: `lib/seo.ts` -> `generateWebsiteJsonLd()`.
-   - Зачем: schema не должна заявлять несуществующую функцию.
-   - Как проверить: production HTML JSON-LD не содержит `SearchAction`; homepage/blog status `200`; rich results/schema validator без fake search.
+   - Статус: **DONE / PRODUCTION VERIFIED** в `LOCAL-SEO-01B implementation`.
+   - Что сделано: `SearchAction` удалён из WebSite JSON-LD; несуществующий поиск не заявляется.
+   - Проверено: Production HTML representative routes не содержит `SearchAction`; WebSite и publisher сохранены.
 
 ### P1 - этапы
 
@@ -566,8 +566,8 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - `LOCAL-SEO-01A-discovery-reconciliation`: **DONE / SUBSTANTIALLY COMPLETE**. GSC evidence, Yandex/SERP observations, competitor patterns, proof inventory, candidate prioritization, CityPage gap analysis and rollout principles have been reconciled. The former `LOCAL-SEO-01 = FUTURE / NOT STARTED` entry is superseded.
    - Current conclusion: there is no evidence of a general technical indexability blocker. Google knows individual city pages; commercial visibility is uneven. Query rows and one-session rank snapshots must not be treated as complete or stable demand/rank data.
    - `LOCAL-SEO-01B-entity-schema-design`: **DONE / APPROVED DESIGN**. Audit и target entity model зафиксированы в [`docs/LOCAL-SEO-01B-ENTITY-SCHEMA-DESIGN.md`](LOCAL-SEO-01B-ENTITY-SCHEMA-DESIGN.md). Подтверждён главный defect: city-specific fake/composite `LocalBusiness` locations. Approved target: один canonical `Organization /#organization` и city `Service -> provider /#organization + areaServed City`.
-   - `LOCAL-SEO-01B-implementation`: **NEXT**. Реализовать только утверждённую schema migration: удалить duplicate global `/#localbusiness`, оставить один `Organization /#organization`, удалить city-specific `LocalBusiness`, добавить shared city `Service` и удалить WebSite `SearchAction`. Не менять Product/Offer, metadata, canonical, HTML geo meta, UI или regional content. Preview QA -> owner review -> Production только после approval.
-   - `LOCAL-SEO-01C-shared-citypage-content-model`: **AFTER 01B IMPLEMENTATION**. Начинать только после успешной schema implementation и Production QA. Design only minimally useful shared local fields/sections while retaining one data-driven `CityPage`; do not mass-rewrite 40 pages or add mandatory word counts/blocks.
+   - `LOCAL-SEO-01B-implementation`: **DONE / PRODUCTION VERIFIED**. Удалены ложные city-specific `LocalBusiness` и global `/#localbusiness`; оставлен один canonical `Organization /#organization`; city pages используют `Service -> provider /#organization + areaServed City`; WebSite `SearchAction` удалён. Product/Offer, Article identity, metadata, canonical, HTML geo meta и visible UI не менялись. Все 40 city routes прошли schema QA. Production deployment `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` — `READY`; sitemap содержит 56 canonical URLs, 56/56 имеют `lastmod = 2026-09-23`.
+   - `LOCAL-SEO-01C-shared-citypage-content-model`: **NEXT / DESIGN FIRST**. Спроектировать только минимально полезные shared local fields/sections при сохранении одного data-driven `CityPage`; не переписывать массово 40 pages и не вводить обязательные word counts/blocks.
    - `LOCAL-SEO-01D-regional-pilot`: **AFTER DESIGN APPROVAL**. Pilot 3-5 existing routes plus 3-5 new exact-proof opportunities in Grodno/Vitebsk regions; candidate routes are not pre-approved for creation.
    - `LOCAL-SEO-01E-measurement`: **AFTER PILOT / RECRAWL**. Evaluate GSC, Yandex Webmaster and documented SERP observations before approving a later Minsk -> Gomel -> Brest -> Mogilev rollout; order can change with evidence.
    - Keep separate: old starter/demo project provenance, Google Business Profile/entity strategy, a possible dedicated MasterZabor phone, Yandex Webmaster data workflow, SEO-META-05 and QZ-09.
