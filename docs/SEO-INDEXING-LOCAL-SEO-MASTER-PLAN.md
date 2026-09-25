@@ -1,6 +1,6 @@
 # SEO / Indexing / Local SEO: master plan
 
-Дата сверки: 2026-09-24
+Дата сверки: 2026-09-25
 
 Статус: **ACTIVE SOURCE OF TRUTH FOR NEXT LOCAL SEO STAGES**
 
@@ -69,14 +69,51 @@ repository и не превращает старые snapshots в вечную �
   robots/noindex. Это не доказывает, что Google обязан индексировать каждую страницу.
 - **VERIFIED FACT:** `LOCAL-SEO-01C` final design утверждён и merged в current main;
   application implementation ещё не выполнялся.
+- **VERIFIED FACT:** `SEO-DATA-01A` завершён и Production verified на main
+  `bc92dab5b35286030d515f2beb75e979cae66038`: собственный read-only GSC API
+  workflow, отдельный OAuth и три публичные support pages. Production deployment
+  `dpl_G4EZsLvrPV1q2KeoLMQM52MPa1FT` — `READY`; support pages не входят в sitemap.
 
 ## 4. Что показывают поисковые данные
 
-### 4.1 Page-level GSC baseline
+### 4.1 First-party GSC API baseline от 2026-09-25
 
-Последний доступный evidence package содержит следующие page-level значения. Точная
-дата выгрузки в этом документе не зафиксирована, поэтому это baseline, а не текущий
-live report.
+- **FIRST-PARTY DATA:** snapshot `capturedAt=2026-09-25T11:31:23.164Z` получен для
+  `sc-domain:masterzabor.by` из всех 56 текущих sitemap canonical URL. URL Inspection:
+  56 attempted, 56 succeeded, 0 failed, `complete=true`.
+- **FIRST-PARTY DATA:** 32 URL имеют `verdict=PASS` и
+  `coverageState=Submitted and indexed`; 9 имеют `NEUTRAL` и
+  `Discovered - currently not indexed`; 15 имеют `NEUTRAL` и
+  `URL is unknown to Google`. Это статусы именно
+  текущих canonical URL, а не полный Google UI Page Indexing universe.
+- **FIRST-PARTY DATA:** из 40 city pages 21 PASS и 19 не PASS; из 6 service pages
+  5 PASS, а `/vorota-raspashnye` unknown. Homepage, `/kontakty` и `/otzyvy` PASS;
+  `/tseny` и `/nashi-raboty` unknown; `/blog` и статья
+  `/blog/skolko-stoit-postavit-zabor-v-belarusi-2026` discovered. Остальные три
+  blog posts PASS.
+- **FIRST-PARTY DATA:** сумма возвращённых Search Analytics page rows за 28 дней:
+  27 clicks / 419 impressions; за 90 дней: 34 clicks / 646 impressions. Это
+  не index coverage; отсутствующая analytics row не означает, что URL не в индексе.
+
+**Граница сравнения:** ранее увиденные в UI GSC `29 indexed / 47 not indexed /
+27 discovered` относятся к другому набору URL или времени. Старые apex, slash и
+redirect URL нельзя прибавлять к текущим 56 canonical. Первый snapshot не
+доказывает одну причину слабых rankings. Вывод `SEO-03` об отсутствии общего
+technical indexability blocker сохраняется, но discovery/indexing текущих city
+pages заметно неоднородны.
+
+Официальный GSC API не отдаёт полный Links report. Владелец ранее видел в UI
+3 external links / 2 linking domains: это сигнал для возможного `OFFPAGE-01`,
+не доказательство единственной ranking cause. Следующий data stage —
+`SEO-DATA-01B` (Yandex Webmaster API); затем `SEO-DATA-01C` сопоставит оба
+baseline и предложит unified diagnostic decision. `LOCAL-SEO-01C` implementation
+не начинается автоматически.
+
+#### Ранее доступный page-level package
+
+До API snapshot был доступен evidence package со следующими page-level значениями.
+Точная дата его выгрузки не зафиксирована; таблица ниже остаётся историческим
+контекстом, а не текущим live report.
 
 | URL | Impressions | Clicks | CTR | Average position | Классификация |
 | --- | ---: | ---: | ---: | ---: | --- |
@@ -304,7 +341,7 @@ migration не менялись.
 | Provenance starter/demo portfolio records | **FUTURE** | Отдельная content/proof задача. |
 | Google Business Profile/entity strategy | **FUTURE** | Нужны доступ и business decision. |
 | Отдельный телефон MasterZabor | **OPEN QUESTION** | Нужна бизнес-информация; не придумывать. |
-| Yandex Webmaster API/data workflow | **FUTURE** | Подключать только для измеримой задачи. |
+| Yandex Webmaster API/data workflow | **NEXT / SEO-DATA-01B** | Собрать first-party baseline до unified diagnostic decision `SEO-DATA-01C`. |
 | Blog expansion / CMS | **FUTURE** | Отдельный content/platform stage; не смешивать с CityPage pilot. |
 | `/kontakty` visual polish/icons | **FUTURE UI** | Не current SEO blocker; metadata/H1 cleanup DONE. Только отдельный UI stage. |
 | `SEO-META-05` | **MONITORING AFTER RECRAWL** | Наблюдать реальные snippets/rewrites; не менять metadata по одному snapshot. |
@@ -351,7 +388,8 @@ city routes прошли schema QA. Production deployment
 
 ### `LOCAL-SEO-01C implementation pilot` — existing routes only
 
-Статус: **NEXT**.
+Статус: **PLANNED / NOT STARTED**. Не запускать автоматически до отдельного owner
+decision после Google + Yandex baseline.
 
 Pilot routes: `/lida`, `/grodno`, `/slonim`, `/glubokoe`, `/lepel`. Новые routes не
 создавать. Убрать `за 5 минут` и неподтверждённую региональную популярность материалов;
@@ -408,8 +446,10 @@ locations и projects остаются текущим no-go.
 
 ## 14. Что требует дополнительных данных
 
-- **OPEN QUESTION:** свежая дата и полный период page/query exports GSC.
-- **OPEN QUESTION:** доступный Yandex Webmaster export/API baseline по тем же routes.
+- **OPEN QUESTION:** следующий сопоставимый GSC snapshot после достаточного времени
+  переобхода; первый API baseline датирован 2026-09-25.
+- **OPEN QUESTION:** доступный Yandex Webmaster API baseline по тем же routes
+  (`SEO-DATA-01B`).
 - **OPEN QUESTION:** подтверждённая service/logistics feasibility для каждого нового
   кандидата.
 - **OPEN QUESTION:** полный provenance старых starter/demo portfolio records.
@@ -417,7 +457,9 @@ locations и projects остаются текущим no-go.
   доступа.
 - **OPEN QUESTION:** нужен ли отдельный business phone для MasterZabor.
 
-`LOCAL-SEO-01B` и `LOCAL-SEO-01C design` завершены. Перед 01C implementation следует
-сохранить доступный pre-change baseline; решение о новом regional rollout требует
-подтверждённого recrawl и достаточных GSC/Yandex данных. Недостаточная выборка не
-компенсируется массовым созданием routes или общими ranking assumptions.
+`LOCAL-SEO-01B`, `LOCAL-SEO-01C design` и `SEO-DATA-01A` завершены. Первый Google
+pre-change baseline сохранён; далее нужны Yandex Webmaster API baseline и unified
+diagnostic decision. `LOCAL-SEO-01C` implementation требует отдельного approval;
+решение о новом regional rollout требует подтверждённого recrawl и достаточных
+GSC/Yandex данных. Недостаточная выборка не компенсируется массовым созданием
+routes или общими ranking assumptions.

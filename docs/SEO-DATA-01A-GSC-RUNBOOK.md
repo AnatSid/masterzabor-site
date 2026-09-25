@@ -6,14 +6,15 @@
 
 ## Когда использовать
 
-После отдельного approval OAuth-настройки запустите `doctor`, затем `snapshot`.
-Обе команды работают на вашем компьютере и читают только `.env.gsc.local` в корне
-проекта. Если файла или данных ещё нет, `doctor` сообщит об этом без вывода
-секретов. Пока implementation review не завершён, OAuth-настройку **не запускать**.
+Рабочий порядок: запустите `doctor`, проверьте `PASS`, затем запустите `snapshot`.
+Обе команды работают локально и читают только `.env.gsc.local` в корне проекта.
+Если файла или данных нет, `doctor` сообщит об этом без вывода секретов. Первый
+полный snapshot уже получен; повторный запуск создаёт новый локальный JSON-файл.
 
 ## Что потребуется локально
 
-После approval создайте `.env.gsc.local` из `.env.gsc.example` и заполните:
+На текущем компьютере `.env.gsc.local` уже настроен. При настройке на другом
+компьютере создайте его из `.env.gsc.example` и заполните:
 
 | Имя | Значение |
 | --- | --- |
@@ -24,6 +25,12 @@
 
 `.env.gsc.local` уже исключён из Git. Не копируйте эти значения в `.env.example`,
 Vercel или чат. Не заменяйте существующие `GOOGLE_*` переменные GA4.
+
+Действующая конфигурация: отдельный Google Cloud project `masterzabor-gsc`, OAuth
+client `MasterZabor GSC Tools`, тип приложения External, publishing status
+**In production**. Используется только scope
+`https://www.googleapis.com/auth/webmasters.readonly`. Production refresh token
+получен после перевода приложения в этот статус. GA4 OAuth не переиспользуется.
 
 Требуется установленный Node.js с поддержкой `node:util.parseEnv` (проект локально
 проверен на Node 24). Новые npm-пакеты не нужны.
@@ -42,6 +49,11 @@ token, вызывает `sites.list`, показывает доступные pr
 выбранную `GSC_SITE_URL` и наличие отправленного sitemap. Завершение — понятный
 `PASS` или `FAIL`. Если property нет в списке, инструмент не пытается молча
 использовать другую.
+
+Последний подтверждённый `doctor`: `PASS` для `sc-domain:masterzabor.by` с
+`permissionLevel=siteFullUser`. Отправленный sitemap найден:
+`pending=false`, `errors=0`, `warnings=0`,
+`lastDownloaded=2026-09-25T04:56:21.952Z`.
 
 `snapshot` снова проверяет property, скачивает
 `https://www.masterzabor.by/sitemap.xml`, извлекает уникальные canonical `<loc>`,
@@ -80,28 +92,38 @@ Time, чтобы уменьшить риск ещё не готовых данн
 Не пересылайте полный терминальный вывод вместе с `.env.gsc.local`; сам CLI не
 печатает client secret, refresh token или access token.
 
-## OAuth setup — DO NOT RUN UNTIL IMPLEMENTATION REVIEW IS APPROVED
+## OAuth: восстановление доступа
 
-Это подготовленные шаги на будущее, не просьба выполнить их сейчас.
+Если `doctor` сообщает об истёкшем или отозванном refresh token, проверьте
+ошибку до перевыпуска. Для восстановления используйте тот же GSC OAuth client
+ID/secret; GA4 client и его token не меняйте.
 
-1. В Google Cloud project включить **Search Console API**. Не менять GA4 OAuth
-   client, GA4 refresh token и Vercel env.
-2. Создать **отдельный** OAuth client типа *Web application* для GSC. Для
-   авторизации через OAuth Playground добавить redirect URI
-   `https://developers.google.com/oauthplayground`.
-3. Проверить статус consent screen. В External/Testing refresh token для этого
-   scope обычно истекает через семь дней; переход к долговременному режиму
-   согласовать отдельно, не меняя текущую GA4 настройку вслепую.
-4. В OAuth Playground включить *Use your own OAuth credentials*, указать новый
-   client ID/secret, запросить **только**
-   `https://www.googleapis.com/auth/webmasters.readonly` и подтвердить доступ
-   Google-аккаунтом с правами на нужную Search Console property.
-5. Полученный refresh token вместе с новым client ID/secret сохранить только
-   в локальном `.env.gsc.local`. Не вставлять токен в чат, Git или Vercel.
-6. Запустить `doctor`. Только после `PASS` запускать `snapshot`.
+1. Убедитесь, что выбран project `masterzabor-gsc`, а приложение External имеет
+   publishing status **In production**. Не создавайте новый client без отдельной
+   причины.
+2. В OAuth Playground включите *Use your own OAuth credentials*, укажите
+   действующий GSC client ID/secret и запросите **только**
+   `https://www.googleapis.com/auth/webmasters.readonly`. Подтвердите доступ
+   Google-аккаунтом с правами на нужную Search Console property. Для этого
+   client настроен redirect URI `https://developers.google.com/oauthplayground`.
+3. Обменяйте authorization code на tokens в OAuth Playground и возьмите новый
+   refresh token. Не копируйте его в чат или документацию.
+4. Сохраните новый refresh token только в `GSC_REFRESH_TOKEN` локального
+   `.env.gsc.local`. `GSC_CLIENT_ID` и `GSC_CLIENT_SECRET` не меняйте. Не
+   вставляйте token в чат, Git или Vercel.
+5. Запустите `doctor`. После `PASS` можно запустить `snapshot`.
 
 Для авторизации нужны действия владельца Google-аккаунта. Сам скрипт не создаёт
 OAuth credentials и не запрашивает согласие автоматически.
+
+## Публичные страницы для Google OAuth branding
+
+[Описание MasterZabor GSC Tools](https://www.masterzabor.by/google-api-access)
+ведёт на [политику конфиденциальности](https://www.masterzabor.by/google-api-privacy)
+и [правила использования](https://www.masterzabor.by/google-api-terms).
+Страницы доступны без входа,
+проверены в Production и не входят в sitemap. Они не запускают GSC-команды и
+не дают посетителям доступ к OAuth credentials или локальным снимкам.
 
 ## Чего инструмент не заменяет
 

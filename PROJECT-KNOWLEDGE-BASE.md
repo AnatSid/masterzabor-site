@@ -35,6 +35,25 @@ Previous production baseline before P1-03: `d612f34b9102c10abfbf5e31a396f2711d91
 - Hosting: Vercel.
 - Integrations: Telegram, Google Analytics, Yandex Metrika, reporting APIs.
 
+### First-party Google Search Console diagnostics
+
+`SEO-DATA-01A` добавил собственный локальный read-only GSC API workflow без
+стороннего SaaS и новых npm dependencies. Команды `npm run seo:gsc:doctor` и
+`npm run seo:gsc:snapshot` используют отдельный GSC OAuth client и читают secrets
+только из `.env.gsc.local`; GA4 OAuth и Vercel env не используются. JSON-снимки
+с Search Analytics, состоянием отправленного sitemap и indexed-version URL
+Inspection сохраняются в исключённой из Git папке `.tmp/seo/`. Скрипт не
+отправляет Request Indexing и не меняет данные Google.
+
+Отдельный Google Cloud project `masterzabor-gsc` и client `MasterZabor GSC Tools`
+работают как External / In production со scope `webmasters.readonly`. Публичные
+`/google-api-access`, `/google-api-privacy` и `/google-api-terms` нужны только для
+Google OAuth branding; они не дают доступ к инструменту и не входят в sitemap.
+Официальный Search Console API не предоставляет полный Links report; при
+необходимости его читают или экспортируют вручную в GSC UI. Действующий
+owner workflow и восстановление токена описаны в
+[`docs/SEO-DATA-01A-GSC-RUNBOOK.md`](docs/SEO-DATA-01A-GSC-RUNBOOK.md).
+
 ## Codex Workflow / Tooling Baseline
 
 TOOLING-01 created root `AGENTS.md` as the stable Codex project-level operating
@@ -809,8 +828,9 @@ balanced peer coverage as the city dataset grows.
 - `LOCAL-SEO-01A` discovery/reconciliation — DONE;
 - `LOCAL-SEO-01B` design + implementation — DONE / PRODUCTION VERIFIED;
 - `LOCAL-SEO-01C design` — DONE / APPROVED / MERGED;
-- `LOCAL-SEO-01C implementation pilot` — NEXT, только existing routes `/lida`,
-  `/grodno`, `/slonim`, `/glubokoe`, `/lepel`;
+- `LOCAL-SEO-01C implementation pilot` — PLANNED / NOT STARTED, только existing
+  routes `/lida`, `/grodno`, `/slonim`, `/glubokoe`, `/lepel`; не запускать
+  автоматически до отдельного owner decision после Google + Yandex baseline;
 - `LOCAL-SEO-01D` new-route/regional expansion — только после 01C implementation,
   recrawl, Google + Yandex measurement и отдельного owner approval;
 - `LOCAL-SEO-01E` measurement/rollout decision — после recrawl и достаточных данных.
@@ -819,8 +839,13 @@ Google остаётся priority #1 для диагностики слабой v
 обязательный параллельный контур. Нельзя ухудшать уже работающий Yandex ради
 теоретического Google improvement; pilot measurement обязателен по обоим поисковикам.
 
-Отдельно остаются future/deferred: starter/demo portfolio provenance, Yandex Webmaster
-regionality/data audit, GBP/entity strategy, possible dedicated MasterZabor phone, blog
+`SEO-DATA-01A` закрыт после Production verification и первого полного GSC snapshot
+от 2026-09-25. Следующий data stage — `SEO-DATA-01B` (Yandex Webmaster API),
+затем `SEO-DATA-01C` (unified diagnostic decision). `OFFPAGE-01` остаётся
+возможным evidence-led workstream, а не доказанной причиной текущих rankings.
+
+Отдельно остаются future/deferred: starter/demo portfolio provenance, Yandex regionality
+settings audit beyond the API baseline, GBP/entity strategy, possible dedicated MasterZabor phone, blog
 expansion/CMS, `/kontakty` visual polish, `SEO-META-05` и `QZ-09`.
 
 Новые routes в текущем pilot не создаются. Doorway-like pages, fake locations и

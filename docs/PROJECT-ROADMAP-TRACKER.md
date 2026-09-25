@@ -1,6 +1,6 @@
 # PROJECT ROADMAP TRACKER / HANDOFF: MASTERZABOR
 
-Дата handoff: 2026-09-24
+Дата handoff: 2026-09-25
 Проект: `masterzabor`  
 Production: `https://www.masterzabor.by`  
 Canonical host: `https://www.masterzabor.by`  
@@ -13,8 +13,14 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 ## CURRENT STATE
 
 - Production сайт работает на `https://www.masterzabor.by`.
+- `SEO-DATA-01A` закрыт: собственный read-only GSC API workflow и три публичные
+  OAuth support pages прошли Production verification. Implementation merge/main
+  `bc92dab5b35286030d515f2beb75e979cae66038`; deployment
+  `dpl_G4EZsLvrPV1q2KeoLMQM52MPa1FT` — `READY`. Следующий data stage:
+  `SEO-DATA-01B` (Yandex Webmaster API), затем `SEO-DATA-01C` (unified diagnostic
+  decision).
 - Approved `LOCAL-SEO-01C` design baseline before docs reconciliation: `b9c6e521cdbf38524990ac340024d65302e2d563`. Application implementation `LOCAL-SEO-01C` ещё не выполнялся.
-- Последний application/schema Production baseline: `58daf03b7503d5fc441b1807235f6bf674734fd7` (`LOCAL-SEO-01B` implementation merge).
+- Последний city/entity schema Production baseline: `58daf03b7503d5fc441b1807235f6bf674734fd7` (`LOCAL-SEO-01B` implementation merge); более поздний `SEO-DATA-01A` application baseline указан выше.
 - `LOCAL-SEO-01B` design и implementation завершены; Production deployment `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` имеет статус `READY`.
 - Текущий PERF discovery / optimization stage закрыт; после PERF-04A дополнительные discovery-этапы PERF-05A/05B/06 не потребовали нового production patch: дальнейшие изменения требуют новых воспроизводимых доказательств.
 - Apex `https://masterzabor.by` остается alias и редиректит на `www`.
@@ -56,7 +62,7 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - Current Production sitemap contains 56 canonical URLs.
 - Global Gomel metadata cleanup is complete: nationwide/root metadata no longer carries Gomel-only fallback wording, the global default keyword `Гомель`, or Gomel `geo.position` / `ICBM`; root keeps `geo.region: BY` and `geo.placename: Беларусь`, while city pages keep their own city geo metadata. The real Gomel address, `/gomel` and factual organization details remain valid.
 - Local SEO discovery/reconciliation is substantially complete. The active staged plan, evidence labels, retired recommendations and next dependency are maintained in [`docs/SEO-INDEXING-LOCAL-SEO-MASTER-PLAN.md`](SEO-INDEXING-LOCAL-SEO-MASTER-PLAN.md).
-- `LOCAL-SEO-01C` final design is DONE / APPROVED / MERGED; the five-route application pilot is NEXT and has not started.
+- `LOCAL-SEO-01C` final design is DONE / APPROVED / MERGED; the five-route application pilot has not started and must not start automatically before a separate decision after the Google + Yandex baseline.
 - BLOG-SEO-01B is complete: Page A remains the permission/documentation pillar at `/blog/nuzhno-li-razreshenie-na-ustanovku-zabora-v-rb` and uses an approved real hero asset.
 - BLOG-SEO-01C is complete and in Production: Page B covers height/neighbour intent at `/blog/vysota-zabora-mezhdu-sosedyami-v-belarusi` and uses an approved real hero asset.
 - Page A and Page B share the current article presentation and `1200×630` WebP hero convention. The same image field supplies article hero, `/blog` card, Open Graph, Twitter and Article JSON-LD.
@@ -572,11 +578,18 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - `LOCAL-SEO-01B-entity-schema-design`: **DONE / APPROVED DESIGN**. Audit и target entity model зафиксированы в [`docs/LOCAL-SEO-01B-ENTITY-SCHEMA-DESIGN.md`](LOCAL-SEO-01B-ENTITY-SCHEMA-DESIGN.md). Подтверждён главный defect: city-specific fake/composite `LocalBusiness` locations. Approved target: один canonical `Organization /#organization` и city `Service -> provider /#organization + areaServed City`.
    - `LOCAL-SEO-01B-implementation`: **DONE / PRODUCTION VERIFIED**. Удалены ложные city-specific `LocalBusiness` и global `/#localbusiness`; оставлен один canonical `Organization /#organization`; city pages используют `Service -> provider /#organization + areaServed City`; WebSite `SearchAction` удалён. Product/Offer, Article identity, metadata, canonical, HTML geo meta и visible UI не менялись. Все 40 city routes прошли schema QA. Production deployment `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` — `READY`; sitemap содержит 56 canonical URLs, 56/56 имеют `lastmod = 2026-09-23`.
    - `LOCAL-SEO-01C-design`: **DONE / APPROVED / MERGED** at design baseline `b9c6e521cdbf38524990ac340024d65302e2d563`. Final architecture is documented in [`docs/LOCAL-SEO-01C-CITYPAGE-CONTENT-MODEL-DESIGN.md`](LOCAL-SEO-01C-CITYPAGE-CONTENT-MODEL-DESIGN.md); no application code was changed by the design merge.
-   - `LOCAL-SEO-01C-implementation-pilot`: **NEXT**. Existing routes only: `/lida`, `/grodno`, `/slonim`, `/glubokoe`, `/lepel`; no new routes. Preserve one shared data-driven `CityPage` and one refined connected `citySeoText()` in its current position/approximate length; remove `за 5 минут` and unsupported regional popularity; retain approved business facts and natural `профнастил (металлопрофиль)` wording; add contextual links to `/zabory-iz-profnastila`, `/zabory-iz-evroshtaketnika`, `/zabory-iz-setki-rabitsy` and `/tseny`; localize H2 for fence types and gates/wickets. Do not add mandatory word count, FAQ, a second price/text block, slug templates or city × material URLs.
+   - `LOCAL-SEO-01C-implementation-pilot`: **PLANNED / NOT STARTED**. Do not launch automatically; the Google + Yandex baseline and a separate owner decision come first. Existing routes only: `/lida`, `/grodno`, `/slonim`, `/glubokoe`, `/lepel`; no new routes. Preserve one shared data-driven `CityPage` and one refined connected `citySeoText()` in its current position/approximate length; remove `за 5 минут` and unsupported regional popularity; retain approved business facts and natural `профнастил (металлопрофиль)` wording; add contextual links to `/zabory-iz-profnastila`, `/zabory-iz-evroshtaketnika`, `/zabory-iz-setki-rabitsy` and `/tseny`; localize H2 for fence types and gates/wickets. Do not add mandatory word count, FAQ, a second price/text block, slug templates or city × material URLs.
    - Approved proof target for `01C` implementation: `content/projects.ts` remains the only registry; add explicit `proofStatus: "confirmed" | "starter"` and optional `proofPriority`; select about three cards deterministically as exact-city confirmed first, then same-oblast confirmed, then nationwide only when regional proof is insufficient. Exact-city proof is a bonus, not a prerequisite; one confirmed project may support several city pages in its oblast; 3–6 strong confirmed projects per oblast is an orientation, not a quota. Do not create a second manual project-ID registry.
    - `LOCAL-SEO-01D-new-route-regional-expansion`: **AFTER 01C IMPLEMENTATION / MEASUREMENT APPROVAL**. No new-route rollout until the existing-route pilot is implemented, recrawled, measured in Google and Yandex, and separately approved by the owner.
    - `LOCAL-SEO-01E-measurement-rollout`: **AFTER RECRAWL AND SUFFICIENT DATA**. Compare GSC, Yandex Webmaster and documented SERP observations; decide whether 01C helped and whether any later regional expansion is justified.
-   - Keep separate / future: starter/demo project provenance; Yandex Webmaster regionality/data audit; Google Business Profile/entity strategy; possible dedicated MasterZabor phone; blog expansion/CMS; `/kontakty` visual polish; `SEO-META-05`; `QZ-09`.
+   - Keep separate / future: starter/demo project provenance; Yandex regionality settings audit beyond the API baseline; Google Business Profile/entity strategy; possible dedicated MasterZabor phone; blog expansion/CMS; `/kontakty` visual polish; `SEO-META-05`; `QZ-09`.
+
+17. `SEO-DATA-01A` — `SEO-DATA-01C`
+   - `SEO-DATA-01A`: **DONE / PRODUCTION VERIFIED / CLOSED**. GSC Wizard требовал платную подписку; вместо SaaS wrapper внедрён собственный локальный read-only GSC API workflow без новых npm dependencies. Отдельные Google Cloud project `masterzabor-gsc` и OAuth client `MasterZabor GSC Tools` работают как External / In production со scope `webmasters.readonly`; GA4 OAuth не менялся. Локальные secrets остаются только в `.env.gsc.local`; финальный `doctor` — `PASS` для `sc-domain:masterzabor.by` (`siteFullUser`), submitted sitemap `pending=false`, `errors=0`, `warnings=0`. Runbook: [`docs/SEO-DATA-01A-GSC-RUNBOOK.md`](SEO-DATA-01A-GSC-RUNBOOK.md).
+   - Production: merge/main `bc92dab5b35286030d515f2beb75e979cae66038`, deployment `dpl_G4EZsLvrPV1q2KeoLMQM52MPa1FT` (`READY`). `/google-api-access`, `/google-api-privacy` и `/google-api-terms` вернули HTTP 200 с self-canonical; sitemap остался на 56 canonical URL без этих support pages.
+   - Первый полный GSC snapshot от `2026-09-25T11:31:23.164Z`: 56/56 URL Inspection attempted, 56 succeeded, 0 failed, `complete=true`. Для текущих sitemap canonical URL: 32 `PASS / Submitted and indexed`, 9 `NEUTRAL / Discovered - currently not indexed`, 15 `NEUTRAL / URL is unknown to Google`. City pages: 21/40 PASS; service pages: 5/6 PASS. `/vorota-raspashnye`, `/tseny` и `/nashi-raboty` unknown; `/blog` и статья `/blog/skolko-stoit-postavit-zabor-v-belarusi-2026` discovered; homepage, `/kontakty`, `/otzyvy` и три другие blog posts PASS.
+   - Search Analytics page-row sums: 28d — 27 clicks / 419 impressions; 90d — 34 clicks / 646 impressions. Отсутствие analytics row не означает отсутствие URL в индексе. UI GSC `29 indexed / 47 not indexed / 27 discovered` относится к другому URL universe или времени, не к тем же 56 canonical URL. Официальный API не предоставляет полный Links report. Ранее в Links UI наблюдались 3 external links / 2 linking domains: это диагностический сигнал, не доказанная единственная причина rankings.
+   - `SEO-DATA-01B`: **NEXT** — Yandex Webmaster API baseline, отдельный read-only stage. После сопоставимого Google + Yandex baseline: `SEO-DATA-01C` — unified diagnostic decision. `LOCAL-SEO-01C` application pilot не запускать автоматически. `OFFPAGE-01` остаётся возможным evidence-led workstream, без утверждённой implementation.
 
 ### P2 - улучшения позже
 
