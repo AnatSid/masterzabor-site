@@ -11,7 +11,9 @@
     "test:telegram": "node --test --test-isolation=none --experimental-strip-types tests/telegram.test.ts",
     "test:leads": "node --test --test-isolation=none --experimental-strip-types tests/lead-storage-retrieval.test.ts",
     "seo:gsc:doctor": "node scripts/seo/gsc.mjs doctor",
-    "seo:gsc:snapshot": "node scripts/seo/gsc.mjs snapshot"
+    "seo:gsc:snapshot": "node scripts/seo/gsc.mjs snapshot",
+    "seo:yandex-webmaster:doctor": "node scripts/seo/yandex-webmaster.mjs doctor",
+    "seo:yandex-webmaster:snapshot": "node scripts/seo/yandex-webmaster.mjs snapshot"
   },
   "dependencies": {
     "@tailwindcss/postcss": "latest",
