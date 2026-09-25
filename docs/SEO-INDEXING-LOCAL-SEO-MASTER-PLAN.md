@@ -104,10 +104,34 @@ pages заметно неоднородны.
 
 Официальный GSC API не отдаёт полный Links report. Владелец ранее видел в UI
 3 external links / 2 linking domains: это сигнал для возможного `OFFPAGE-01`,
-не доказательство единственной ranking cause. Следующий data stage —
-`SEO-DATA-01B` (Yandex Webmaster API); затем `SEO-DATA-01C` сопоставит оба
-baseline и предложит unified diagnostic decision. `LOCAL-SEO-01C` implementation
-не начинается автоматически.
+не доказательство единственной ranking cause.
+
+### 4.2 First-party Yandex Webmaster API baseline от 2026-09-25
+
+- **FIRST-PARTY DATA:** `SEO-DATA-01B` live-validated в stage branch: `doctor`
+  прошёл с OAuth scope `webmaster:hostinfo` и `webmaster:verify`. С одним
+  `webmaster:hostinfo` чтение host info вернуло HTTP 403 `ACCESS_FORBIDDEN`.
+  Snapshot `capturedAt=2026-09-25T14:22:36.793Z` получил 19/19 разделов без
+  ошибок (`complete=true`, `dataComplete=true`).
+- **FIRST-PARTY DATA:** Yandex summary возвращает `searchable_pages_count=56`;
+  обнаруженный через `ROBOTS_TXT` sitemap содержит 56 URL и 0 ошибок. В полной
+  pages-in-search sample наблюдались все 40/40 city pages и 6/6 service pages,
+  а также остальные семейства текущих sitemap pages. Точное сравнение URL
+  помечает `<loc>` главной без `/` как `notObservedInSample`, но вариант главной
+  с `/` присутствует в ответе Яндекса: это несовпадение строки, не свидетельство
+  отсутствия главной в поиске.
+- **FIRST-PARTY DATA:** поисковые показы и клики в Yandex Webmaster подтверждают
+  существующую видимость, но endpoint'ы возвращают разные короткие периоды;
+  их нельзя выдавать за 28/90-дневный тренд или напрямую приравнивать к GSC.
+  Выборка/история внешних ссылок показывает 2 ссылки с 2 hosts; это очень
+  небольшой footprint, но не доказанная причина текущих rankings.
+- **FIRST-PARTY DATA:** diagnostic `NO_METRIKA_COUNTER_BINDING` имеет состояние
+  `PRESENT / POSSIBLE_PROBLEM`; его причинная связь с ranking или indexing не
+  установлена.
+
+Следующий gate — `SEO-DATA-01C`: сопоставить Google и Yandex baseline и только
+после этого принять решение между возможными дальнейшими workstreams.
+`LOCAL-SEO-01C` implementation и `OFFPAGE-01` сейчас не выбраны и не запускаются.
 
 #### Ранее доступный page-level package
 
@@ -341,7 +365,8 @@ migration не менялись.
 | Provenance starter/demo portfolio records | **FUTURE** | Отдельная content/proof задача. |
 | Google Business Profile/entity strategy | **FUTURE** | Нужны доступ и business decision. |
 | Отдельный телефон MasterZabor | **OPEN QUESTION** | Нужна бизнес-информация; не придумывать. |
-| Yandex Webmaster API/data workflow | **NEXT / SEO-DATA-01B** | Собрать first-party baseline до unified diagnostic decision `SEO-DATA-01C`. |
+| Yandex Webmaster API/data workflow | **LIVE-VALIDATED / READY TO CLOSE AFTER MERGE** | `SEO-DATA-01B`: doctor PASS и первый полный first-party snapshot; stage branch ещё не merged. |
+| Unified Google + Yandex diagnosis | **NEXT / SEO-DATA-01C** | Сопоставить оба baseline и определить следующий workstream; implementation пока не выбран. |
 | Blog expansion / CMS | **FUTURE** | Отдельный content/platform stage; не смешивать с CityPage pilot. |
 | `/kontakty` visual polish/icons | **FUTURE UI** | Не current SEO blocker; metadata/H1 cleanup DONE. Только отдельный UI stage. |
 | `SEO-META-05` | **MONITORING AFTER RECRAWL** | Наблюдать реальные snippets/rewrites; не менять metadata по одному snapshot. |
@@ -448,8 +473,8 @@ locations и projects остаются текущим no-go.
 
 - **OPEN QUESTION:** следующий сопоставимый GSC snapshot после достаточного времени
   переобхода; первый API baseline датирован 2026-09-25.
-- **OPEN QUESTION:** доступный Yandex Webmaster API baseline по тем же routes
-  (`SEO-DATA-01B`).
+- **OPEN QUESTION:** unified interpretation Google и Yandex baseline по тем же
+  routes и выбор следующего workstream (`SEO-DATA-01C`).
 - **OPEN QUESTION:** подтверждённая service/logistics feasibility для каждого нового
   кандидата.
 - **OPEN QUESTION:** полный provenance старых starter/demo portfolio records.
@@ -458,8 +483,9 @@ locations и projects остаются текущим no-go.
 - **OPEN QUESTION:** нужен ли отдельный business phone для MasterZabor.
 
 `LOCAL-SEO-01B`, `LOCAL-SEO-01C design` и `SEO-DATA-01A` завершены. Первый Google
-pre-change baseline сохранён; далее нужны Yandex Webmaster API baseline и unified
-diagnostic decision. `LOCAL-SEO-01C` implementation требует отдельного approval;
+pre-change baseline сохранён; `SEO-DATA-01B` live-validated и готов к закрытию
+после merge. Далее нужен `SEO-DATA-01C` unified diagnostic decision.
+`LOCAL-SEO-01C` implementation требует отдельного approval;
 решение о новом regional rollout требует подтверждённого recrawl и достаточных
 GSC/Yandex данных. Недостаточная выборка не компенсируется массовым созданием
 routes или общими ranking assumptions.
