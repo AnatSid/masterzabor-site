@@ -865,8 +865,9 @@ Google остаётся priority #1 для диагностики слабой v
 теоретического Google improvement; pilot measurement обязателен по обоим поисковикам.
 
 `SEO-DATA-01A` закрыт после Production verification и первого полного GSC snapshot
-от 2026-09-25. `SEO-DATA-01B` live-validated и готов к закрытию после merge;
-следующий gate — `SEO-DATA-01C` (unified Google + Yandex diagnosis). Ни
+от 2026-09-25. `SEO-DATA-01B` — **DONE / CLOSED**, merge/main
+`d21733ad7623bc927e81acd08fb05d1b94e54333`; следующий gate —
+`SEO-DATA-01C` (unified Google + Yandex diagnosis). Ни
 `LOCAL-SEO-01C` implementation, ни `OFFPAGE-01` не выбраны до этого решения;
 малый external-link footprint сам по себе не доказывает причину rankings.
 

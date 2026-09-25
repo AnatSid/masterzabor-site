@@ -108,7 +108,8 @@ pages заметно неоднородны.
 
 ### 4.2 First-party Yandex Webmaster API baseline от 2026-09-25
 
-- **FIRST-PARTY DATA:** `SEO-DATA-01B` live-validated в stage branch: `doctor`
+- **FIRST-PARTY DATA:** `SEO-DATA-01B` — **DONE / CLOSED** на merge/main
+  `d21733ad7623bc927e81acd08fb05d1b94e54333`; `doctor`
   прошёл с OAuth scope `webmaster:hostinfo` и `webmaster:verify`. С одним
   `webmaster:hostinfo` чтение host info вернуло HTTP 403 `ACCESS_FORBIDDEN`.
   Snapshot `capturedAt=2026-09-25T14:22:36.793Z` получил 19/19 разделов без
@@ -365,7 +366,7 @@ migration не менялись.
 | Provenance starter/demo portfolio records | **FUTURE** | Отдельная content/proof задача. |
 | Google Business Profile/entity strategy | **FUTURE** | Нужны доступ и business decision. |
 | Отдельный телефон MasterZabor | **OPEN QUESTION** | Нужна бизнес-информация; не придумывать. |
-| Yandex Webmaster API/data workflow | **LIVE-VALIDATED / READY TO CLOSE AFTER MERGE** | `SEO-DATA-01B`: doctor PASS и первый полный first-party snapshot; stage branch ещё не merged. |
+| Yandex Webmaster API/data workflow | **DONE / CLOSED** | `SEO-DATA-01B`: doctor PASS и первый полный first-party snapshot; merge/main `d21733ad7623bc927e81acd08fb05d1b94e54333`. |
 | Unified Google + Yandex diagnosis | **NEXT / SEO-DATA-01C** | Сопоставить оба baseline и определить следующий workstream; implementation пока не выбран. |
 | Blog expansion / CMS | **FUTURE** | Отдельный content/platform stage; не смешивать с CityPage pilot. |
 | `/kontakty` visual polish/icons | **FUTURE UI** | Не current SEO blocker; metadata/H1 cleanup DONE. Только отдельный UI stage. |
@@ -483,8 +484,9 @@ locations и projects остаются текущим no-go.
 - **OPEN QUESTION:** нужен ли отдельный business phone для MasterZabor.
 
 `LOCAL-SEO-01B`, `LOCAL-SEO-01C design` и `SEO-DATA-01A` завершены. Первый Google
-pre-change baseline сохранён; `SEO-DATA-01B` live-validated и готов к закрытию
-после merge. Далее нужен `SEO-DATA-01C` unified diagnostic decision.
+pre-change baseline сохранён; `SEO-DATA-01B` — **DONE / CLOSED** на merge/main
+`d21733ad7623bc927e81acd08fb05d1b94e54333`. Далее нужен `SEO-DATA-01C`
+unified diagnostic decision.
 `LOCAL-SEO-01C` implementation требует отдельного approval;
 решение о новом regional rollout требует подтверждённого recrawl и достаточных
 GSC/Yandex данных. Недостаточная выборка не компенсируется массовым созданием
