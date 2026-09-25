@@ -16,9 +16,10 @@ Older prompts may still mention the removed root `PROJECT-ROADMAP-TRACKER.md`; t
 - `SEO-DATA-01A` закрыт: собственный read-only GSC API workflow и три публичные
   OAuth support pages прошли Production verification. Implementation merge/main
   `bc92dab5b35286030d515f2beb75e979cae66038`; deployment
-  `dpl_G4EZsLvrPV1q2KeoLMQM52MPa1FT` — `READY`. Следующий data stage:
-  `SEO-DATA-01B` (Yandex Webmaster API), затем `SEO-DATA-01C` (unified diagnostic
-  decision).
+  `dpl_G4EZsLvrPV1q2KeoLMQM52MPa1FT` — `READY`. `SEO-DATA-01B` прошёл live
+  OAuth/doctor и полный Yandex Webmaster snapshot в stage branch; готов к review
+  и закрытию после merge. Следующий диагностический gate — `SEO-DATA-01C`:
+  совместный разбор Google и Yandex без автоматического запуска implementation.
 - Approved `LOCAL-SEO-01C` design baseline before docs reconciliation: `b9c6e521cdbf38524990ac340024d65302e2d563`. Application implementation `LOCAL-SEO-01C` ещё не выполнялся.
 - Последний city/entity schema Production baseline: `58daf03b7503d5fc441b1807235f6bf674734fd7` (`LOCAL-SEO-01B` implementation merge); более поздний `SEO-DATA-01A` application baseline указан выше.
 - `LOCAL-SEO-01B` design и implementation завершены; Production deployment `dpl_EmZZcsfT8gQRADyjWwrpLQ5M9N1a` имеет статус `READY`.
@@ -589,7 +590,8 @@ Do not bulk-copy huge original photos. First optimize to WebP/JPEG, set useful `
    - Production: merge/main `bc92dab5b35286030d515f2beb75e979cae66038`, deployment `dpl_G4EZsLvrPV1q2KeoLMQM52MPa1FT` (`READY`). `/google-api-access`, `/google-api-privacy` и `/google-api-terms` вернули HTTP 200 с self-canonical; sitemap остался на 56 canonical URL без этих support pages.
    - Первый полный GSC snapshot от `2026-09-25T11:31:23.164Z`: 56/56 URL Inspection attempted, 56 succeeded, 0 failed, `complete=true`. Для текущих sitemap canonical URL: 32 `PASS / Submitted and indexed`, 9 `NEUTRAL / Discovered - currently not indexed`, 15 `NEUTRAL / URL is unknown to Google`. City pages: 21/40 PASS; service pages: 5/6 PASS. `/vorota-raspashnye`, `/tseny` и `/nashi-raboty` unknown; `/blog` и статья `/blog/skolko-stoit-postavit-zabor-v-belarusi-2026` discovered; homepage, `/kontakty`, `/otzyvy` и три другие blog posts PASS.
    - Search Analytics page-row sums: 28d — 27 clicks / 419 impressions; 90d — 34 clicks / 646 impressions. Отсутствие analytics row не означает отсутствие URL в индексе. UI GSC `29 indexed / 47 not indexed / 27 discovered` относится к другому URL universe или времени, не к тем же 56 canonical URL. Официальный API не предоставляет полный Links report. Ранее в Links UI наблюдались 3 external links / 2 linking domains: это диагностический сигнал, не доказанная единственная причина rankings.
-   - `SEO-DATA-01B`: **NEXT** — Yandex Webmaster API baseline, отдельный read-only stage. После сопоставимого Google + Yandex baseline: `SEO-DATA-01C` — unified diagnostic decision. `LOCAL-SEO-01C` application pilot не запускать автоматически. `OFFPAGE-01` остаётся возможным evidence-led workstream, без утверждённой implementation.
+   - `SEO-DATA-01B`: **LIVE-VALIDATED / READY TO CLOSE AFTER MERGE** в stage branch. Отдельный Yandex Webmaster токен использует подтверждённые live-проверкой scope `webmaster:hostinfo` и `webmaster:verify`: с одним `hostinfo` host info вернул HTTP 403 `ACCESS_FORBIDDEN`, с двумя `doctor` — `PASS`. Первый snapshot `2026-09-25T14:22:36.793Z`: 19/19 разделов успешны, `complete=true`, `dataComplete=true`; Yandex summary `searchable_pages_count=56`, detected sitemap 56 URL / 0 errors, все 40/40 city и 6/6 service pages наблюдались в pages-in-search samples. Точное сравнение `<loc>` отметило главную без `/` как `notObservedInSample`, но вариант с `/` присутствует у Яндекса; это несовпадение строки, не отсутствие главной в поиске. Yandex search visibility существует; external links sample/history показывает 2 ссылки с 2 hosts. `NO_METRIKA_COUNTER_BINDING=PRESENT / POSSIBLE_PROBLEM` — диагностический пункт, не установленная причина ранжирования или индексации. Runbook: [`docs/SEO-DATA-01B-YANDEX-WEBMASTER-RUNBOOK.md`](SEO-DATA-01B-YANDEX-WEBMASTER-RUNBOOK.md).
+   - `SEO-DATA-01C`: **NEXT / UNIFIED GOOGLE + YANDEX DIAGNOSIS**. Только этот gate определит следующий evidence-led workstream; не выбирать и не запускать сейчас `LOCAL-SEO-01C` implementation или `OFFPAGE-01`.
 
 ### P2 - улучшения позже
 

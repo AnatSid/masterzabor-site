@@ -7,11 +7,10 @@ Sitemap или индекс и не отправляет страницы на �
 
 ## Рабочий порядок
 
-**Создание OAuth-приложения и токена — только после review реализации.**
-Пока локального `.env.yandex-webmaster.local` нет, `doctor` должен завершаться
-безопасной ошибкой, не запрашивая и не показывая токен.
-
-После review и локальной настройки из корня проекта:
+OAuth-приложение и локальный токен уже настроены владельцем; live `doctor` и первый
+полный snapshot прошли проверку 2026-09-25. Без локального
+`.env.yandex-webmaster.local` `doctor` завершается безопасной ошибкой, не запрашивая
+и не показывая токен. Для повторной проверки из корня проекта:
 
 ```powershell
 npm run seo:yandex-webmaster:doctor
@@ -36,8 +35,8 @@ Sitemap, поисковых запросов и внешних ссылок. О�
 
 ## Отдельная локальная конфигурация
 
-После review создайте `.env.yandex-webmaster.local` из
-`.env.yandex-webmaster.example` и заполните:
+При первоначальной настройке или восстановлении создайте
+`.env.yandex-webmaster.local` из `.env.yandex-webmaster.example` и заполните:
 
 | Переменная | Значение |
 | --- | --- |
@@ -51,17 +50,17 @@ Sitemap, поисковых запросов и внешних ссылок. О�
 используются и не меняются. `host_id` вручную вводить не нужно: скрипт
 получает его из списка hosts API и сверяет с заданным host URL.
 
-### Получение и восстановление токена — после review
+### Получение и восстановление токена
 
 Для инструмента требуется отдельное приложение Яндекс OAuth, не приложение
-Метрики. Начальная стратегия минимального доступа — **только**
-`webmaster:hostinfo`. Общая инструкция Яндекса перечисляет также
-`webmaster:verify`, но он не входит в утверждённую read-only модель.
-Достаточность одного `webmaster:hostinfo` для *всего* snapshot пока не
-доказана: `doctor` проверит разные endpoint'ы с реальным токеном. Если
-конкретный endpoint вернёт ошибку прав, не добавляйте `webmaster:verify`
-автоматически — сначала сохраните безопасный код ошибки и отдельно
-согласуйте изменение scope.
+Метрики. Для проверенного workflow нужны **оба** scope:
+`webmaster:hostinfo` и `webmaster:verify`. Live `doctor` с одним
+`webmaster:hostinfo` остановился на чтении host info с HTTP 403
+`ACCESS_FORBIDDEN`. После добавления `webmaster:verify` тот же workflow прошёл
+полностью: user, hosts, точный host info, обнаруженный Sitemap и его детали,
+read-only probes внешних ссылок и query analytics — `PASS`. Это подтверждение
+необходимых разрешений для данного host и workflow, а не разрешение скрипту
+выполнять действия verification: он их не вызывает.
 
 Официальная [инструкция Яндекс OAuth для Вебмастера](https://yandex.ru/dev/webmaster/doc/ru/tasks/how-to-get-oauth)
 описывает создание приложения, redirect URI
@@ -126,8 +125,8 @@ Sitemap сохраняются как возвращены API. Отдельну
 | Код/ситуация | Что проверить |
 | --- | --- |
 | `MISSING_LOCAL_ENV`, `MISSING_WEBMASTER_TOKEN` | Локальный файл и отдельный Webmaster access token. Не публикуйте значение. |
-| `INVALID_OAUTH_TOKEN`, HTTP 401/403 | Токен истёк, отозван или неверен; перевыпустите его через отдельное приложение и повторите `doctor`. |
-| `ACCESS_FORBIDDEN` | Scope или права аккаунта на нужный host; не добавляйте `webmaster:verify` без отдельного решения. |
+| `INVALID_OAUTH_TOKEN`, HTTP 401 | Токен истёк, отозван или неверен; перевыпустите его через отдельное приложение и повторите `doctor`. |
+| `ACCESS_FORBIDDEN` | Проверьте оба подтверждённых scope (`webmaster:hostinfo`, `webmaster:verify`) и права аккаунта на точный host. Live проверка с одним `webmaster:hostinfo` получила HTTP 403 на host info. |
 | `HOST_NOT_UNIQUE_OR_MISSING`, `HOST_NOT_VERIFIED`, `HOST_DATA_NOT_READY` | Точный `www` host, права и `host_data_status` в Вебмастере. |
 | `SITEMAP_NOT_DETECTED` | Проверьте точный URL Sitemap и его состояние в интерфейсе Вебмастера. |
 | HTTP 429 / `QUOTA_EXCEEDED` | Подождите до сброса квоты; не запускайте snapshot подряд. |

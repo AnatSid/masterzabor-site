@@ -54,6 +54,31 @@ Google OAuth branding; они не дают доступ к инструмент
 owner workflow и восстановление токена описаны в
 [`docs/SEO-DATA-01A-GSC-RUNBOOK.md`](docs/SEO-DATA-01A-GSC-RUNBOOK.md).
 
+### First-party Yandex Webmaster diagnostics
+
+`SEO-DATA-01B` добавил отдельный локальный read-only Yandex Webmaster API
+workflow без новых npm dependencies. Команды
+`npm run seo:yandex-webmaster:doctor` и
+`npm run seo:yandex-webmaster:snapshot` используют только
+`.env.yandex-webmaster.local`; `YANDEX_METRIKA_TOKEN`, GSC OAuth и production env
+не переиспользуются. JSON snapshots сохраняются в исключённой из Git
+`.tmp/seo/`. Скрипт не отправляет URL на переобход, не меняет host, Sitemap,
+verification или настройки. Подтверждённые live-проверкой OAuth scope —
+`webmaster:hostinfo` и `webmaster:verify`: один `hostinfo` дал HTTP 403
+`ACCESS_FORBIDDEN` на host info, оба scope обеспечили полный `doctor PASS`.
+Access token действует 6 месяцев и при истечении перевыпускается вручную;
+refresh-token flow не предполагается. Порядок работы описан в
+[`docs/SEO-DATA-01B-YANDEX-WEBMASTER-RUNBOOK.md`](docs/SEO-DATA-01B-YANDEX-WEBMASTER-RUNBOOK.md).
+
+Первый snapshot от `2026-09-25T14:22:36.793Z` прошёл 19/19 разделов без
+ошибок: `searchable_pages_count=56`, detected sitemap 56 URL / 0 ошибок,
+pages-in-search samples содержат все 40 city и 6 service pages. Для главной
+точное сравнение без `/` не совпало с возвращённым Яндексом вариантом с `/`;
+это не отсутствие главной в поиске. External links sample/history показывает
+2 ссылки с 2 hosts. `NO_METRIKA_COUNTER_BINDING=PRESENT / POSSIBLE_PROBLEM` —
+диагностическое состояние, не доказанная причина ranking/indexing. Периоды и
+семантика Yandex API отличаются от GSC URL Inspection и Search Analytics.
+
 ## Codex Workflow / Tooling Baseline
 
 TOOLING-01 created root `AGENTS.md` as the stable Codex project-level operating
@@ -840,9 +865,10 @@ Google остаётся priority #1 для диагностики слабой v
 теоретического Google improvement; pilot measurement обязателен по обоим поисковикам.
 
 `SEO-DATA-01A` закрыт после Production verification и первого полного GSC snapshot
-от 2026-09-25. Следующий data stage — `SEO-DATA-01B` (Yandex Webmaster API),
-затем `SEO-DATA-01C` (unified diagnostic decision). `OFFPAGE-01` остаётся
-возможным evidence-led workstream, а не доказанной причиной текущих rankings.
+от 2026-09-25. `SEO-DATA-01B` live-validated и готов к закрытию после merge;
+следующий gate — `SEO-DATA-01C` (unified Google + Yandex diagnosis). Ни
+`LOCAL-SEO-01C` implementation, ни `OFFPAGE-01` не выбраны до этого решения;
+малый external-link footprint сам по себе не доказывает причину rankings.
 
 Отдельно остаются future/deferred: starter/demo portfolio provenance, Yandex regionality
 settings audit beyond the API baseline, GBP/entity strategy, possible dedicated MasterZabor phone, blog
