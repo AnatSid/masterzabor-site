@@ -86,13 +86,12 @@ CTA предлагает расчёт ограждения. Он не долже
 1. Исследуйте search demand, intent и overlap с существующими URL.
 2. Для юридической или иной чувствительной темы проверьте первичные источники и область применимости.
 3. Создайте semantic/content design document: URL, primary intent, границы темы, claim matrix, outline, sources и internal links.
-4. Напишите draft с `content-and-copy` в рамках утверждённого design и
-   `docs/EDITORIAL-WRITING-GUIDE.md`. До отдельного утверждения voice document
-   используйте только уже утверждённые указания в writing guide; не изобретайте
-   атрибуты голоса.
-5. После появления утверждённого MasterZabor voice document передайте его
-   writer и `humanizer`. Для humanizer штатно поддерживается корневой
-   `humanizer-context.md`, который автоматически загружается при наличии. В
+4. Напишите draft с `content-and-copy` в рамках утверждённого design,
+   `docs/EDITORIAL-WRITING-GUIDE.md` и `docs/brand-voice.md`. Не изобретайте
+   новые атрибуты голоса.
+5. Передайте `docs/brand-voice.md` writer и `humanizer`. Для humanizer штатно
+   поддерживается корневой `humanizer-context.md`, который автоматически
+   загружается при наличии. В
    дальнейшем этот файл должен кратко передавать актуальные правила и примеры из
    канонического voice document, а не создавать второй независимый источник
    голоса.

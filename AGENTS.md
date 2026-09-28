@@ -26,15 +26,17 @@ Use this priority order:
 For stage work, read the roadmap first. Read only the relevant Knowledge Base
 sections unless the task genuinely needs full historical context.
 
-- For tasks that substantially change public editorial or SEO copy, read and
-  follow `docs/EDITORIAL-WRITING-GUIDE.md` and use relevant installed skills
-  according to its sequence and roles. `content-and-copy` is the primary writing
-  skill; `copy-editing` is optional.
+- When creating or substantially editing public copy, read `docs/brand-voice.md`
+  as the canonical voice source and adapt tone to the page or surface type.
+- For public editorial or SEO copy, also follow
+  `docs/EDITORIAL-WRITING-GUIDE.md` and use relevant installed skills according
+  to its roles. `content-and-copy` is the primary writing skill; `copy-editing`
+  is optional.
 - For blog articles, also read and follow
   `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md` for the blog lifecycle and assets. It
   does not apply automatically to service, pricing, or landing pages.
 - The project brief, verified facts, and applicable project writing guide take
-  precedence over generic recommendations in skills.
+  precedence over voice guidance and generic recommendations in skills.
 
 ## Production and Domain Invariants
 
