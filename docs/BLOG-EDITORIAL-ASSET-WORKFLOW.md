@@ -86,16 +86,35 @@ CTA предлагает расчёт ограждения. Он не долже
 1. Исследуйте search demand, intent и overlap с существующими URL.
 2. Для юридической или иной чувствительной темы проверьте первичные источники и область применимости.
 3. Создайте semantic/content design document: URL, primary intent, границы темы, claim matrix, outline, sources и internal links.
-4. Напишите draft статьи в рамках утверждённого design.
-5. Проведите factual и editorial review по `docs/EDITORIAL-WRITING-GUIDE.md`.
-6. Покажите текст и текущую presentation на localhost, desktop и mobile.
-7. Проведите отдельный visual workflow для hero после одобрения текста и intent.
-8. Подготовьте утверждённый master как production asset и подключите его к `BlogPost`.
-9. Финализируйте metadata, Article/Breadcrumb JSON-LD и contextual internal links.
-10. Обновите semantic sitemap freshness только у реально изменённых crawler-visible surfaces.
-11. Запустите пропорциональные проверки и получите одобрение localhost.
-12. Создайте stage commit, push и проверьте Vercel Preview.
-13. После явного разрешения выполните merge в `main`, дождитесь Production Ready и проведите production smoke.
+4. Напишите draft с `content-and-copy` в рамках утверждённого design и
+   `docs/EDITORIAL-WRITING-GUIDE.md`. До отдельного утверждения voice document
+   используйте только уже утверждённые указания в writing guide; не изобретайте
+   атрибуты голоса.
+5. После появления утверждённого MasterZabor voice document передайте его
+   writer и `humanizer`. Для humanizer штатно поддерживается корневой
+   `humanizer-context.md`, который автоматически загружается при наличии. В
+   дальнейшем этот файл должен кратко передавать актуальные правила и примеры из
+   канонического voice document, а не создавать второй независимый источник
+   голоса.
+6. Если draft сгенерирован AI или явно шаблонный, обычно выполните полный
+   rewrite через `humanizer`; для уже сильного человеческого или
+   отредактированного текста допустимы detect и точечная правка без полного
+   rewrite. В обоих случаях передайте утверждённый voice context и зафиксируйте
+   locked facts и решения, которые humanizer менять не должен. Затем проведите
+   `editorial-qa` по intent, brief, фактам, голосу, структуре и ясности. После
+   QA при необходимости используйте humanizer detect для поиска конкретных
+   паттернов и точечных исправлений. Повторно проверьте затронутые факты и
+   прочитайте статью целиком. AI score не является publish gate.
+7. Используйте `copy-editing` только при необходимости line-edit; не включайте
+   его маркетинговые и conversion-приёмы автоматически.
+8. Покажите текст и текущую presentation на localhost, desktop и mobile.
+9. Проведите отдельный visual workflow для hero после одобрения текста и intent.
+10. Подготовьте утверждённый master как production asset и подключите его к `BlogPost`.
+11. Финализируйте metadata, Article/Breadcrumb JSON-LD и contextual internal links.
+12. Обновите semantic sitemap freshness только у реально изменённых crawler-visible surfaces.
+13. Запустите пропорциональные проверки и получите одобрение localhost.
+14. Создайте stage commit, push и проверьте Vercel Preview.
+15. После явного разрешения выполните merge в `main`, дождитесь Production Ready и проведите production smoke.
 
 Текст статьи и hero image не создаются автоматически одним шагом. Сначала утверждаются intent, правовые границы и содержание. Изображение получает отдельное творческое решение и отдельное approval.
 

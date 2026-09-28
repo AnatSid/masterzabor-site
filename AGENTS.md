@@ -26,12 +26,15 @@ Use this priority order:
 For stage work, read the roadmap first. Read only the relevant Knowledge Base
 sections unless the task genuinely needs full historical context.
 
-- When creating or substantially editing articles or SEO content, use all relevant
-  installed content/SEO skills; a specialized writing/content skill is the primary
-  workflow. Read and follow `docs/EDITORIAL-WRITING-GUIDE.md` and
-  `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md`: they define the mandatory writing
-  standard and the durable article/asset workflow without replacing a specialized
-  skill's methodology.
+- For tasks that substantially change public editorial or SEO copy, read and
+  follow `docs/EDITORIAL-WRITING-GUIDE.md` and use relevant installed skills
+  according to its sequence and roles. `content-and-copy` is the primary writing
+  skill; `copy-editing` is optional.
+- For blog articles, also read and follow
+  `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md` for the blog lifecycle and assets. It
+  does not apply automatically to service, pricing, or landing pages.
+- The project brief, verified facts, and applicable project writing guide take
+  precedence over generic recommendations in skills.
 
 ## Production and Domain Invariants
 
