@@ -296,8 +296,8 @@ export default function TsenyPage() {
               уточняем параметры и считаем объект без автоматических доплат.
             </p>
             <p className="mt-4 max-w-none text-pretty leading-relaxed text-slate-600 md:text-[1.0625rem] md:leading-[1.65]">
-              Подробно о стартовых ориентирах и исходных данных читайте в статье
-              о том, {" "}
+              Подробнее о стартовых ценах и о том, как оценить стоимость для
+              своего участка, читайте в статье о том, {" "}
               <Link
                 className="font-semibold text-[#0A5633] underline decoration-1 underline-offset-4 hover:text-green-800"
                 href="/blog/skolko-stoit-postavit-zabor-v-belarusi-2026"
