@@ -49,7 +49,11 @@ export default function BlogPage() {
               <Link href={`/blog/${post.slug}`}>
                 <Image
                   alt={post.imageAlt ?? post.title}
-                  className="h-52 w-full object-cover"
+                  className={`h-52 w-full object-cover ${
+                    post.slug === "skolko-stoit-postavit-zabor-v-belarusi-2026"
+                      ? "object-right"
+                      : ""
+                  }`}
                   height={420}
                   src={post.image}
                   width={720}
