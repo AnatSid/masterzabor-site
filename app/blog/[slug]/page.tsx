@@ -51,7 +51,16 @@ export default async function BlogPostPage({ params }: BlogRouteProps) {
     notFound();
   }
 
-  const relatedPosts = blogPosts.filter((item) => item.slug !== post.slug).slice(0, 3);
+  const relatedPosts = blogPosts
+    .filter(
+      (item) =>
+        item.slug !== post.slug &&
+        !(
+          post.slug === "skolko-stoit-postavit-zabor-v-belarusi-2026" &&
+          item.slug === "kakoy-zabor-luchshe-profnastil-ili-evroshtaketnik"
+        ),
+    )
+    .slice(0, 3);
 
   const articleJsonLd = generateArticleJsonLd({
     title: post.title,
