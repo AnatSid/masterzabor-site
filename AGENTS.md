@@ -27,11 +27,12 @@ For stage work, read the roadmap first. Read only the relevant Knowledge Base
 sections unless the task genuinely needs full historical context.
 
 - When creating or substantially editing articles or SEO content, use all relevant
-  installed content/SEO skills; a specialized writing/content skill is the primary
-  workflow. Read and follow `docs/EDITORIAL-WRITING-GUIDE.md` and
+  installed content/SEO skills according to the sequence and roles in
+  `docs/EDITORIAL-WRITING-GUIDE.md`; `content-and-copy` is the primary writing
+  skill and `copy-editing` is optional. Read and follow that guide and
   `docs/BLOG-EDITORIAL-ASSET-WORKFLOW.md`: they define the mandatory writing
-  standard and the durable article/asset workflow without replacing a specialized
-  skill's methodology.
+  standard and article/asset workflow without replacing a specialized skill's
+  methodology.
 
 ## Production and Domain Invariants
 
