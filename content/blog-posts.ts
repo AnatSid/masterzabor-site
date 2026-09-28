@@ -77,7 +77,7 @@ export const blogPosts: BlogPost[] = [
     metaDescription:
       "Стартовые цены МастерЗабор на заборы с установкой в Беларуси в 2026 году. Что входит в цену за метр, от чего зависит итог и как сравнить предложения подрядчиков.",
     excerpt:
-      "Цены на заборы с установкой под ключ начинаются от 30 BYN за погонный метр. Разбираем, что входит в стоимость и как сравнивать предложения подрядчиков.",
+      "Цены на заборы с установкой под ключ начинаются от 65 BYN за погонный метр. Разбираем, что входит в стоимость и как сравнивать предложения подрядчиков.",
     publishedAt: "2026-05-18",
     image: "/images/blog/skolko-stoit-postavit-zabor-v-belarusi-2026.webp",
     imageAlt: "Металлический забор с воротами и калиткой у частного дома",
@@ -87,21 +87,21 @@ export const blogPosts: BlogPost[] = [
       <p>На <a href="/tseny">странице цен МастерЗабор</a> цены на заборы с установкой под ключ указаны за погонный метр. Речь не о цене отдельного листа профнастила или рулона сетки: при расчёте учитывают материалы, каркас, крепёж, доставку и монтаж.</p>
       <h3 data-price-group-title>Заборы</h3>
       <ul data-price-list>
-        <li><a href="/zabory-iz-setki-rabitsy"><span>Забор из сетки-рабицы</span> <strong>от 30 BYN/м.п.</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
-        <li><a href="/zabory-iz-profnastila"><span>Забор из профнастила</span> <strong>от 70 BYN/м.п.</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
-        <li><a href="/zabory-iz-evroshtaketnika"><span>Забор из евроштакетника</span> <strong>от 85 BYN/м.п.</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
+        <li><a href="/zabory-iz-setki-rabitsy"><span>Забор из сетки-рабицы</span> <strong>от 65 BYN/м.п.</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
+        <li><a href="/zabory-iz-profnastila"><span>Забор из профнастила</span> <strong>от 120 BYN/м.п.</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
+        <li><a href="/zabory-iz-evroshtaketnika"><span>Забор из евроштакетника</span> <strong>от 130 BYN/м.п.</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
       </ul>
       <h3 data-price-group-title>Ворота и калитка</h3>
       <ul data-price-list>
-        <li><a href="/vorota-raspashnye"><span>Распашные ворота</span> <strong>от 1200 BYN</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
-        <li><a href="/vorota-otkatnye"><span>Откатные ворота</span> <strong>от 3000 BYN</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
-        <li><a href="/kalitki"><span>Калитка</span> <strong>от 1000 BYN</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
+        <li><a href="/vorota-raspashnye"><span>Распашные ворота</span> <strong>от 1300 BYN</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
+        <li><a href="/vorota-otkatnye"><span>Откатные ворота</span> <strong>от 4000 BYN</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
+        <li><a href="/kalitki"><span>Калитка</span> <strong>от 1100 BYN</strong><span aria-hidden="true" data-price-chevron>›</span></a></li>
       </ul>
       <p>Это стартовые цены. Для расчёта нужны высота и конструкция забора, а также условия участка. Ворота и калитку считают отдельно от цены забора за метр.</p>
       <p>Если нужен ориентир для своего участка, <a href="#blog-lead-form">заполните форму расчёта</a>.</p>
 
       <h2>Что входит в цену за метр</h2>
-      <p>Одинаковые 70 BYN/м.п. в двух предложениях ещё не означают одинаковый забор. Одна цена может относиться только к материалу, другая включать часть работ или установку. Даже для установленного забора высота, толщина металла и каркас могут отличаться. Сравнивать нужно одинаковую конструкцию и одинаковый объём работ.</p>
+      <p>Одинаковая цена за метр в двух предложениях ещё не означает одинаковый забор. Одна цена может относиться только к материалу, другая включать часть работ или установку. Даже для установленного забора высота, толщина металла и каркас могут отличаться. Сравнивать нужно одинаковую конструкцию и одинаковый объём работ.</p>
       <p>МастерЗабор рассчитывает установленный забор, а не только стоимость материала. В расчёте учитываются материалы, каркас, крепёж, доставка и монтаж. Столбы, основание и дополнительные элементы подбирают под конструкцию и участок. Перед договором уточните, что вошло в расчёт и какие работы, если они нужны, посчитают отдельно.</p>
 
       <h2>Как оценить стоимость забора для своего участка</h2>
