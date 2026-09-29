@@ -134,8 +134,8 @@ CTA предлагает расчёт ограждения. Он не долже
 
 ## Visual workflow
 
-Творческий выбор сюжета и правила генерации: `docs/BLOG-HERO-VISUAL-GUIDE.md`.
-История решений и предыдущие итерации: `docs/BLOG-HERO-VISUAL-HANDOFF.md`.
+Для нового hero по умолчанию используйте `docs/BLOG-HERO-VISUAL-GUIDE.md`.
+`docs/BLOG-HERO-VISUAL-HANDOFF.md` — исторический архив: открывайте его только для уточнения неоднозначного правила, объяснения принятого решения или восстановления прежней итерации изображения.
 Editorial/article chat задаёт intent и вместе с пользователем утверждает результат; visual-chat отвечает за творческие направления и генерацию; Codex — за техническую production integration.
 
 Hero создаётся как отдельный editorial asset:
