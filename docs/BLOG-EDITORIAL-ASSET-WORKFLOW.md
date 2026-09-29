@@ -75,7 +75,7 @@ Hero выводится через `next/image` с intrinsic-размером `1
 
 CTA предлагает расчёт ограждения. Он не должен обещать юридическую консультацию, разрешение, узаконивание или решение спора.
 
-Блок `Другие статьи` не использует tags или semantic matching. Он исключает текущий slug из исходного массива `blogPosts` и берёт первые три записи через `.slice(0, 3)`. Контекстные ссылки в тексте остаются основным способом связать материалы по intent.
+Блок `Другие статьи` не использует tags или semantic matching. Он исключает текущий slug из исходного массива `blogPosts`; только для статьи о стоимости дополнительно исключена слабая comparison article. Затем берутся первые три записи через `.slice(0, 3)`. Контекстные ссылки в тексте остаются основным способом связать материалы по intent.
 
 `tags` сохранены в data model, но hashtag pills не показываются ни в article page, ни в карточках `/blog`. Tag archive pages отсутствуют. Не создавайте taxonomy routes без отдельного решения по спросу и content architecture.
 
@@ -134,6 +134,10 @@ CTA предлагает расчёт ограждения. Он не долже
 
 ## Visual workflow
 
+Для нового hero по умолчанию используйте `docs/BLOG-HERO-VISUAL-GUIDE.md`.
+`docs/BLOG-HERO-VISUAL-HANDOFF.md` — исторический архив: открывайте его только для уточнения неоднозначного правила, объяснения принятого решения или восстановления прежней итерации изображения.
+Editorial/article chat задаёт intent и вместе с пользователем утверждает результат; visual-chat отвечает за творческие направления и генерацию; Codex — за техническую production integration.
+
 Hero создаётся как отдельный editorial asset:
 
 1. Утвердите search intent и content design статьи.
@@ -181,7 +185,7 @@ Production asset находится внутри repository в `public/images/bl
 
 ## Текущая convention для blog images
 
-Page A и Page B подтверждают текущую editorial convention:
+Page A, Page B и COST подтверждают текущую editorial convention:
 
 - production target: `1200×630`
 - aspect ratio: примерно `1.91:1`
@@ -197,19 +201,19 @@ Page A и Page B подтверждают текущую editorial convention:
 
 ## Asset registry
 
-Registry описывает все четыре текущие статьи. Размер `1200×630` у первых двух записей задан внутри SVG generator; отдельного production-файла для них нет.
+Registry описывает все четыре текущие статьи. Для ранней comparison article размер `1200×630` задан внутри SVG generator; отдельного production-файла для неё нет.
 
 | Article | Slug | `publishedAt` | `updatedAt` |
 | --- | --- | --- | --- |
 | Какой забор лучше: профнастил или евроштакетник? | `kakoy-zabor-luchshe-profnastil-ili-evroshtaketnik` | `2026-05-18` | отсутствует |
-| Сколько стоит поставить забор в Беларуси в 2026 году? | `skolko-stoit-postavit-zabor-v-belarusi-2026` | `2026-05-18` | отсутствует |
+| Сколько стоит поставить забор в Беларуси в 2026 году? | `skolko-stoit-postavit-zabor-v-belarusi-2026` | `2026-05-18` | `2026-09-28` |
 | Нужно ли разрешение на установку забора в Беларуси | `nuzhno-li-razreshenie-na-ustanovku-zabora-v-rb` | `2026-05-18` | `2026-09-12` |
 | Высота забора между соседями в Беларуси: действует ли предел 2 м | `vysota-zabora-mezhdu-sosedyami-v-belarusi` | `2026-09-12` | отсутствует |
 
 | Slug | External master/source | Production representation | Dimensions / format / size | Alt | Current usage |
 | --- | --- | --- | --- | --- | --- |
 | `kakoy-zabor-luchshe-profnastil-ili-evroshtaketnik` | `not recorded / unknown` | Inline `data:image/svg+xml` из `blogImage()` в `content/blog-posts.ts`; repository asset отсутствует | `1200×630`, SVG data URI, отдельный file size отсутствует | `imageAlt` не задан: hero/card используют title; Open Graph получает общий default alt из `generatePageMetadata()` | article hero, `/blog` card, Open Graph, Twitter; не включается в Article JSON-LD |
-| `skolko-stoit-postavit-zabor-v-belarusi-2026` | `not recorded / unknown` | Inline `data:image/svg+xml` из `blogImage()` в `content/blog-posts.ts`; repository asset отсутствует | `1200×630`, SVG data URI, отдельный file size отсутствует | `imageAlt` не задан: hero/card используют title; Open Graph получает общий default alt из `generatePageMetadata()` | article hero, `/blog` card, Open Graph, Twitter; не включается в Article JSON-LD |
+| `skolko-stoit-postavit-zabor-v-belarusi-2026` | `not recorded / unknown` | `public/images/blog/skolko-stoit-postavit-zabor-v-belarusi-2026.webp` | `1200×630`, WebP, 244,904 bytes | `Металлический забор с воротами и калиткой у частного дома` | article hero, `/blog` card, Open Graph, Twitter, Article JSON-LD |
 | `nuzhno-li-razreshenie-na-ustanovku-zabora-v-rb` | `not recorded / unknown` | `public/images/blog/razreshenie-na-zabor-v-belarusi.webp` | `1200×630`, WebP, 190,410 bytes, sRGB | `Забор на частном участке и схема границ перед установкой в Беларуси` | article hero, `/blog` card, Open Graph, Twitter, Article JSON-LD |
 | `vysota-zabora-mezhdu-sosedyami-v-belarusi` | Verified current file: `C:\DiscD\проекты сайта\Фото типов забора\Картинки для статей\vysota-zabora-mezhdu-sosedyami-v-belarusi.webp.png` | `public/images/blog/vysota-zabora-mezhdu-sosedyami-v-belarusi.webp` | source: PNG, `1731×909`, 2,741,113 bytes, sRGB; production: `1200×630`, WebP, 194,300 bytes, sRGB | `Забор на границе двух соседних частных участков в Беларуси` | article hero, `/blog` card, Open Graph, Twitter, Article JSON-LD |
 
