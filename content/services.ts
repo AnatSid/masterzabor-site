@@ -40,7 +40,7 @@ export const services: Service[] = [
       "Заборы из профнастила и металлопрофиля с установкой под ключ - цены по Беларуси",
     metaDescription:
       "Заборы из профнастила и металлопрофиля по всей Беларуси. Бесплатный расчёт, доставка и установка под ключ. Цвета по RAL, гарантия и рассрочка.",
-    detailUpdatedAt: "2026-09-22",
+    detailUpdatedAt: "2026-10-30",
     priceFrom: 70,
     priceUnit: "BYN/м.п.",
     imageSrc: "/images/services/zabory-iz-profnastila/hero.jpeg",

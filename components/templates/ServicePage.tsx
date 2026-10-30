@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { TrackedContactLink } from "@/components/analytics/TrackedContactLink";
 import { QuizForm } from "@/components/forms/QuizForm";
+import { ProfnastilGuide } from "@/components/templates/ProfnastilGuide";
 import {
   serviceProseClassName,
   SiteContainer,
@@ -449,20 +450,24 @@ export function ServicePage({ service }: ServicePageProps) {
         </SiteContainer>
       </section>
 
-      <section className="py-16">
-        <SiteContainer>
-          <article className={serviceProseClassName}>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-            {service.title}: что важно знать
-          </h2>
-          <div className="mt-6 space-y-6">
-            {serviceSeoText(service).map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-          </article>
-        </SiteContainer>
-      </section>
+      {service.slug === "zabory-iz-profnastila" ? (
+        <ProfnastilGuide />
+      ) : (
+        <section className="py-16">
+          <SiteContainer>
+            <article className={serviceProseClassName}>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+                {service.title}: что важно знать
+              </h2>
+              <div className="mt-6 space-y-6">
+                {serviceSeoText(service).map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </article>
+          </SiteContainer>
+        </section>
+      )}
 
       <section className="py-16">
         <SiteContainer>
